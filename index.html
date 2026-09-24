@@ -264,6 +264,17 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .dots i.on{background:var(--accent)}
 html.tg .bar:has(> [data-back]:only-child){display:none}
 html.tg [data-back]{display:none}
+.actions.after{position:sticky; bottom:0; z-index:5; padding-top:14px; padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px)); margin-bottom:-12px; background:linear-gradient(to bottom, transparent, var(--paper) 28%)}
+@media (max-width:520px){
+  #app{gap:14px; padding-block:12px 28px}
+  .qcard{padding:16px 16px; gap:10px}
+  .qcard .ask{font-size:19px}
+  .qcard .formula{padding-block:6px; min-height:56px; font-size:23px}
+  .options{gap:6px}
+  .opt{min-height:50px; padding:8px 12px}
+  .opt .tex{font-size:17px}
+  .write-line{min-height:72px}
+}
 .why{padding:0 16px 14px}
 @keyframes up{from{transform:translateY(24px); opacity:0} to{transform:none; opacity:1}}
 @keyframes rise{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
@@ -971,6 +982,7 @@ const App = (() => {
   }
   if (inTg) { try { tg.BackButton.onClick(() => { if (ov) return closeExpl(); if (backFn) backFn(); }); } catch (e) {} }
   const haptic = kind => {
+    return; // вибрация отключена
     if (!inTg || !tg.HapticFeedback) return;
     try { kind === 'ok' ? tg.HapticFeedback.notificationOccurred('success') : kind === 'bad' ? tg.HapticFeedback.notificationOccurred('error') : tg.HapticFeedback.selectionChanged(); } catch (e) {}
   };
@@ -1858,7 +1870,7 @@ const App = (() => {
   }
   const afterActions = f => {
     const label = S.i + 1 < S.items.length ? 'Дальше' : 'Результат';
-    return `<div class="actions"><button class="btn btn-ghost" data-expl>Пояснение</button><button class="btn btn-primary" data-next>${label}</button></div>`;
+    return `<div class="actions after"><button class="btn btn-ghost" data-expl>Пояснение</button><button class="btn btn-primary" data-next>${label}</button></div>`;
   };
 
   /* ---------- «Напиши формулу»: разбор, отображение, проверка ---------- */
