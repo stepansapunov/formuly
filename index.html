@@ -58,6 +58,12 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .brand{display:flex; flex-direction:column; gap:6px}
 .brand h1{font-family:var(--display); font-weight:700; font-size:30px; letter-spacing:-.01em; line-height:1.1}
 .brand h1 i{font-style:normal; color:var(--accent)}
+.streak{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:12px 16px; font-size:15px}
+.streak .fire{font-size:26px; line-height:1; filter:grayscale(1); opacity:.45}
+.streak.on .fire{filter:none; opacity:1}
+.streak b{font-family:var(--display); font-size:18px}
+.streak small{color:var(--ink-2); font-size:13px}
+.streak-up{margin:0; font-weight:700; color:var(--accent)}
 .summary{display:grid; grid-template-columns:1fr; gap:14px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow:var(--shadow)}
 .summary .big{font-family:var(--display); font-size:26px; font-weight:700; line-height:1}
 .summary .big small{font-size:14px; color:var(--ink-3); font-weight:500}
@@ -176,6 +182,7 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .ov-card p{margin:0; line-height:1.6; max-width:62ch}
 .ov-card p .tex{font-size:1.06em}
 .fig{margin:0; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:8px}
+.anim-btn{align-self:center; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:6px 14px; font:600 14px var(--body); color:var(--ink); cursor:pointer}
 .fig > svg{display:block; width:100%; max-width:420px; height:auto; margin:0 auto; color:var(--ink); overflow:visible}
 .fig figcaption{font-size:13.5px; line-height:1.5; color:var(--ink-2)}
 .fig > svg text{fill:currentColor; font:13px var(--body)}
@@ -226,6 +233,26 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .help:hover{border-color:var(--accent); color:var(--accent)}
 .with-help{display:inline-flex; align-items:center; gap:8px}
 .counts{display:flex; flex-wrap:wrap; gap:4px 14px; margin-top:10px; font-size:13px; color:var(--ink-2)}
+.len{display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:12px; font-size:13px; color:var(--ink-2)}
+.len button{border:1px solid var(--line); background:var(--paper); color:var(--ink); border-radius:999px; padding:5px 11px; font:600 13px var(--body); cursor:pointer; font-variant-numeric:proportional-nums}
+.len button.on{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.qcard .given{font-size:20px; text-align:center; padding:8px; margin-top:6px; background:var(--accent-soft); border-radius:12px; overflow-x:auto}
+.mode.calc span{color:var(--ink-3)}
+.more-modes{background:var(--card); border:1px solid var(--line); border-radius:14px}
+.more-modes summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:10px; padding:14px 16px; font-weight:600}
+.more-modes summary::-webkit-details-marker{display:none}
+.more-modes summary small{margin-left:auto; font-weight:500; font-size:13px; color:var(--ink-3)}
+.more-modes summary::after{content:''; width:8px; height:8px; border-right:2px solid var(--ink-2); border-bottom:2px solid var(--ink-2); transform:rotate(45deg) translateY(-2px); transition:transform .2s}
+.more-modes[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
+.more-modes .modes-list{display:flex; flex-direction:column; gap:8px; padding:0 10px 10px}
+.more-modes .mode{background:var(--paper); flex-direction:column; align-items:flex-start; gap:3px; padding:12px 14px}
+.more-modes .mode span{text-align:left; line-height:1.35}
+.nocells{display:inline-block; margin-left:6px; padding:1px 7px; border-radius:999px; background:var(--accent-soft); color:var(--accent); letter-spacing:0; text-transform:none; font-weight:600}
+.qcard .mean{font:400 15px var(--body); color:var(--ink-2)}
+.given-vals{margin-top:10px; font-size:18px; line-height:1.9; display:flex; flex-wrap:wrap; gap:4px 10px; align-items:baseline}
+.given-vals .lbl{font-size:15px; color:var(--ink-2)}
+.given-vals .sep{margin-left:-8px}
+.solution{overflow-x:auto; overflow-y:hidden; padding:10px 12px; background:var(--card); border:1px solid var(--line); border-radius:12px; font-size:17px; text-align:center}
 .counts i{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px}
 .c-done{background:var(--ok)} .c-prog{background:var(--accent)} .c-new{background:var(--cell)}
 .help-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
@@ -302,72 +329,95 @@ v: x — координата тела, м; x_0 — начальная коор�
 w: x = x_0 + \frac{v_x}{t} ;; x = x_0 t + v_x ;; x = x_0 + \frac{v_x t^2}{2}
 b: x = ⟦x_0@a⟧ + ⟦v_x t@a⟧ ;; v_x t^2 ;; \frac{v_x}{t} ;; x_0 t
 e: x :: [x_0] + [v_x] [t]
+x: t :: ( [x] - [x_0] ) / [v_x]
+x: v_x :: ( [x] - [x_0] ) / [t]
 = Ускорение
 f: \vec a = \frac{\Delta \vec v}{\Delta t}
 v: \vec a — ускорение, м/с²; \Delta \vec v — изменение скорости, м/с; \Delta t — промежуток времени, с
 w: \vec a = \frac{\Delta t}{\Delta \vec v} ;; \vec a = \frac{\Delta \vec r}{\Delta t} ;; \vec a = \Delta \vec v \cdot \Delta t
 b: \vec a = \frac{⟦\Delta \vec v⟧}{⟦\Delta t⟧} ;; \Delta \vec r ;; \Delta t^2 ;; \vec v
 e: \vec a :: [\Delta \vec v] / [\Delta t]
+x: \Delta t :: [\Delta v] / [a]
+x: \Delta v :: [a] [\Delta t]
+xg: a = \dfrac{\Delta v}{\Delta t}
 = Скорость при равноускоренном движении
 f: v_x = v_{0x} + a_x t
 v: v_x — проекция скорости в момент t, м/с; v_{0x} — проекция начальной скорости, м/с; a_x — проекция ускорения, м/с²; t — время, с
 w: v_x = v_{0x} + \frac{a_x t^2}{2} ;; v_x = v_{0x} t + a_x ;; v_x = \frac{v_{0x} + a_x}{t}
 b: v_x = ⟦v_{0x}@a⟧ + ⟦a_x t@a⟧ ;; \frac{a_x t^2}{2} ;; a_x ;; v_{0x} t
 e: v_x :: [v_{0x}] + [a_x] [t]
+x: t :: ( [v_x] - [v_{0x}] ) / [a_x]
+x: a_x :: ( [v_x] - [v_{0x}] ) / [t]
 = Координата при равноускоренном движении
 f: x = x_0 + v_{0x} t + \frac{a_x t^2}{2}
 v: x_0 — начальная координата, м; v_{0x} — проекция начальной скорости, м/с; a_x — проекция ускорения, м/с²; t — время, с
 w: x = x_0 + v_{0x} t + a_x t^2 ;; x = x_0 + v_{0x} t + \frac{a_x t}{2} ;; x = x_0 t + v_{0x} + \frac{a_x t^2}{2}
 b: x = x_0 + ⟦v_{0x} t@a⟧ + ⟦\frac{a_x t^2}{2}@a⟧ ;; a_x t^2 ;; \frac{a_x t}{2} ;; v_{0x}
 e: x :: [x_0] + [v_{0x}] [t] + [a_x] [t] ^2 / 2
+x: a_x :: 2 ( [x] - [x_0] - [v_{0x}] [t] ) / [t] ^2
 = Перемещение без времени
 f: s_x = \frac{v_x^2 - v_{0x}^2}{2 a_x}
 v: s_x — проекция перемещения, м; v_x — проекция конечной скорости, м/с; v_{0x} — проекция начальной скорости, м/с; a_x — проекция ускорения, м/с²
 w: s_x = \frac{v_x - v_{0x}}{2 a_x} ;; s_x = \frac{v_x^2 - v_{0x}^2}{a_x} ;; s_x = \frac{2 a_x}{v_x^2 - v_{0x}^2}
 b: s_x = \frac{⟦v_x^2 - v_{0x}^2⟧}{⟦2 a_x⟧} ;; v_x - v_{0x} ;; a_x ;; 2 a_x t
 e: s_x :: ( [v_x] ^2 - [v_{0x}] ^2 ) / ( 2 [a_x] )
+x: a_x :: ( [v_x] ^2 - [v_{0x}] ^2 ) / ( 2 [s_x] )
+x: v_x :: sqrt( [v_{0x}] ^2 + 2 [a_x] [s_x] )
 = Перемещение через среднюю скорость
 f: s_x = \frac{v_{0x} + v_x}{2}\, t
 v: s_x — проекция перемещения, м; v_{0x} — проекция начальной скорости, м/с; v_x — проекция конечной скорости, м/с; t — время, с
 w: s_x = (v_{0x} + v_x)\, t ;; s_x = \frac{v_x - v_{0x}}{2}\, t ;; s_x = \frac{v_{0x} + v_x}{2t}
 b: s_x = \frac{⟦v_{0x} + v_x⟧}{⟦2⟧}\,⟦t⟧ ;; v_x - v_{0x} ;; t^2 ;; 2t
 e: s_x :: ( [v_{0x}] + [v_x] ) / 2 * [t]
+x: t :: 2 [s_x] / ( [v_{0x}] + [v_x] )
+x: v_x :: 2 [s_x] / [t] - [v_{0x}]
 = Время падения с высоты без начальной скорости
 f: t = \sqrt{\frac{2h}{g}}
 v: t — время падения, с; h — высота, м; g — ускорение свободного падения, м/с²
 w: t = \sqrt{\frac{h}{2g}} ;; t = \frac{2h}{g} ;; t = \sqrt{2gh}
 b: t = \sqrt{\frac{⟦2h⟧}{⟦g⟧}} ;; h ;; 2g ;; gh
 e: t :: sqrt( 2 [h] / [g] )
+x: h :: [g] [t] ^2 / 2
+x: g :: 2 [h] / [t] ^2
 = Сложение скоростей
 f: \vec v = \vec v_{\text{отн}} + \vec v_{\text{пер}}
 v: \vec v — скорость тела относительно неподвижной системы отсчёта; \vec v_{\text{отн}} — скорость тела относительно подвижной системы; \vec v_{\text{пер}} — скорость подвижной системы отсчёта
 w: \vec v = \vec v_{\text{отн}} - \vec v_{\text{пер}} ;; \vec v = \vec v_{\text{отн}} \cdot \vec v_{\text{пер}} ;; \vec v = \frac{\vec v_{\text{отн}} + \vec v_{\text{пер}}}{2}
 b: \vec v = ⟦\vec v_{\text{отн}}@a⟧ + ⟦\vec v_{\text{пер}}@a⟧ ;; -\vec v_{\text{пер}} ;; 2\vec v_{\text{отн}} ;; \vec a
 e: \vec v :: [\vec v_{\text{отн}}] + [\vec v_{\text{пер}}]
+x: v_{\text{отн}} :: [v] - [v_{\text{пер}}]
+x: v_{\text{пер}} :: [v] - [v_{\text{отн}}]
+xg: v = v_{\text{отн}} + v_{\text{пер}}
 = Период и частота обращения
 f: T = \frac{1}{\nu}
 v: T — период, с; \nu — частота, Гц
 w: T = 2\pi\nu ;; T = \frac{2\pi}{\nu} ;; T = \nu^2
 b: T = \frac{⟦1⟧}{⟦\nu⟧} ;; 2\pi ;; \nu^2 ;; \omega
 e: T :: 1 / [\nu]
+x: \nu :: 1 / [T]
 = Угловая скорость
 f: \omega = \frac{2\pi}{T}
 v: \omega — угловая скорость, рад/с; T — период обращения, с
 w: \omega = 2\pi T ;; \omega = \frac{T}{2\pi} ;; \omega = \frac{\pi}{T}
 b: \omega = \frac{⟦2\pi⟧}{⟦T⟧} ;; \pi ;; \nu ;; T^2
 e: \omega :: 2 pi / [T]
+x: T :: 2 pi / [\omega]
 = Линейная скорость при движении по окружности
 f: v = \omega R
 v: v — линейная скорость, м/с; \omega — угловая скорость, рад/с; R — радиус окружности, м
 w: v = \frac{\omega}{R} ;; v = \omega R^2 ;; v = \frac{R}{\omega}
 b: v = ⟦\omega@a⟧\,⟦R@a⟧ ;; R^2 ;; \nu ;; T
 e: v :: [\omega] [R]
+x: R :: [v] / [\omega]
+x: \omega :: [v] / [R]
 = Центростремительное ускорение
 f: a_{\text{ц}} = \frac{v^2}{R}
 v: a_{\text{ц}} — центростремительное ускорение, м/с²; v — линейная скорость, м/с; R — радиус окружности, м
 w: a_{\text{ц}} = \frac{v}{R} ;; a_{\text{ц}} = v^2 R ;; a_{\text{ц}} = \frac{v^2}{2R}
 b: a_{\text{ц}} = \frac{⟦v^2⟧}{⟦R⟧} ;; v ;; 2R ;; R^2
 e: a_{\text{ц}} :: [v] ^2 / [R]
+x: R :: [v] ^2 / [a_{\text{ц}}]
+x: v :: sqrt( [a_{\text{ц}}] [R] )
 
 # 1.2 | Динамика | dyn
 = Второй закон Ньютона
@@ -376,6 +426,8 @@ v: m — масса тела, кг; \vec a — ускорение тела, м/�
 w: \vec a = m(\vec F_1 + \vec F_2 + \ldots + \vec F_n) ;; m\vec v = \vec F_1 + \vec F_2 + \ldots + \vec F_n ;; \frac{\vec a}{m} = \vec F_1 + \vec F_2 + \ldots + \vec F_n
 b: ⟦m@a⟧⟦\vec a@a⟧ = \vec F_1 + \vec F_2 + \ldots + \vec F_n ;; \vec v ;; \vec p ;; \frac{1}{2}
 e: \vec a :: [\vec F] / [m]
+x: m :: [F] / [a]
+xg: F = ma
 = Третий закон Ньютона
 f: \vec F_{12} = -\vec F_{21}
 v: \vec F_{12} — сила, с которой первое тело действует на второе, Н; \vec F_{21} — сила, с которой второе тело действует на первое, Н
@@ -388,36 +440,48 @@ v: G — гравитационная постоянная, 6,67·10⁻¹¹ Н·
 w: F = G\frac{m_1 m_2}{R} ;; F = G\frac{m_1 + m_2}{R^2} ;; F = \frac{m_1 m_2}{G R^2}
 b: F = G\frac{⟦m_1 m_2⟧}{⟦R^2⟧} ;; R ;; m_1 + m_2 ;; G
 e: F :: [G] [m_1] [m_2] / [R] ^2
+x: R :: sqrt( [G] [m_1] [m_2] / [F] )
+x: m_1 :: [F] [R] ^2 / ( [G] [m_2] )
 = Ускорение свободного падения на высоте h
 f: g = G\frac{M}{(R + h)^2}
 v: M — масса планеты, кг; R — радиус планеты, м; h — высота над поверхностью, м
 w: g = G\frac{M}{R^2 + h} ;; g = G\frac{M}{R + h} ;; g = G\frac{M h}{R^2}
 b: g = G\frac{⟦M⟧}{⟦(R + h)^2⟧} ;; R^2 + h ;; R + h ;; M h
 e: g :: [G] [M] / ( [R] + [h] ) ^2
+x: M :: [g] ( [R] + [h] ) ^2 / [G]
+x: h :: sqrt( [G] [M] / [g] ) - [R]
 = Первая космическая скорость
 f: v_1 = \sqrt{\frac{GM}{R}}
 v: v_1 — первая космическая скорость, м/с; M — масса планеты, кг; R — радиус орбиты, м
 w: v_1 = \sqrt{\frac{2GM}{R}} ;; v_1 = \frac{GM}{R} ;; v_1 = \sqrt{\frac{GM}{R^2}}
 b: v_1 = \sqrt{\frac{⟦GM⟧}{⟦R⟧}} ;; 2GM ;; R^2 ;; g
 e: v_1 :: sqrt( [G] [M] / [R] ) || sqrt( [g] [R] )
+x: M :: [v_1] ^2 [R] / [G]
+x: R :: [G] [M] / [v_1] ^2
 = Закон Гука
 f: F_{\text{упр}} = k\,|\Delta l|
 v: F_{\text{упр}} — сила упругости, Н; k — жёсткость, Н/м; \Delta l — удлинение, м
 w: F_{\text{упр}} = \frac{|\Delta l|}{k} ;; F_{\text{упр}} = \frac{k\,\Delta l^2}{2} ;; F_{\text{упр}} = k\,\Delta l^2
 b: F_{\text{упр}} = ⟦k@a⟧\,⟦|\Delta l|@a⟧ ;; \Delta l^2 ;; \frac{1}{2} ;; m
 e: F_{\text{упр}} :: [k] [\Delta l]
+x: k :: [F_{\text{упр}}] / [\Delta l]
+x: \Delta l :: [F_{\text{упр}}] / [k]
 = Сила трения скольжения
 f: F_{\text{тр}} = \mu N
 v: \mu — коэффициент трения; N — сила нормальной реакции опоры, Н
 w: F_{\text{тр}} = \frac{N}{\mu} ;; F_{\text{тр}} = \frac{\mu}{N} ;; F_{\text{тр}} = \mu N^2
 b: F_{\text{тр}} = ⟦\mu@a⟧\,⟦N@a⟧ ;; N^2 ;; \frac{1}{\mu} ;; g
 e: F_{\text{тр}} :: [\mu] [N]
+x: \mu :: [F_{\text{тр}}] / [N]
+x: N :: [F_{\text{тр}}] / [\mu]
 = Вес тела в лифте, ускорение направлено вверх
 f: P = m(g + a)
 v: P — вес тела, Н; m — масса, кг; g — ускорение свободного падения, м/с²; a — ускорение лифта, м/с²
 w: P = m(g - a) ;; P = mg ;; P = m(a - g)
 b: P = ⟦m⟧(⟦g + a⟧) ;; g - a ;; a - g ;; a
 e: P :: [m] ( [g] + [a] )
+x: a :: [P] / [m] - [g]
+x: m :: [P] / ( [g] + [a] )
 
 # 1.3 | Статика | stat
 = Момент силы
@@ -426,36 +490,48 @@ v: M — момент силы, Н·м; F — сила, Н; l — плечо с�
 w: M = \frac{F}{l} ;; M = F l^2 ;; M = \frac{l}{F}
 b: M = ⟦F@a⟧\,⟦l@a⟧ ;; l^2 ;; \frac{1}{l} ;; m
 e: M :: [F] [l]
+x: l :: [M] / [F]
+x: F :: [M] / [l]
 = Правило рычага
 f: F_1 l_1 = F_2 l_2
 v: F_1, F_2 — силы, приложенные к рычагу, Н; l_1, l_2 — плечи этих сил, м
 w: F_1 l_2 = F_2 l_1 ;; \frac{F_1}{l_1} = \frac{F_2}{l_2} ;; F_1 F_2 = l_1 l_2
 b: F_1 ⟦l_1⟧ = F_2 ⟦l_2⟧ ;; \frac{1}{l_1} ;; l_1^2 ;; F_1
 e: F_1 l_1 :: [F_2] [l_2]
+x: F_1 :: [F_2] [l_2] / [l_1]
+x: l_2 :: [F_1] [l_1] / [F_2]
 = Давление
 f: p = \frac{F}{S}
 v: p — давление, Па; F — сила давления, Н; S — площадь, м²
 w: p = F S ;; p = \frac{S}{F} ;; p = \frac{F}{S^2}
 b: p = \frac{⟦F⟧}{⟦S⟧} ;; S^2 ;; m ;; V
 e: p :: [F] / [S]
+x: S :: [F] / [p]
+x: F :: [p] [S]
 = Давление столба жидкости
 f: p = \rho g h
 v: \rho — плотность жидкости, кг/м³; g — ускорение свободного падения, м/с²; h — глубина, м
 w: p = \frac{\rho g}{h} ;; p = \rho g h^2 ;; p = \frac{\rho h}{g}
 b: p = ⟦\rho@a⟧\,⟦g@a⟧\,⟦h@a⟧ ;; h^2 ;; V ;; m
 e: p :: [\rho] [g] [h]
+x: h :: [p] / ( [\rho] [g] )
+x: \rho :: [p] / ( [g] [h] )
 = Сила Архимеда
 f: F_{\text{А}} = \rho_{\text{ж}}\, g\, V_{\text{погр}}
 v: \rho_{\text{ж}} — плотность жидкости, кг/м³; V_{\text{погр}} — объём погружённой части тела, м³
 w: F_{\text{А}} = \rho_{\text{т}}\, g\, V_{\text{т}} ;; F_{\text{А}} = \frac{\rho_{\text{ж}}\, g}{V_{\text{погр}}} ;; F_{\text{А}} = \rho_{\text{ж}}\, V_{\text{погр}}
 b: F_{\text{А}} = ⟦\rho_{\text{ж}}@a⟧\,⟦g@a⟧\,⟦V_{\text{погр}}@a⟧ ;; \rho_{\text{т}} ;; V_{\text{т}} ;; m
 e: F_{\text{А}} :: [\rho_{\text{ж}}] [g] [V_{\text{погр}}]
+x: V_{\text{погр}} :: [F_{\text{А}}] / ( [\rho_{\text{ж}}] [g] )
+x: \rho_{\text{ж}} :: [F_{\text{А}}] / ( [g] [V_{\text{погр}}] )
 = Гидравлический пресс
 f: \frac{F_1}{S_1} = \frac{F_2}{S_2}
 v: F_1, F_2 — силы, действующие на поршни, Н; S_1, S_2 — площади поршней, м²
 w: F_1 S_1 = F_2 S_2 ;; \frac{F_1}{S_2} = \frac{F_2}{S_1} ;; \frac{F_1}{S_1^2} = \frac{F_2}{S_2^2}
 b: \frac{F_1}{⟦S_1⟧} = \frac{F_2}{⟦S_2⟧} ;; F_1 ;; F_2 ;; S_1^2
 e: \dfrac{F_1}{S_1} :: [F_2] / [S_2]
+x: F_2 :: [F_1] [S_2] / [S_1]
+x: S_2 :: [F_2] [S_1] / [F_1]
 
 # 1.4 | Законы сохранения | cons
 = Импульс тела
@@ -464,72 +540,98 @@ v: \vec p — импульс, кг·м/с; m — масса, кг; \vec v — с
 w: \vec p = \frac{m\vec v^2}{2} ;; \vec p = \frac{\vec v}{m} ;; \vec p = m\vec a
 b: \vec p = ⟦m@a⟧\,⟦\vec v@a⟧ ;; \vec a ;; \frac{1}{2} ;; v^2
 e: \vec p :: [m] [\vec v]
+x: v :: [p] / [m]
+x: m :: [p] / [v]
+xg: p = mv
 = Изменение импульса
 f: \Delta\vec p = \vec F\,\Delta t
 v: \Delta\vec p — изменение импульса, кг·м/с; \vec F — сила, Н; \Delta t — время действия силы, с
 w: \Delta\vec p = \frac{\vec F}{\Delta t} ;; \Delta\vec p = \vec F\,\Delta s ;; \Delta\vec p = m\,\Delta t
 b: \Delta\vec p = ⟦\vec F@a⟧\,⟦\Delta t@a⟧ ;; \Delta s ;; m ;; \frac{1}{\Delta t}
 e: \Delta\vec p :: [\vec F] [\Delta t]
+x: F :: [\Delta p] / [\Delta t]
+x: \Delta t :: [\Delta p] / [F]
+xg: \Delta p = F\Delta t
 = Закон сохранения импульса
 f: m_1\vec v_1 + m_2\vec v_2 = m_1\vec v_1\,' + m_2\vec v_2\,'
 v: m_1, m_2 — массы тел, кг; \vec v_1, \vec v_2 — скорости до взаимодействия, м/с; \vec v_1\,', \vec v_2\,' — скорости после взаимодействия, м/с
 w: m_1\vec v_1 - m_2\vec v_2 = m_1\vec v_1\,' - m_2\vec v_2\,' ;; \frac{\vec v_1}{m_1} + \frac{\vec v_2}{m_2} = \frac{\vec v_1\,'}{m_1} + \frac{\vec v_2\,'}{m_2} ;; m_1\vec v_1 + m_2\vec v_2 = (m_1 - m_2)\,\vec v\,'
 b: m_1\vec v_1 + m_2\vec v_2 = ⟦m_1\vec v_1\,'@a⟧ + ⟦m_2\vec v_2\,'@a⟧ ;; m_1\vec v_2\,' ;; m_2\vec v_1\,' ;; (m_1 + m_2)\,\vec v_1
 e: m_1\vec v_1 + m_2\vec v_2 :: [m_1] [\vec v_1\,'] + [m_2] [\vec v_2\,']
+x: v_1' :: ( [m_1] [v_1] + [m_2] [v_2] - [m_2] [v_2'] ) / [m_1]
+xg: m_1 v_1 + m_2 v_2 = m_1 v_1' + m_2 v_2'
 = Работа силы
 f: A = F s \cos\alpha
 v: A — работа, Дж; F — сила, Н; s — модуль перемещения, м; \alpha — угол между силой и перемещением
 w: A = F s \sin\alpha ;; A = \frac{F}{s}\cos\alpha ;; A = F s \,\mathrm{tg}\,\alpha
 b: A = ⟦F@a⟧\,⟦s@a⟧\,⟦\cos\alpha@a⟧ ;; \sin\alpha ;; \mathrm{tg}\,\alpha ;; t
 e: A :: [F] [s] cos( [\alpha] )
+x: F :: [A] / ( [s] cos( [\alpha] ) )
+x: s :: [A] / ( [F] cos( [\alpha] ) )
 = Мощность
 f: N = \frac{A}{t}
 v: N — мощность, Вт; A — работа, Дж; t — время, с
 w: N = A t ;; N = \frac{t}{A} ;; N = \frac{A}{t^2}
 b: N = \frac{⟦A⟧}{⟦t⟧} ;; t^2 ;; F ;; s
 e: N :: [A] / [t]
+x: A :: [N] [t]
+x: t :: [A] / [N]
 = Мощность через силу и скорость
 f: N = F v
 v: N — мощность, Вт; F — сила тяги, Н; v — скорость, м/с
 w: N = \frac{F}{v} ;; N = \frac{F v^2}{2} ;; N = F v t
 b: N = ⟦F@a⟧\,⟦v@a⟧ ;; t ;; v^2 ;; \frac{1}{2}
 e: N :: [F] [v]
+x: v :: [N] / [F]
+x: F :: [N] / [v]
 = Кинетическая энергия
 f: E_{\text{к}} = \frac{m v^2}{2}
 v: E_{\text{к}} — кинетическая энергия, Дж; m — масса, кг; v — скорость, м/с
 w: E_{\text{к}} = m v^2 ;; E_{\text{к}} = \frac{m v}{2} ;; E_{\text{к}} = \frac{m^2 v}{2}
 b: E_{\text{к}} = \frac{⟦m v^2⟧}{⟦2⟧} ;; m v ;; m^2 v ;; 4
 e: E_{\text{к}} :: [m] [v] ^2 / 2
+x: v :: sqrt( 2 [E_{\text{к}}] / [m] )
+x: m :: 2 [E_{\text{к}}] / [v] ^2
 = Потенциальная энергия тела над землёй
 f: E_{\text{п}} = m g h
 v: E_{\text{п}} — потенциальная энергия, Дж; h — высота над нулевым уровнем, м
 w: E_{\text{п}} = \frac{m g h}{2} ;; E_{\text{п}} = \frac{m g}{h} ;; E_{\text{п}} = m g h^2
 b: E_{\text{п}} = ⟦m@a⟧\,⟦g@a⟧\,⟦h@a⟧ ;; h^2 ;; \frac{1}{2} ;; v
 e: E_{\text{п}} :: [m] [g] [h]
+x: h :: [E_{\text{п}}] / ( [m] [g] )
+x: m :: [E_{\text{п}}] / ( [g] [h] )
 = Энергия деформированной пружины
 f: E_{\text{п}} = \frac{k x^2}{2}
 v: k — жёсткость пружины, Н/м; x — деформация, м
 w: E_{\text{п}} = k x ;; E_{\text{п}} = \frac{k x}{2} ;; E_{\text{п}} = k x^2
 b: E_{\text{п}} = \frac{⟦k x^2⟧}{⟦2⟧} ;; k x ;; m x^2 ;; 4
 e: E_{\text{п}} :: [k] [x] ^2 / 2
+x: x :: sqrt( 2 [E_{\text{п}}] / [k] )
+x: k :: 2 [E_{\text{п}}] / [x] ^2
 = Теорема о кинетической энергии
 f: A = E_{\text{к}2} - E_{\text{к}1}
 v: A — работа всех сил, Дж; E_{\text{к}1}, E_{\text{к}2} — начальная и конечная кинетическая энергия, Дж
 w: A = E_{\text{к}1} - E_{\text{к}2} ;; A = E_{\text{к}1} + E_{\text{к}2} ;; A = \frac{E_{\text{к}2}}{E_{\text{к}1}}
 b: A = ⟦E_{\text{к}2}⟧ - ⟦E_{\text{к}1}⟧ ;; E_{\text{п}2} ;; E_{\text{п}1} ;; E_{\text{к}}
 e: A :: [E_{\text{к}2}] - [E_{\text{к}1}]
+x: E_{\text{к}2} :: [E_{\text{к}1}] + [A]
+x: E_{\text{к}1} :: [E_{\text{к}2}] - [A]
 = Закон сохранения механической энергии
 f: E_{\text{к}} + E_{\text{п}} = \text{const}
 v: E_{\text{к}} — кинетическая энергия, Дж; E_{\text{п}} — потенциальная энергия, Дж
 w: E_{\text{к}} - E_{\text{п}} = \text{const} ;; E_{\text{к}} \cdot E_{\text{п}} = \text{const} ;; \frac{E_{\text{к}}}{E_{\text{п}}} = \text{const}
 b: ⟦E_{\text{к}}@a⟧ + ⟦E_{\text{п}}@a⟧ = \text{const} ;; A ;; p ;; E_{\text{к}}^2
 e: E_{\text{к}1} + E_{\text{п}1} :: [E_{\text{к}2}] + [E_{\text{п}2}]
+x: E_{\text{к}2} :: [E_{\text{к}1}] + [E_{\text{п}1}] - [E_{\text{п}2}]
+xg: E_{\text{к}1} + E_{\text{п}1} = E_{\text{к}2} + E_{\text{п}2}
 = КПД механизма
 f: \eta = \frac{A_{\text{пол}}}{A_{\text{затр}}} \cdot 100\%
 v: \eta — КПД, %; A_{\text{пол}} — полезная работа, Дж; A_{\text{затр}} — затраченная работа, Дж
 w: \eta = \frac{A_{\text{затр}}}{A_{\text{пол}}} \cdot 100\% ;; \eta = \frac{A_{\text{затр}} - A_{\text{пол}}}{A_{\text{затр}}} \cdot 100\% ;; \eta = A_{\text{пол}} \cdot A_{\text{затр}} \cdot 100\%
 b: \eta = \frac{⟦A_{\text{пол}}⟧}{⟦A_{\text{затр}}⟧} \cdot 100\% ;; A_{\text{пол}} + A_{\text{затр}} ;; Q ;; N
 e: \eta :: [A_{\text{пол}}] / [A_{\text{затр}}] * [100\%] || [A_{\text{пол}}] / [A_{\text{затр}}]
+x: A_{\text{пол}} :: [\eta] [A_{\text{затр}}] / [100\%] || [\eta] [A_{\text{затр}}]
+x: A_{\text{затр}} :: [A_{\text{пол}}] * [100\%] / [\eta] || [A_{\text{пол}}] / [\eta]
 
 # 1.5 | Механические колебания и волны | osc
 = Гармонические колебания
@@ -544,49 +646,62 @@ v: \nu — частота, Гц; N — число колебаний; t — вр
 w: \nu = N t ;; \nu = \frac{t}{N} ;; \nu = \frac{2\pi N}{t}
 b: \nu = \frac{⟦N⟧}{⟦t⟧} ;; 2\pi ;; T ;; t^2
 e: \nu :: [N] / [t]
+x: N :: [\nu] [t]
+x: t :: [N] / [\nu]
 = Циклическая частота
 f: \omega = 2\pi\nu
 v: \omega — циклическая частота, рад/с; \nu — частота, Гц
 w: \omega = \frac{2\pi}{\nu} ;; \omega = \pi\nu ;; \omega = \frac{\nu}{2\pi}
 b: \omega = ⟦2\pi@a⟧\,⟦\nu@a⟧ ;; T ;; \pi ;; \frac{1}{2\pi}
 e: \omega :: 2 pi [\nu]
+x: \nu :: [\omega] / ( 2 pi )
 = Период математического маятника
 f: T = 2\pi\sqrt{\frac{l}{g}}
 v: T — период, с; l — длина нити, м; g — ускорение свободного падения, м/с²
 w: T = 2\pi\sqrt{\frac{g}{l}} ;; T = 2\pi\sqrt{\frac{m}{k}} ;; T = 2\pi\,\frac{l}{g}
 b: T = ⟦2\pi⟧\sqrt{\frac{⟦l⟧}{⟦g⟧}} ;; m ;; k ;; \pi
 e: T :: 2 pi sqrt( [l] / [g] )
+x: l :: [g] [T] ^2 / ( 4 pi ^2 )
+x: g :: 4 pi ^2 [l] / [T] ^2
 = Период пружинного маятника
 f: T = 2\pi\sqrt{\frac{m}{k}}
 v: T — период, с; m — масса груза, кг; k — жёсткость пружины, Н/м
 w: T = 2\pi\sqrt{\frac{k}{m}} ;; T = 2\pi\sqrt{\frac{l}{g}} ;; T = \frac{1}{2\pi}\sqrt{\frac{m}{k}}
 b: T = ⟦2\pi⟧\sqrt{\frac{⟦m⟧}{⟦k⟧}} ;; l ;; g ;; \frac{1}{2\pi}
 e: T :: 2 pi sqrt( [m] / [k] )
+x: m :: [k] [T] ^2 / ( 4 pi ^2 )
+x: k :: 4 pi ^2 [m] / [T] ^2
 = Максимальная скорость при колебаниях
 f: v_{\max} = \omega A
 v: v_{\max} — амплитуда скорости, м/с; \omega — циклическая частота, рад/с; A — амплитуда, м
 w: v_{\max} = \frac{A}{\omega} ;; v_{\max} = \omega^2 A ;; v_{\max} = \omega A^2
 b: v_{\max} = ⟦\omega@a⟧\,⟦A@a⟧ ;; A^2 ;; \omega^2 ;; T
 e: v_{\max} :: [\omega] [A]
+x: A :: [v_{\max}] / [\omega]
+x: \omega :: [v_{\max}] / [A]
 = Энергия пружинного маятника
 f: \frac{k A^2}{2} = \frac{m v_{\max}^2}{2}
 v: k — жёсткость, Н/м; A — амплитуда, м; m — масса груза, кг; v_{\max} — максимальная скорость, м/с
 w: k A = m v_{\max} ;; \frac{k A}{2} = \frac{m v_{\max}}{2} ;; \frac{k A^2}{2} = m v_{\max}^2
 b: \frac{⟦k A^2⟧}{2} = \frac{⟦m v_{\max}^2⟧}{2} ;; k A ;; m v_{\max} ;; m g h
 e: \dfrac{kA^2}{2} :: [m] [v_{\max}] ^2 / 2
+x: v_{\max} :: [A] sqrt( [k] / [m] )
+x: A :: [v_{\max}] sqrt( [m] / [k] )
 = Длина волны
 f: \lambda = v T
 v: \lambda — длина волны, м; v — скорость волны, м/с; T — период, с
 w: \lambda = \frac{v}{T} ;; \lambda = \frac{T}{v} ;; \lambda = v\nu
 b: \lambda = ⟦v@a⟧\,⟦T@a⟧ ;; \nu ;; \frac{1}{T} ;; t
 e: \lambda :: [v] [T]
+x: v :: [\lambda] / [T]
+x: T :: [\lambda] / [v]
 </script>
 
 <script type="text/plain" id="expl">
 @ kin-1
 p: При равномерном прямолинейном движении тело за любые равные промежутки времени совершает одинаковые перемещения. Скорость при этом постоянна.
 p: Направим ось OX вдоль движения. Проекция перемещения равна разности конечной и начальной координаты: $s_x = x - x_0$.
-fig: uniform
+fig: uniformAnim
 p: С другой стороны, при равномерном движении $s_x = v_x t$. Приравняем и выразим координату: $x = x_0 + v_x t$.
 p: Если тело движется против оси OX, то $v_x < 0$, и координата с течением времени уменьшается. Формула при этом та же.
 
@@ -602,11 +717,12 @@ p: Запишем формулу ускорения: $a_x = \dfrac{v_x - v_{0x}}
 p: Выведем из неё скорость. Умножим обе части на $t$ и перенесём $v_{0x}$: $v_x = v_{0x} + a_x t$.
 fig: vel
 p: Получается, что при равноускоренном движении скорость зависит от времени линейно, и её график является прямой.
+fig: velAnim
 p: При торможении ускорение направлено против скорости, проекция $a_x$ отрицательная, и скорость уменьшается.
 
 @ kin-4
 p: Как и при равномерном движении, площадь под графиком зависимости скорости от времени равна перемещению.
-fig: area
+fig: areaAnim
 p: Фигуру под графиком разобьём на прямоугольник и треугольник. Площадь прямоугольника $v_{0x} t$, площадь треугольника $\dfrac{1}{2}\cdot t\cdot a_x t = \dfrac{a_x t^2}{2}$.
 p: Сложим их и получим перемещение: $s_x = v_{0x} t + \dfrac{a_x t^2}{2}$.
 p: Так как $x = x_0 + s_x$, координата тела равна $x = x_0 + v_{0x} t + \dfrac{a_x t^2}{2}$.
@@ -630,7 +746,7 @@ p: Выражение $\dfrac{v_{0x} + v_x}{2}$ равно средней ско
 @ kin-7
 p: Тело падает с высоты $h$ без начальной скорости. Введём ось OY вертикально вверх, начало отсчёта поместим на уровень земли.
 p: Тогда $y_0 = h$ и $v_{0y} = 0$. Ускорение свободного падения направлено вниз, против оси, поэтому его проекция равна $-g$. Уравнение координаты: $y = h - \dfrac{g t^2}{2}$.
-fig: fall
+fig: fallAnim
 p: В момент удара о землю координата $y = 0$: $0 = h - \dfrac{g t^2}{2}$. Выразим время падения: $t = \sqrt{\dfrac{2h}{g}}$.
 p: Например, с высоты 20 м тело падает за $\sqrt{2\cdot 20 / 10} = 2$ с. На ЕГЭ берут $g = 10$ м/с².
 p: Скорость перед ударом найдём из $v_y = -g t$. По модулю $v = g t = \sqrt{2gh}$. Не путайте её со временем падения, в тестах эти формулы часто стоят рядом.
@@ -639,7 +755,7 @@ p: Этой формулы нет в кодификаторе, поэтому н
 @ kin-8
 p: Скорость тела зависит от системы отсчёта. Рассмотрим лодку, которая переплывает реку.
 p: Относительно воды лодка движется со скоростью $\vec v_{\text{отн}}$, а сама вода движется относительно берега со скоростью $\vec v_{\text{пер}}$.
-fig: boat
+fig: boatAnim
 p: Скорость лодки относительно берега равна их векторной сумме: $\vec v = \vec v_{\text{отн}} + \vec v_{\text{пер}}$. Складываем по правилу треугольника: совмещаем конец первого вектора с началом второго.
 p: Если лодка плывёт по течению, модули скоростей складываются, против течения вычитаются. Если векторы перпендикулярны, модуль находим по теореме Пифагора: $v = \sqrt{v_{\text{отн}}^2 + v_{\text{пер}}^2}$.
 p: Так же находится скорость сближения двух тел. При движении навстречу скорости складываются, при движении в одну сторону из большей скорости вычитается меньшая.
@@ -654,7 +770,7 @@ p: Частоту измеряют в герцах: 1 Гц = 1 с⁻¹. Отде
 
 @ kin-10
 p: Чтобы понять, как быстро поворачивается тело, вводят угловую скорость. Она равна углу поворота, делённому на время: $\omega = \dfrac{\varphi}{t}$, размерность рад/с.
-fig: ang
+fig: angAnim
 p: При полном обороте тело возвращается в ту же точку и поворачивается на $360^\circ$, то есть на $2\pi$ радиан. Время одного оборота равно периоду $T$.
 p: Подставим в определение: $\omega = \dfrac{2\pi}{T}$. Так как $\dfrac{1}{T} = \nu$, можно записать ещё $\omega = 2\pi\nu$.
 p: Радиан является безразмерной величиной, поэтому угловую скорость можно записывать и в с⁻¹.
@@ -665,11 +781,12 @@ p: За один оборот точка проходит длину окруж�
 fig: lin
 p: Так как $\dfrac{2\pi}{T} = \omega$, получаем $v = \omega R$.
 p: У всех точек вращающегося диска угловая скорость одинаковая. Линейная скорость тем больше, чем дальше точка от центра.
+fig: diskAnim
 p: Если две шестерёнки соединены цепью, как у велосипеда, одинаковыми будут линейные скорости, а угловые скорости будут разными.
 
 @ kin-12
 p: При равномерном движении по окружности модуль скорости не меняется, а направление меняется постоянно. Скорость всегда направлена по касательной к окружности.
-fig: cent
+fig: centAnim
 p: Направление скорости меняет центростремительное ускорение. Оно направлено к центру окружности.
 p: Его модуль равен $a_{\text{ц}} = \dfrac{v^2}{R}$. Подставим $v = \omega R$ и получим вторую форму: $a_{\text{ц}} = \omega^2 R$.
 p: Если модуль скорости тоже меняется, появляется ещё тангенциальное ускорение, направленное вдоль скорости. Полное ускорение находят по теореме Пифагора: $a = \sqrt{a_{\text{ц}}^2 + a_\tau^2}$.
@@ -706,7 +823,7 @@ p: Этой формулы нет в кодификаторе, поэтому н
 
 @ dyn-5
 p: Первая космическая скорость – скорость, с которой должно двигаться тело, чтобы стать искусственным спутником планеты.
-fig: orbit
+fig: orbitAnim
 p: Спутник движется по окружности, и на него действует только сила тяготения. Она и сообщает ему центростремительное ускорение. Запишем второй закон Ньютона: $G\dfrac{mM}{R^2} = m\dfrac{v^2}{R}$.
 p: Сократим массу спутника и один радиус, получим $v_1 = \sqrt{\dfrac{GM}{R}}$. Так как $g = G\dfrac{M}{R^2}$, можно записать и так: $v_1 = \sqrt{gR}$.
 p: Для Земли первая космическая скорость равна 7,9 км/с. Вторая космическая, с которой тело покидает Землю, равна 11,2 км/с.
@@ -722,7 +839,7 @@ p: Не путайте с энергией пружины $\dfrac{kx^2}{2}$: т�
 @ dyn-7
 p: Сила трения возникает при соприкосновении двух тел и препятствует их относительному движению.
 p: Проведём эксперимент: будем тянуть брусок динамометром, постепенно увеличивая силу. Пока брусок покоится, на него действует сила трения покоя, и она равна приложенной силе.
-fig: friction
+fig: frictionAnim
 p: Когда брусок начинает скользить, действует сила трения скольжения: $F_{\text{тр}} = \mu N$. Где $\mu$ – коэффициент трения, безразмерная величина, $N$ – сила реакции опоры.
 p: В рамках ЕГЭ максимальную силу трения покоя принимают равной силе трения скольжения, поэтому $F_{\text{тр.пок}} \le \mu N$.
 p: Обратите внимание: в формуле стоит $N$, а не $mg$. Они равны, только если тело лежит на горизонтальной поверхности и других вертикальных сил нет.
@@ -790,10 +907,11 @@ p: Умножим обе части на $\Delta t$: $\vec F\,\Delta t = m\,\Del
 fig: impulse
 p: Произведение $\vec F\,\Delta t$ называют импульсом силы. Изменение импульса тела равно импульсу силы, которая на него подействовала.
 p: Поэтому удар смягчают, увеличивая время: при том же изменении импульса сила получается меньше. Так работают подушки безопасности. По той же причине человек, приземляясь после прыжка, сгибает ноги в коленях: торможение длится дольше, и удар по ногам получается слабее.
+fig: impulseAnim
 
 @ cons-3
 p: Рассмотрим замкнутую систему тел: внешние силы на неё не действуют или скомпенсированы, и тела взаимодействуют только друг с другом.
-fig: collision
+fig: collisionAnim
 p: По третьему закону Ньютона при столкновении тела действуют друг на друга с равными и противоположными силами одно и то же время. Значит, изменения их импульсов равны по модулю и противоположны по направлению.
 p: Поэтому суммарный импульс системы не меняется: $m_1\vec v_1 + m_2\vec v_2 = m_1\vec v_1\,' + m_2\vec v_2\,'$.
 p: В задачах закон записывают в проекциях, и скорость, направленная против оси, входит со знаком минус. Если после удара тела движутся вместе, справа будет $(m_1 + m_2)\,\vec v\,'$.
@@ -835,21 +953,21 @@ p: Формула работает вблизи поверхности Земл�
 @ cons-9
 p: При растяжении пружины сила упругости меняется: $F = kx$. Поэтому работу нельзя найти просто как силу, умноженную на перемещение.
 fig: springx
-fig: springgraph
+fig: springAreaAnim
 p: Воспользуемся графиком: работа равна площади под графиком силы. Под графиком треугольник с катетами $x$ и $kx$, его площадь $\dfrac{1}{2}\cdot x\cdot kx = \dfrac{kx^2}{2}$.
 p: Эта работа запасается в пружине в виде потенциальной энергии: $E_{\text{п}} = \dfrac{kx^2}{2}$.
 p: Энергия зависит от квадрата деформации: если растянуть пружину вдвое сильнее, энергии в ней будет в 4 раза больше.
 
 @ cons-10
 p: Изменение кинетической энергии тела равно работе всех сил, которые на него действуют: $A = E_{\text{к}2} - E_{\text{к}1}$.
-fig: kinthm
+fig: kinthmAnim
 p: Вывод тот же, что и для кинетической энергии: работа постоянной силы $A = mas$, а $s = \dfrac{v_2^2 - v_1^2}{2a}$. Получаем $A = \dfrac{mv_2^2}{2} - \dfrac{mv_1^2}{2}$.
 p: Если работа положительная, тело разгоняется, если отрицательная, тормозит. Например, машина массой 1000 кг затормозила с 20 до 10 м/с. Работа всех сил $A = \dfrac{1000\cdot 10^2}{2} - \dfrac{1000\cdot 20^2}{2} = 50\,000 - 200\,000 = -150\,000$ Дж. Работа отрицательная, машина тормозит.
 p: Порядок важен: из конечной энергии вычитают начальную.
 
 @ cons-11
 p: Если на тело действуют только сила тяжести и сила упругости, а трения нет, полная механическая энергия сохраняется: $E_{\text{к}} + E_{\text{п}} = \text{const}$.
-fig: energy
+fig: energyAnim
 p: Энергия при этом переходит из одного вида в другой. Падающее тело теряет потенциальную энергию и на столько же набирает кинетическую.
 p: В задачах записывают энергию в двух точках и приравнивают: $E_{\text{к}1} + E_{\text{п}1} = E_{\text{к}2} + E_{\text{п}2}$. Например, для падения с высоты $h$: $mgh = \dfrac{mv^2}{2}$, откуда $v = \sqrt{2gh}$.
 p: Если есть трение, механическая энергия уменьшается, и часть её переходит во внутреннюю. Тогда $E_1 = E_2 + |A_{\text{тр}}|$.
@@ -890,35 +1008,35 @@ p: Связь такая же, как у угловой скорости при 
 
 @ osc-4
 p: Математический маятник – материальная точка, подвешенная на невесомой нерастяжимой нити. Модель работает, если груз мал по сравнению с длиной нити, а отклонения небольшие.
-fig: pendulum
+fig: pendanim
 p: Период малых колебаний: $T = 2\pi\sqrt{\dfrac{l}{g}}$.
 p: Масса в формулу не входит, поэтому период от неё не зависит: на нити одной длины можно качать любое тело, лёгкое или тяжёлое, и период будет одинаковым. От амплитуды он тоже не зависит, пока отклонения малы.
 p: Чем длиннее нить, тем медленнее колебания. На планете с меньшим $g$ маятник качается медленнее.
 
 @ osc-5
 p: Пружинный маятник – груз массой $m$ на пружине жёсткостью $k$. Если вывести груз из положения равновесия, сила упругости будет возвращать его обратно.
-fig: springosc | Груз колеблется между точками $-A$ и $A$ около положения равновесия.
+fig: springanim
 p: Период колебаний: $T = 2\pi\sqrt{\dfrac{m}{k}}$.
 p: Тяжёлый груз труднее разогнать и остановить, поэтому с ростом массы период растёт. Жёсткая пружина возвращает груз сильнее, поэтому с ростом жёсткости период уменьшается.
 p: Период не зависит от амплитуды и от $g$. На Луне такой маятник колебался бы с тем же периодом.
 
 @ osc-6
 p: При гармонических колебаниях $x = A\cos\omega t$ скорость тоже меняется гармонически: $v_x = -A\omega\sin\omega t$.
-fig: springosc
+fig: oscvel
 p: Синус по модулю не больше единицы, поэтому наибольшая скорость равна $v_{\max} = \omega A$.
 p: Скорость максимальна, когда тело проходит положение равновесия. В крайних точках тело на мгновение останавливается, и скорость равна нулю.
 p: Так же находится максимальное ускорение: $a_{\max} = \omega^2 A$. Оно, наоборот, наибольшее в крайних точках.
 
 @ osc-7
 p: При колебаниях пружинного маятника без трения полная механическая энергия сохраняется. Она переходит из потенциальной энергии пружины в кинетическую энергию груза и обратно.
-fig: springosc | В крайних точках вся энергия запасена в пружине, в положении равновесия вся энергия у движущегося груза.
+fig: oscen
 p: В крайнем положении груз останавливается, а деформация максимальна: $E = \dfrac{kA^2}{2}$.
 p: В положении равновесия пружина не деформирована, а скорость максимальна: $E = \dfrac{mv_{\max}^2}{2}$. Приравниваем: $\dfrac{kA^2}{2} = \dfrac{mv_{\max}^2}{2}$.
 p: Из этого равенства удобно находить максимальную скорость: $v_{\max} = A\sqrt{\dfrac{k}{m}} = \omega A$.
 
 @ osc-8
 p: Волна – колебания, которые распространяются в пространстве. Длина волны $\lambda$ – расстояние, на которое волна распространяется за один период.
-fig: wave
+fig: waveanim
 p: Волна движется с постоянной скоростью $v$, поэтому за время $T$ она проходит расстояние $\lambda = vT$.
 p: Так как $T = \dfrac{1}{\nu}$, можно записать и так: $\lambda = \dfrac{v}{\nu}$, или $v = \lambda\nu$.
 p: На рисунке длину волны удобно искать как расстояние между соседними гребнями. При переходе волны в другую среду частота не меняется, а скорость и длина волны меняются.
@@ -1025,6 +1143,8 @@ const App = (() => {
       } else if (line.startsWith('f: ')) f.f = line.slice(3);
       else if (line.startsWith('v: ')) f.v = line.slice(3).split(';').map(s => s.split(' — ').map(x => x.trim()));
       else if (line.startsWith('w: ')) f.w = line.slice(3).split(';;').map(s => s.trim());
+      else if (line.startsWith('xg: ')) f.xg = line.slice(4).trim();
+      else if (line.startsWith('x: ')) { const [tg, ans] = line.slice(3).split(' :: '); (f.x ||= []).push({ target: tg.trim(), alts: ans.split(' || ').map(x => tokenize(x)) }); }
       else if (line.startsWith('e: ')) { const [lhs, ans] = line.slice(3).split(' :: '); const alts = ans.split(' || ').map(x => tokenize(x)); f.e = { lhs: lhs.trim(), tokens: alts[0], alts }; }
       else if (line.startsWith('b: ')) {
         const [tpl, ...extra] = line.slice(3).split(';;').map(s => s.trim());
@@ -1041,9 +1161,14 @@ const App = (() => {
     return { code, title: SECTION_TITLES[code] || `Раздел ${code}`, topics, items: topics.flatMap(t => t.items) };
   });
   const UPCOMING = [
-    ['2', 'Молекулярная физика и термодинамика'],
-    ['3', 'Электродинамика'],
-    ['4', 'Квантовая физика']
+    ['2', 'МКТ'],
+    ['3', 'Термодинамика'],
+    ['4', 'Электричество'],
+    ['5', 'Магнетизм'],
+    ['6', 'Оптика'],
+    ['7', 'СТО'],
+    ['8', 'Ядерная физика'],
+    ['9', 'Квантовая физика']
   ];
 
   /* ---------- прогресс (позже: Telegram CloudStorage) ---------- */
@@ -1085,6 +1210,32 @@ const App = (() => {
     seen[id] = 1; save(); saveSeen(); saveSched();
     return { counted, due: dueAt(id) };
   };
+  /* серия дней подряд: день засчитывается, когда за него решено 5 заданий */
+  const STREAK_KEY = 'formuly.streak.v1', STREAK_MIN = 5;
+  let streak = { d: '', n: 0, best: 0, t: '', c: 0 };
+  try { streak = { ...streak, ...(JSON.parse(localStorage.getItem(STREAK_KEY) || '{}') || {}) }; } catch (e) {}
+  const saveStreak = () => { try { localStorage.setItem(STREAK_KEY, JSON.stringify(streak)); } catch (e) {} cloudQueue('k', streak); };
+  const dayKey = (off = 0) => { const d = new Date(now()); d.setDate(d.getDate() + off); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; };
+  const streakNow = () => streak.d === dayKey() || streak.d === dayKey(-1) ? streak.n : 0;
+  const doneToday = () => streak.d === dayKey();
+  const leftToday = () => Math.max(0, STREAK_MIN - (streak.t === dayKey() ? streak.c : 0));
+  let streakUp = false;                               // серия продлилась в этом раунде
+  function streakTick() {
+    const today = dayKey();
+    if (streak.t !== today) { streak.t = today; streak.c = 0; }
+    streak.c++;
+    if (streak.c >= STREAK_MIN && streak.d !== today) {
+      streak.n = streak.d === dayKey(-1) ? streak.n + 1 : 1; streak.d = today;
+      streak.best = Math.max(streak.best || 0, streak.n); streakUp = true;
+    }
+    saveStreak();
+  }
+  const daysWord = n => plural(n, 'день', 'дня', 'дней');
+  function streakLine() {
+    const n = streakNow(), left = leftToday();
+    const tail = doneToday() ? 'сегодня засчитан' : n ? `реши ещё ${left} ${plural(left, 'задание', 'задания', 'заданий')} сегодня, чтобы не прервать` : `реши ${left} ${plural(left, 'задание', 'задания', 'заданий')}, чтобы начать серию`;
+    return `<div class="streak ${n ? 'on' : ''}"><span class="fire" aria-hidden="true">🔥</span><span><b class="num">${n}</b> ${daysWord(n)} подряд<br><small>${tail}</small></span></div>`;
+  }
   /* просрочка: каждые 3 дня без повторения — минус клетка (но не ниже 1) */
   const DECAY = 3;
   let decayNotice = 0;
@@ -1139,7 +1290,7 @@ const App = (() => {
   }
   // длинная формула уменьшается, чтобы целиком влезть в карточку на узком экране
   function fitFormulas(root = $app) {
-    root.querySelectorAll('.qcard .formula, .ov-formula').forEach(el => {
+    root.querySelectorAll('.qcard .formula, .ov-formula, .solution').forEach(el => {
       el.style.fontSize = '';
       const inner = el.querySelector('.tex'); if (!inner) return;
       const cs = getComputedStyle(el);
@@ -1198,12 +1349,14 @@ const App = (() => {
         <span class="eyebrow">Физика</span>
         <h1>Формулы <i>для ЕГЭ</i></h1>
       </header>
+      ${streakLine()}
       <section class="summary">
         <div>
           <span class="eyebrow">Весь курс</span>
           <div class="big num">${pct(ALL)}%<small> освоено</small></div>
           <div class="meter"><span style="width:${pct(ALL)}%"></span></div>
           <div class="counts num">Начато ${started(ALL)} из ${total} · выучено ${done}</div>
+          ${lenChips(ALL)}
         </div>
         <button class="btn ${dueList().length ? 'btn-ghost' : 'btn-primary'}" data-go="mix-all" ${weak ? '' : 'disabled'}>Тренировка</button>
       </section>
@@ -1230,19 +1383,22 @@ const App = (() => {
     `);
     $app.querySelectorAll('[data-section]').forEach(b => b.onclick = () => section(b.dataset.section));
     const wl = $app.querySelector('[data-welcome]'); if (wl) wl.onclick = () => openWelcome();
-    const rv = $app.querySelector('[data-review]'); if (rv) rv.onclick = () => start({ pool: dueList(), mode: 'mix', label: 'Повторение', back: home });
+    const rv = $app.querySelector('[data-review]'); if (rv) rv.onclick = () => start({ pool: dueList(), mode: 'mix', label: 'Повторение', back: home, count: 20 });
+    wireLen(home);
     $app.querySelectorAll('[data-help]').forEach(b => b.onclick = openHelp);
-    $app.querySelector('[data-go="mix-all"]').onclick = () => start({ pool: ALL, mode: 'mix', label: 'Тренировка', back: home });
+    $app.querySelector('[data-go="mix-all"]').onclick = () => start({ pool: ALL, mode: 'mix', label: 'Тренировка', back: home, count: lenOf(ALL) });
     $app.querySelector('[data-reset]').onclick = openResetConfirm;
   }
 
   /* ---------- экран темы ---------- */
   const MODES = {
-    pick:  ['Найди формулу', 'Выбери верную из четырёх'],
-    name:  ['Узнай формулу', 'По формуле назови закон'],
-    gap:   ['Заполни пропуск', 'Что стоит в пустой клетке'],
-    build: ['Собери формулу', 'Расставь кусочки по местам'],
-    write: ['Напиши формулу', 'Набери формулу сам'],
+    pick:  ['Найди формулу', 'По названию выбери верную формулу из четырёх'],
+    name:  ['Узнай формулу', 'По формуле выбери, как она называется'],
+    gap:   ['Заполни пропуск', 'В формуле не хватает части – выбери, что стоит на месте вопроса'],
+    build: ['Собери формулу', 'Расставь кусочки формулы по пустым клеткам'],
+    write: ['Напиши формулу', 'Набери формулу целиком на клавиатуре, без подсказок'],
+    expr:  ['Вырази величину', 'Выведи из формулы нужную величину, как в начале решения задачи'],
+    calc:  ['Посчитай', 'Реши короткую задачу с числами. Не влияет на клетки и серию'],
     mix:   ['Тренировка', 'Всё вперемешку, слабые чаще']
   };
   function section(code) {
@@ -1258,6 +1414,7 @@ const App = (() => {
           <div class="sec-top"><b class="num">${pct(sec.items)}%</b><span class="muted">освоено</span></div>
           <div class="meter"><span style="width:${pct(sec.items)}%"></span></div>
           <div class="counts num">Начато ${started(sec.items)} из ${sec.items.length} · выучено ${learned(sec.items)}</div>
+          ${lenChips(sec.items)}
         </div>
         <button class="btn btn-primary" data-sec>Тренировка</button>
       </div>
@@ -1279,11 +1436,14 @@ const App = (() => {
     `, e => { if (e.key === 'Escape') home(); });
     $app.querySelector('[data-back]').onclick = home;
     setBack(home);
-    $app.querySelector('[data-sec]').onclick = () => start({ pool: sec.items, mode: 'mix', label: sec.title, back: () => section(code) });
+    $app.querySelector('[data-sec]').onclick = () => start({ pool: sec.items, mode: 'mix', label: sec.title, back: () => section(code), count: lenOf(sec.items) });
+    wireLen(() => section(code));
     $app.querySelectorAll('[data-topic]').forEach(b => b.onclick = () => topic(b.dataset.topic));
   }
+  let modesOpen = false;                             // раскрыт ли список режимов (на время сессии)
   function topic(id) {
     const t = TOPICS.find(x => x.id === id);
+    const modeList = ['pick', 'name', 'gap', 'build', 'write', 'expr', 'calc'].filter(m => m === 'expr' ? t.items.some(f => f.x) : m === 'calc' ? t.items.some(canCalc) : true);
     const back = () => topic(id);
     paint(`
       <div class="bar"><button class="icon-btn" data-back aria-label="Назад">${ICON.back}</button></div>
@@ -1295,7 +1455,12 @@ const App = (() => {
       </header>
       <section class="modes">
         <button class="mode primary" data-mode="mix"><b>${MODES.mix[0]}</b></button>
-        ${['pick', 'name', 'gap', 'build', 'write'].map(m => `<button class="mode" data-mode="${m}"><b>${MODES[m][0]}</b></button>`).join('')}
+        <details class="more-modes" ${modesOpen ? 'open' : ''}>
+          <summary><span>Режимы</span><small>${modeList.length} ${plural(modeList.length, 'режим', 'режима', 'режимов')}</small></summary>
+          <div class="modes-list">
+            ${modeList.map(m => `<button class="mode" data-mode="${m}"><b>${MODES[m][0]}</b><span>${MODES[m][1]}</span></button>`).join('')}
+          </div>
+        </details>
       </section>
       <section style="display:flex;flex-direction:column;gap:10px">
         <div class="section-head"><h2 class="with-help">Шпаргалка <button class="help" data-help aria-label="Что значат клетки">?</button></h2><span class="eyebrow">нажми, чтобы раскрыть</span></div>
@@ -1314,18 +1479,27 @@ const App = (() => {
     setBack(() => section(t.code.split('.')[0]));
     $app.querySelectorAll('[data-help]').forEach(b => b.onclick = openHelp);
     $app.querySelectorAll('[data-why]').forEach(b => b.onclick = () => openExpl(byId[b.dataset.why]));
-    $app.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => start({ pool: t.items, mode: b.dataset.mode, label: t.title, back }));
+    const mm = $app.querySelector('.more-modes'); if (mm) mm.addEventListener('toggle', () => { modesOpen = mm.open; });
+    $app.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { const m = b.dataset.mode, pool = m === 'expr' ? t.items.filter(f => f.x) : m === 'calc' ? t.items.filter(canCalc) : t.items; start({ pool, mode: m, label: t.title, back, count: pool.length }); });
   }
 
   /* ---------- сессия ---------- */
   let S = null;
-  const SESSION = 10;
-  function start({ pool, mode, label, back }) {
+  // длина тренировки для раздела и всего курса: выбирает ученик, запоминаем
+  const LENS = [10, 20, 30, 0];                     // 0 – все формулы
+  let lenPref = 20;
+  try { const raw = localStorage.getItem('formuly.len.v1'); if (raw !== null && LENS.includes(+raw)) lenPref = +raw; } catch (e) {}
+  const lenOf = pool => lenPref ? Math.min(lenPref, pool.length) : pool.length;
+  const lenChips = pool => `<div class="len" role="group" aria-label="Сколько заданий"><span>Заданий:</span>${LENS.filter(n => !n || n < pool.length).map(n => `<button class="${n === lenPref || (!n && lenPref >= pool.length) ? 'on' : ''}" data-len="${n}">${n || 'все ' + pool.length}</button>`).join('')}</div>`;
+  const wireLen = redraw => $app.querySelectorAll('[data-len]').forEach(b => b.onclick = () => { lenPref = +b.dataset.len; try { localStorage.setItem('formuly.len.v1', String(lenPref)); } catch (e) {} redraw(); });
+  function start({ pool, mode, label, back, count }) {
     const rank = f => { const l = lvl(f.id); if (l >= 1 && isDue(f.id)) return 0; if (l >= 1 && l < 2) return 1; if (!seen[f.id] && l === 0) return 1.5; if (l === 0) return 1; return 2.5 + l / 2; };
     const ordered = pool.map(f => ({ f, k: rank(f) + Math.random() * 1.2 })).sort((a, b) => a.k - b.k).map(x => x.f);
-    const items = shuffle(ordered.slice(0, Math.min(SESSION, pool.length)));
-    const modes = items.map(() => mode === 'mix' ? ['pick', 'name', 'gap', 'build', 'write'][Math.random() * 5 | 0] : mode);
-    S = { pool, mode, label, back, items, modes, i: 0, results: [] };
+    const n = Math.min(count || pool.length, pool.length);
+    const items = shuffle(ordered.slice(0, n));
+    const modes = items.map(f => { if (mode !== 'mix') return mode; const m = ['pick', 'name', 'gap', 'build', 'write', ...(f.x ? ['expr'] : [])]; return m[Math.random() * m.length | 0]; });
+    S = { pool, mode, label, back, count, items, modes, i: 0, results: [] };
+    streakUp = false;
     question();
   }
 
@@ -1338,8 +1512,15 @@ const App = (() => {
   }
   function wireTop() { const fn = () => S.results.length ? result() : S.back(); $app.querySelector('[data-close]').onclick = fn; setBack(fn); }
 
-  function record(f, ok) { haptic(ok ? 'ok' : 'bad'); const info = bump(f.id, ok); S.results.push({ f, ok, ...info }); }
-  const earlyNote = () => { const r = S.results[S.results.length - 1]; return r && r.ok && !r.counted ? `<span class="note">Следующая клетка — ${whenLabel(r.due)}, при повторении</span>` : ''; };
+  function record(f, ok) {
+    haptic(ok ? 'ok' : 'bad');
+    // «Посчитай» – тренировка без клеток: прогресс, сроки повторений и серию дней не трогаем
+    const calc = S.modes[S.i] === 'calc';
+    const info = calc ? { counted: true, calc: true } : bump(f.id, ok);
+    if (!calc) streakTick();
+    S.results.push({ f, ok, ...info });
+  }
+  const earlyNote = () => { const r = S.results[S.results.length - 1]; return r && r.ok && !r.counted && !r.calc ? `<span class="note">Следующая клетка — ${whenLabel(r.due)}, при повторении</span>` : ''; };
   function next() { S.i++; S.i < S.items.length ? question() : result(); }
 
   function question() {
@@ -1348,10 +1529,12 @@ const App = (() => {
     if (mode === 'gap') return qGap(f);
     if (mode === 'build') return qBuild(f);
     if (mode === 'write') return qWrite(f);
+    if (mode === 'expr') return qExpr(f);
+    if (mode === 'calc') return qCalc(f);
     return qName(f);
   }
 
-  function choice(f, { eyebrow, ask, askTex, sub, options, correct, isTex, row, note }) {
+  function choice(f, { eyebrow, ask, askTex, askHtml, sub, options, correct, isTex, row, note, solution }) {
     let picked = null;
     const render = () => {
       const done = picked !== null;
@@ -1359,6 +1542,7 @@ const App = (() => {
         <article class="qcard" style="min-height:0">
           <span class="eyebrow">${eyebrow}</span>
           ${ask ? `<div class="ask">${esc(ask)}</div>` : ''}
+          ${askHtml || ''}
           ${askTex ? `<div class="formula">${tex(askTex)}</div>` : ''}
           ${sub ? `<div class="sub">${sub}</div>` : ''}
         </article>
@@ -1371,6 +1555,7 @@ const App = (() => {
         </div>
         ${done ? `
           <div class="verdict-line"><span class="verdict ${picked === correct ? 'ok' : 'bad'}">${picked === correct ? 'Верно' : 'Ошибка — верный вариант подсвечен зелёным'}</span>${earlyNote()}</div>
+          ${solution ? `<div class="solution">${solution}</div>` : ''}
           ${afterActions(f)}` : ''}
       `, e => {
         if (!done && /^[1-4]$/.test(e.key)) pick(options[+e.key - 1]);
@@ -1397,10 +1582,12 @@ const App = (() => {
 
   /* шаблон с клетками: fill[k] — содержимое клетки или null */
   const OKC = '#2FA36B', BADC = '#E5534B';
-  function tpl(f, fill, { cur = -1, marks = null } = {}) {
+  function tpl(f, fill, { cur = -1, marks = null, plain = false } = {}) {
     let k = 0;
     return f.b.tpl.replace(/⟦[^⟧]+⟧/g, () => {
       const i = k++, c = fill[i];
+      // «Заполни пропуск»: без рамок, на месте пропуска просто вопрос
+      if (plain) return c == null ? '\\,{\\color{#4C6FFF}{?}}\\,' : `{${c}}`;
       if (c == null) return i === cur ? '\\boxed{\\,?\\,}' : '\\boxed{\\phantom{00}}';
       const col = marks ? (marks[i] ? OKC : BADC) : null;
       return col ? `\\boxed{\\color{${col}}{${c}}}` : `\\boxed{${c}}`;
@@ -1410,7 +1597,7 @@ const App = (() => {
     const sl = f.b.slots, k = Math.random() * sl.length | 0, correct = sl[k].c;
     const fill = sl.map((x, i) => i === k ? null : x.c);
     const pool = [...new Set([...f.b.extra, ...sl.map(x => x.c)])].filter(x => x !== correct);
-    choice(f, { eyebrow: `${esc(f.topic.title)} · заполни пропуск`, ask: f.n, askTex: tpl(f, fill, { cur: k }), options: shuffle([correct, ...shuffle(pool).slice(0, 3)]), correct, isTex: true });
+    choice(f, { eyebrow: `${esc(f.topic.title)} · заполни пропуск`, ask: f.n, askTex: tpl(f, fill, { cur: k, plain: true }), options: shuffle([correct, ...shuffle(pool).slice(0, 3)]), correct, isTex: true });
   }
   function checkBuild(f, fill) {
     const sl = f.b.slots, left = {};
@@ -1482,15 +1669,72 @@ const App = (() => {
     const dot = (x, y, r = 4) => `<circle cx="${x}" cy="${y}" r="${r}" class="dot"/>`;
     const axes = (w, h, top = 12, tl = true) => A(40, h, w, h) + (tl ? T(w, h + 17, 't', 'm', 'end') : '') + A(40, h, 40, top) + T(52, top + 8, 'v', 'm', 'start');
     const svg = (w, h, label, body) => `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${body}</svg>`;
-    // график x(t) с отмеченным положением тела в момент t = 0
-    const phase = (phi, lbl) => {
-      const y = x => 70 - 45 * Math.cos(2 * Math.PI * (x - 40) / 120 + phi);
-      return svg(340, 140, 'График колебаний, отмечено положение тела в момент t = 0',
-        A(40, 70, 330, 70) + T(330, 87, 't', 'm', 'end') + A(40, 130, 40, 8) + T(30, 14, 'x', 'm', 'end') +
-        L(40, 25, 320, 25, 'dash muted') + L(40, 115, 320, 115, 'dash muted') + T(28, 29, 'A', 'm', 'end') + T(28, 119, '−A', 'm', 'end') +
-        `<polyline points="${Array.from({ length: 116 }, (_, i) => { const x = 40 + i * 2.4; return `${r1(x)},${r1(y(x))}`; }).join(' ')}" class="wave"/>` +
-        dot(40, r1(y(40)), 6) + T(52, phi === 0 ? 16 : phi < 0 ? 92 : r1(y(40)) - 10, lbl, 'sm acct', 'start'));
+    // ---- анимированные рисунки: svg + anim(el) → frame(t), dur – длительность в секундах ----
+    const pts = a => a.map(([x, y]) => `${r1(x)},${r1(y)}`).join(' ');
+    // груз на вертикальной пружине и график x(t) рядом; phi – начальная фаза
+    const springGraph = (cap, phi = 0, lbl = '', bracket = false) => {
+      const y = t => 130 - 45 * Math.cos(Math.PI * t + phi);   // период 2 с, амплитуда 45
+      const X = t => 110 + 40 * t;
+      const y0 = y(0);
+      return {
+        cap, dur: 4,
+        svg: svg(340, 222, 'Анимация: груз на пружине колеблется, рядом рисуется график x(t)',
+          L(25, 12, 85, 12, 'thick') + `<polyline data-a="spring" points="" class="spring"/>` +
+          `<rect data-a="block" x="37" y="115" width="36" height="30" class="solid"/>` +
+          A(110, 212, 110, 30) + T(100, 38, 'x', 'm', 'end') + A(110, 130, 334, 130) + T(334, 148, 't', 'm', 'end') +
+          L(110, 85, 306, 85, 'dash muted') + L(110, 175, 306, 175, 'dash muted') +
+          T(312, 90, 'A', 'm', 'start') + T(312, 180, '−A', 'm', 'start') + T(104, 148, '0', 'm', 'end') +
+          (bracket ? A(150, 62, 113, 62) + A(150, 62, 187, 62) + L(190, 55, 190, 85, 'muted') + T(150, 55, 'T', 'm') : '') +
+          (lbl ? `<circle cx="110" cy="${r1(y0)}" r="7" class="ring"/>` + T(122, 36, 'при t = 0: ' + lbl, 'sm acct', 'start') : '') +
+          `<polyline data-a="graph" points="" class="wave"/>` +
+          `<line data-a="link" x1="73" y1="130" x2="110" y2="130" class="ln dash"/>` + `<circle data-a="pt" cx="110" cy="85" r="5" class="dot"/>`),
+        anim: el => {
+          const q = n => el.querySelector(`[data-a="${n}"]`);
+          const spr = q('spring'), blk = q('block'), gr = q('graph'), ln = q('link'), pt = q('pt');
+          return t => {
+            const yc = y(t), top = 12, bot = yc - 15, n = 10, step = (bot - top - 12) / n;
+            blk.setAttribute('y', r1(bot));
+            const sp = [[55, top], [55, top + 6]];
+            for (let k = 0; k < n; k++) sp.push([k % 2 ? 45 : 65, top + 6 + step * (k + 0.5)]);
+            sp.push([55, bot - 6], [55, bot]);
+            spr.setAttribute('points', pts(sp));
+            const N = Math.max(1, Math.round(t * 24)), g = [];
+            for (let k = 0; k <= N; k++) { const tt = t * k / N; g.push([X(tt), y(tt)]); }
+            gr.setAttribute('points', pts(g));
+            const gx = r1(X(t));
+            ln.setAttribute('y1', r1(yc)); ln.setAttribute('x2', gx); ln.setAttribute('y2', r1(yc));
+            pt.setAttribute('cx', gx); pt.setAttribute('cy', r1(yc));
+          };
+        }
+      };
     };
+    // груз на горизонтальной пружине: x = A cos ωt, центр груза 180 ± 75, период 3 с; extra – что дорисовать в кадре
+    const W3 = 2 * Math.PI / 3;
+    // в крайних точках и в положении равновесия кадр задерживается на 0,5 с: реальное время → время колебаний
+    const HOLD = 0.5, QUART = 0.75;
+    const warp = r => { const k = Math.floor(r / (QUART + HOLD)), rem = r - k * (QUART + HOLD); return k * QUART + Math.max(0, rem - HOLD); };
+    const hSpring = (cap, label, h, body, extra) => ({
+      cap, dur: 8 * (QUART + HOLD),
+      svg: svg(320, h, label,
+        L(20, 20, 20, 110, 'thick') + L(20, 110, 310, 110) +
+        L(105, 60, 105, 116, 'dash muted') + L(180, 60, 180, 116, 'dash muted') + L(255, 60, 255, 116, 'dash muted') +
+        T(105, 132, '−A', 'm') + T(180, 132, '0', 'm') + T(255, 132, 'A', 'm') +
+        `<polyline data-a="spring" points="" class="spring"/><rect data-a="block" x="230" y="70" width="50" height="40" class="solid"/>` + body),
+      anim: el => {
+        const q = n => el.querySelector(`[data-a="${n}"]`);
+        const spr = q('spring'), blk = q('block'), more = extra(q);
+        return r => {
+          const t = warp(r);
+          const xc = 180 + 75 * Math.cos(W3 * t), left = xc - 25, n = 12, step = (left - 36) / n;
+          blk.setAttribute('x', r1(left));
+          const sp = [[20, 90], [28, 90]];
+          for (let k = 0; k < n; k++) sp.push([28 + step * (k + 0.5), k % 2 ? 100 : 80]);
+          sp.push([left - 8, 90], [left, 90]);
+          spr.setAttribute('points', pts(sp));
+          more(t, xc);
+        };
+      }
+    });
     return {
       uniform: {
         cap: 'Тело начинает движение из точки $x_0$ и за время $t$ смещается на $v_x t$.',
@@ -1813,18 +2057,9 @@ const App = (() => {
           `<polyline points="${Array.from({ length: 121 }, (_, i) => { const x = 30 + i * 2.4; return `${r1(x)},${r1(85 - 55 * Math.cos(2 * Math.PI * (x - 30) / 120))}`; }).join(' ')}" class="wave"/>` +
           L(150, 30, 150, 14, 'muted') + L(270, 30, 270, 14, 'muted') + A(210, 18, 152, 18) + A(210, 18, 268, 18) + T(210, 12, 'T', 'm'))
       },
-      phcos: {
-        cap: 'Рисунок 1. В момент $t = 0$ тело в крайнем положении, $x = A$: $x = A\\cos\\omega t$.',
-        svg: phase(0, 'x = A')
-      },
-      phsin: {
-        cap: 'Рисунок 2. В момент $t = 0$ тело в положении равновесия, $x = 0$, и движется к $A$: $x = A\\sin\\omega t$.',
-        svg: phase(-Math.PI / 2, 'x = 0')
-      },
-      phmix: {
-        cap: 'Рисунок 3. В момент $t = 0$ тело между равновесием и крайним положением, например в точке $x = \\frac{A}{2}$: $x = A\\cos\\left(\\omega t + \\frac{\\pi}{3}\\right)$.',
-        svg: phase(Math.PI / 3, 'x = A/2')
-      },
+      phcos: springGraph('Рисунок 1. В момент $t = 0$ тело в крайнем положении, $x = A$: $x = A\\cos\\omega t$.', 0, 'x = A'),
+      phsin: springGraph('Рисунок 2. В момент $t = 0$ тело в положении равновесия, $x = 0$, и движется к $A$: $x = A\\sin\\omega t$.', -Math.PI / 2, 'x = 0'),
+      phmix: springGraph('Рисунок 3. В момент $t = 0$ тело между равновесием и крайним положением, например в точке $x = \\frac{A}{2}$: $x = A\\cos\\left(\\omega t + \\frac{\\pi}{3}\\right)$.', Math.PI / 3, 'x = A/2'),
       pendulum: {
         cap: 'Груз на нити качается около положения равновесия. При малых отклонениях период не зависит от амплитуды.',
         svg: svg(300, 190, 'Математический маятник: нить длиной l и груз',
@@ -1843,6 +2078,350 @@ const App = (() => {
           L(125, 40, 125, 110, 'dash muted') + L(175, 40, 175, 60, 'dash') + L(225, 40, 225, 110, 'dash muted') +
           T(125, 34, '−A', 'm') + T(175, 34, '0', 'm') + T(225, 34, 'A', 'm') +
           A(206, 50, 256, 50, 'acc thick') + T(262, 55, S('v', 'max'), 'm acct', 'start'))
+      },
+      springanim: springGraph('Груз колеблется между точками $A$ и $-A$ около положения равновесия $x = 0$. Справа рисуется график его координаты от времени: получается косинус с периодом $T$.', 0, '', true),
+      pendanim: {
+        cap: 'Лёгкий и тяжёлый грузы на нитях одной длины $l$ качаются синхронно: период от массы не зависит. Маятник с нитью в 4 раза длиннее качается в 2 раза медленнее, потому что $T$ растёт как $\\sqrt{l}$.',
+        dur: 4,
+        svg: svg(320, 250, 'Анимация: три маятника, два одинаковой длины с разными грузами и один длиннее',
+          L(20, 14, 300, 14, 'thick') +
+          [[50, 56], [120, 56], [225, 224]].map(([x, l], k) => L(x, 14, x, 14 + l, 'dash muted') +
+            `<line data-a="s${k}" x1="${x}" y1="14" x2="${x}" y2="${14 + l}" class="ln"/><circle data-a="b${k}" cx="${x}" cy="${14 + l}" r="${[6, 10, 8][k]}" class="solid"/>`).join('') +
+          T(42, 50, 'l', 'm', 'end') + T(112, 50, 'l', 'm', 'end') + T(217, 130, '4l', 'm', 'end')),
+        anim: el => {
+          const P = [[50, 56, 2], [120, 56, 2], [225, 224, 4]].map(([x, l, T0], k) => ({ x, l, T0, s: el.querySelector(`[data-a="s${k}"]`), b: el.querySelector(`[data-a="b${k}"]`) }));
+          return t => P.forEach(({ x, l, T0, s, b }) => {
+            const th = 0.38 * Math.cos(2 * Math.PI * t / T0), bx = r1(x + l * Math.sin(th)), by = r1(14 + l * Math.cos(th));
+            s.setAttribute('x2', bx); s.setAttribute('y2', by); b.setAttribute('cx', bx); b.setAttribute('cy', by);
+          });
+        }
+      },
+      oscvel: hSpring('Стрелка показывает скорость груза. В положении равновесия скорость наибольшая, $v_{\\max} = \\omega A$, а в крайних точках груз на мгновение останавливается.',
+        'Анимация: груз на пружине, стрелка скорости меняет длину', 140, '<g data-a="v"></g>',
+        q => { const g = q('v'); return (t, xc) => {
+          const len = -55 * Math.sin(W3 * t);
+          g.innerHTML = Math.abs(len) > 6
+            ? A(r1(xc), 55, r1(xc + len), 55, 'acc thick') + T(r1(xc + len + (len > 0 ? 7 : -7)), 60, 'v', 'm acct', len > 0 ? 'start' : 'end')
+            : T(r1(xc), 60, 'v = 0', 'sm acct');
+        }; }),
+      oscen: hSpring('Верхняя полоса – потенциальная энергия пружины, нижняя – кинетическая энергия груза. В крайних точках вся энергия в пружине, в положении равновесия вся у груза. Сумма двух полос всегда равна полной энергии $E$.',
+        'Анимация: груз на пружине, две полосы: потенциальная и кинетическая энергия', 204,
+        `<rect x="60" y="150" width="220" height="14" class="ghostb"/><rect x="60" y="176" width="220" height="14" class="ghostb"/>` +
+          L(280, 144, 280, 196, 'dash muted') + T(288, 175, 'E', 'm', 'start') +
+          `<rect data-a="ep" x="60" y="150" width="220" height="14" class="barp"/><rect data-a="ek" x="60" y="176" width="0" height="14" class="bark"/>` +
+          T(52, 162, S('E', 'п'), 'm acct', 'end') + T(52, 188, S('E', 'к'), 'm', 'end'),
+        q => { const ep = q('ep'), ek = q('ek'); return t => {
+          const w = r1(220 * Math.cos(W3 * t) ** 2);
+          ep.setAttribute('width', w); ek.setAttribute('width', r1(220 - w));
+        }; }),
+      waveanim: {
+        cap: 'За один период $T$ гребень (стрелка) смещается ровно на $\\lambda$. Точка шнура (кружок) вместе с волной не едет, а только колеблется вверх-вниз.',
+        dur: 3,
+        svg: svg(340, 160, 'Анимация: бегущая волна, гребень за период проходит длину волны',
+          L(20, 85, 320, 85, 'dash muted') + L(260, 44, 260, 126, 'dash muted') +
+          L(50, 50, 50, 20, 'muted') + L(170, 50, 170, 20, 'muted') + A(110, 24, 52, 24) + A(110, 24, 168, 24) + T(110, 16, 'λ', 'm') +
+          `<polyline data-a="wave" points="" class="wave"/><g data-a="crest"></g><circle data-a="pt" cx="260" cy="85" r="6" class="solid"/>` +
+          A(250, 146, 310, 146, 'acc') + T(280, 140, 'v', 'm acct')),
+        anim: el => {
+          const q = n => el.querySelector(`[data-a="${n}"]`), wv = q('wave'), cr = q('crest'), pt = q('pt');
+          const y = (x, t) => 85 - 35 * Math.sin(2 * Math.PI * ((x - 20) / 120 - t / 3));
+          return t => {
+            wv.setAttribute('points', pts(Array.from({ length: 151 }, (_, k) => [20 + k * 2, y(20 + k * 2, t)])));
+            const xc = r1(50 + 40 * t);
+            cr.innerHTML = A(xc, 32, xc, 45, 'acc thick');
+            pt.setAttribute('cy', r1(y(260, t)));
+          };
+        }
+      },
+      angAnim: {
+        cap: 'Точка равномерно движется по окружности, угол поворота $\\varphi$ растёт. За полный оборот тело поворачивается на $360^\\circ$, то есть на $2\\pi$ радиан, и тратит на это время $T$.',
+        dur: 4.4,
+        svg: svg(320, 190, 'Анимация: точка обходит окружность, угол поворота растёт до 2π',
+          `<path data-a="sec" d="" class="softf"/><circle cx="100" cy="95" r="65" class="ring"/>` + L(100, 95, 165, 95) +
+          `<path data-a="arc" d="" class="arc"/><line data-a="rad" x1="100" y1="95" x2="165" y2="95" class="ln"/>` + dot(100, 95, 3) +
+          `<circle data-a="pt" cx="165" cy="95" r="6" class="dot"/><text data-a="phi" x="126" y="86" text-anchor="middle" class="m">φ</text>` +
+          `<text data-a="t1" x="190" y="84" class="m acct">φ = 0°</text><text data-a="t2" x="190" y="110" class="">t = 0</text>`),
+        anim: el => {
+          const q = n => el.querySelector(`[data-a="${n}"]`), sec = q('sec'), arc = q('arc'), rad = q('rad'), pt = q('pt'), ph = q('phi'), t1 = q('t1'), t2 = q('t2');
+          return r => {
+            const f = Math.min(1, r / 4), a = 2 * Math.PI * f, x = r1(100 + 65 * Math.cos(a)), y = r1(95 - 65 * Math.sin(a));
+            const big = a > Math.PI ? 1 : 0, full = f >= 1;
+            sec.setAttribute('d', full ? 'M35,95 A65,65 0 1 0 165,95 A65,65 0 1 0 35,95 Z' : `M100,95 L165,95 A65,65 0 ${big} 0 ${x},${y} Z`);
+            arc.setAttribute('d', full ? 'M165,95 A65,65 0 1 0 35,95 A65,65 0 1 0 165,95' : `M165,95 A65,65 0 ${big} 0 ${x},${y}`);
+            rad.setAttribute('x2', x); rad.setAttribute('y2', y); pt.setAttribute('cx', x); pt.setAttribute('cy', y);
+            ph.setAttribute('x', r1(100 + 30 * Math.cos(a / 2))); ph.setAttribute('y', r1(100 - 30 * Math.sin(a / 2)));
+            t1.textContent = full ? 'φ = 360° = 2π' : `φ = ${Math.round(360 * f)}°`;
+            t2.textContent = full ? 'за время t = T' : 'идёт время t';
+          };
+        }
+      },
+      centAnim: {
+        cap: 'Модуль скорости не меняется, а направление меняется постоянно: скорость всё время по касательной. Центростремительное ускорение всё время направлено к центру окружности, то есть перпендикулярно скорости.',
+        dur: 5,
+        svg: svg(280, 200, 'Анимация: точка движется по окружности, скорость по касательной, ускорение к центру',
+          `<circle cx="120" cy="100" r="70" class="ring"/>` + dot(120, 100, 3) + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const a = Math.PI / 2 + 2 * Math.PI * r / 5, c = Math.cos(a), sn = Math.sin(a);
+            const x = 120 + 70 * c, y = 100 - 70 * sn, vx = x - 52 * sn, vy = y - 52 * c, ax = x - 38 * c, ay = y + 38 * sn;
+            const m = 15, rt = [[x - m * sn, y - m * c], [x - m * sn - m * c, y - m * c + m * sn], [x - m * c, y + m * sn]];
+            g.innerHTML = `<polyline points="${pts(rt)}" class="rt"/>` + A(r1(x), r1(y), r1(vx), r1(vy)) + A(r1(x), r1(y), r1(ax), r1(ay), 'acc') + dot(r1(x), r1(y), 6) +
+              T(r1(vx - 12 * sn), r1(vy - 12 * c + 5), 'v', 'm') + T(r1(ax - 12 * sn + 0), r1(ay - 12 * c + 5), 'a', 'm acct');
+          };
+        }
+      },
+      diskAnim: {
+        cap: 'Две точки на одном радиусе поворачиваются на один и тот же угол, поэтому угловая скорость $\\omega$ у них одинаковая. Но дальняя точка за то же время проходит дугу в 2 раза длиннее, и её скорость $v = \\omega R$ в 2 раза больше.',
+        dur: 3.5,
+        svg: svg(300, 210, 'Анимация: вращающийся диск, дальняя точка движется быстрее ближней',
+          `<circle cx="120" cy="115" r="84" class="ring"/><circle cx="120" cy="115" r="42" class="orbit"/>` + dot(120, 115, 3) +
+          L(120, 115, 204, 115, 'dash muted') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const arcP = (R, a) => `<path d="M${120 + R},115 A${R},${R} 0 ${a > Math.PI ? 1 : 0} 0 ${r1(120 + R * Math.cos(a))},${r1(115 - R * Math.sin(a))}" class="arc"/>`;
+          return r => {
+            const a = Math.max(0.001, 2 * Math.PI / 3 * Math.min(1, r / 3.5)), c = Math.cos(a), sn = Math.sin(a);
+            const P = [[84, 56, 'v₁'], [42, 28, 'v₂']];
+            g.innerHTML = arcP(84, a) + arcP(42, a) + L(120, 115, r1(120 + 84 * c), r1(115 - 84 * sn)) +
+              P.map(([R, V, lb]) => { const x = 120 + R * c, y = 115 - R * sn;
+                return A(r1(x), r1(y), r1(x - V * sn), r1(y - V * c)) + dot(r1(x), r1(y), 5) + T(r1(x - V * sn - 10 * sn), r1(y - V * c - 10 * c + 5), lb, 'm'); }).join('');
+          };
+        }
+      },
+      energyAnim: {
+        cap: 'В точке 1 тело неподвижно на высоте $h$: вся энергия потенциальная. При падении столбик $E_{\\text{п}}$ уменьшается, а $E_{\\text{к}}$ растёт. В точке 2 у земли вся энергия кинетическая. Сумма столбиков всё время равна полной энергии $E$.',
+        dur: 3.2,
+        svg: svg(320, 214, 'Анимация: тело падает, потенциальная энергия переходит в кинетическую',
+          L(20, 200, 300, 200) + L(54, 36, 110, 36, 'dash muted') + L(54, 186, 110, 186, 'dash muted') +
+          T(116, 40, 'точка 1', 'sm', 'start') + T(116, 190, 'точка 2', 'sm', 'start') +
+          `<rect x="196" y="46" width="30" height="140" class="ghostb"/><rect x="250" y="46" width="30" height="140" class="ghostb"/>` +
+          L(186, 46, 290, 46, 'dash muted') + T(296, 51, 'E', 'm', 'start') +
+          `<rect data-a="ep" x="196" y="46" width="30" height="140" class="barp"/><rect data-a="ek" x="250" y="186" width="30" height="0" class="bark"/>` +
+          T(211, 212, S('E', 'п'), 'm acct') + T(265, 212, S('E', 'к'), 'm') +
+          `<g data-a="v"></g><circle data-a="ball" cx="40" cy="36" r="8" class="solid"/>`),
+        anim: el => {
+          const q = n => el.querySelector(`[data-a="${n}"]`), ep = q('ep'), ek = q('ek'), ball = q('ball'), vg = q('v');
+          return r => {
+            const tau = Math.min(1, Math.max(0, (r - 0.8) / 1.6)), k = tau * tau, y = 36 + 150 * k;
+            ball.setAttribute('cy', r1(y));
+            ep.setAttribute('y', r1(46 + 140 * k)); ep.setAttribute('height', r1(140 * (1 - k)));
+            ek.setAttribute('y', r1(186 - 140 * k)); ek.setAttribute('height', r1(140 * k));
+            vg.innerHTML = tau > 0.12 ? A(24, r1(y + 4 - 44 * tau), 24, r1(y + 4), 'acc') + T(16, r1(y + 8 - 22 * tau), 'v', 'm acct', 'end') : '';
+          };
+        }
+      },
+      uniformAnim: {
+        cap: 'Тело движется равномерно: отметки поставлены через равные промежутки времени, и расстояния между ними одинаковые. За время $t$ тело смещается от $x_0$ на $v_x t$.',
+        dur: 4.3,
+        svg: svg(320, 120, 'Анимация: тело равномерно движется вдоль оси x',
+          A(20, 86, 306, 86) + T(306, 76, 'x', 'm', 'end') + L(40, 81, 40, 91) + T(40, 108, '0', 'm') + L(70, 81, 70, 91) + T(70, 108, S('x', '0'), 'm') +
+          `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const t = Math.min(4, r), x = 70 + 50 * t, n = Math.floor(t / 0.8 + 1e-6);
+            let h = '';
+            for (let k = 0; k <= n; k++) h += `<circle cx="${70 + 40 * k}" cy="70" r="8" class="ghost"/>` + L(70 + 40 * k, 83, 70 + 40 * k, 89, 'muted');
+            if (t >= 4) h += L(270, 81, 270, 91) + T(270, 108, 'x', 'm') + A(70, 30, 270, 30, 'acc') + L(70, 24, 70, 36, 'acc') + T(170, 21, S('v', 'x', 't'), 'm acct');
+            else h += T(300, 30, `t = ${t.toFixed(1).replace('.', ',')} с`, 'sm', 'end');
+            g.innerHTML = h + `<circle cx="${r1(x)}" cy="70" r="8" class="dot"/>`;
+          };
+        }
+      },
+      velAnim: {
+        cap: 'Тело разгоняется с постоянным ускорением: за каждую секунду скорость растёт на одну и ту же величину. Поэтому график $v_x(t)$ – прямая, которая начинается с $v_{0x}$.',
+        dur: 4.3,
+        svg: svg(320, 232, 'Анимация: тело разгоняется, стрелка скорости растёт, график скорости – прямая',
+          L(20, 60, 300, 60) + axes(305, 215, 92, false) + T(305, 232, 't', 'm', 'end') + T(34, 201, S('v', '0x'), 'm', 'end') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const V = t => 15 + 20 * t, X = t => 30 + 10 * t + 8 * t * t, gx = t => 40 + 55 * t, gy = t => 215 - 1.2 * V(t);
+          return r => {
+            const t = Math.min(4, r), N = Math.max(1, Math.round(t * 10)), line = [];
+            for (let k = 0; k <= N; k++) line.push([gx(t * k / N), gy(t * k / N)]);
+            const x = X(t), v = V(t);
+            g.innerHTML = `<rect x="${r1(x - 12)}" y="44" width="24" height="16" class="solid"/>` +
+              A(r1(x), 32, r1(x + 0.8 * v), 32, 'acc thick') + T(r1(x + 0.8 * v + 6), 37, S('v', 'x'), 'm acct', 'start') +
+              `<polyline points="${pts(line)}" class="wave"/>` + L(r1(gx(t)), 215, r1(gx(t)), r1(gy(t)), 'dash muted') + dot(r1(gx(t)), r1(gy(t)), 5);
+          };
+        }
+      },
+      fallAnim: {
+        cap: 'Положения тела через равные промежутки времени. За каждый следующий промежуток тело пролетает больше, потому что скорость растёт.',
+        dur: 2.6,
+        svg: svg(300, 200, 'Анимация: тело падает с высоты h, отметки через равные промежутки времени',
+          L(50, 20, 150, 20, 'thick') + L(30, 184, 170, 184, 'thick') + T(116, 32, S('v', '0', ' = 0'), 'm', 'start') +
+          A(200, 101, 200, 22) + A(200, 101, 200, 182) + T(212, 106, 'h', 'm', 'start') +
+          A(252, 70, 252, 120, 'acc') + T(264, 100, 'g', 'm acct', 'start') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const Y = t => 28 + 144 * (t / 2) ** 2;
+          return r => {
+            const t = Math.min(2, Math.max(0, r - 0.4)), y = Y(t);
+            let h = '';
+            for (let k = 1; k * 0.4 <= t + 1e-6 && k < 5; k++) h += `<circle cx="100" cy="${r1(Y(k * 0.4))}" r="4.5" class="ghost"/>`;
+            if (t > 0.15) h += A(82, r1(y - 34 * t / 2), 82, r1(y + 8), 'acc') + T(74, r1(y - 4), 'v', 'm acct', 'end');
+            g.innerHTML = `<circle cx="100" cy="28" r="4.5" class="ghost"/>` + h + `<circle cx="100" cy="${r1(y)}" r="6" class="dot"/>`;
+          };
+        }
+      },
+      boatAnim: {
+        cap: 'Лодка держит нос поперёк реки, но течение её сносит. Относительно берега она плывёт по диагонали со скоростью $\\vec v = \\vec v_{\\text{отн}} + \\vec v_{\\text{пер}}$.',
+        dur: 4.3,
+        svg: svg(320, 190, 'Анимация: лодка переплывает реку, течение сносит её',
+          `<rect x="10" y="20" width="300" height="150" class="water"/>` + L(10, 20, 310, 20) + L(10, 170, 310, 170) +
+          L(60, 160, 60, 24, 'dash muted') + T(66, 186, 'старт', 'sm', 'start') +
+          A(236, 150, 296, 150, 'muted') + T(266, 144, 'течение', 'sm') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const t = Math.min(4, r), x = 60 + 30 * t, y = 160 - 34 * t;
+            g.innerHTML = L(60, 160, r1(x), r1(y), 'acc') +
+              `<polygon points="${pts([[x, y - 11], [x + 6, y + 8], [x - 6, y + 8]])}" class="solid"/>` +
+              (t < 3.2 ? A(r1(x), r1(y), r1(x), r1(y - 40)) + T(r1(x - 6), r1(y - 26), S('v', 'отн'), 'm', 'end') +
+                A(r1(x), r1(y), r1(x + 35), r1(y)) + T(r1(x + 38), r1(y + 5), S('v', 'пер'), 'm', 'start') +
+                A(r1(x), r1(y), r1(x + 35), r1(y - 40), 'acc thick') + T(r1(x + 40), r1(y - 38), 'v', 'm acct', 'start') : '');
+          };
+        }
+      },
+      collisionAnim: {
+        cap: 'Шары сталкиваются и разлетаются, их скорости меняются. Но сумма импульсов $m_1\\vec v_1 + m_2\\vec v_2$ до удара и после удара одна и та же.',
+        dur: 3.5,
+        svg: svg(320, 140, 'Анимация: столкновение двух шаров',
+          L(10, 104, 310, 104) + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]'), tc = 200 / 75 - 34 / 75;
+          return r => {
+            const t = Math.min(3.5, r), after = t > tc, dt = t - tc;
+            const x1 = after ? 40 + 60 * tc - 40 * dt : 40 + 60 * t, x2 = after ? 240 - 15 * tc + 35 * dt : 240 - 15 * t;
+            const v1 = after ? -40 : 60, v2 = after ? 35 : -15, pr = after ? '′' : '';
+            const arrow = (x, y, v, lb) => A(r1(x), y, r1(x + v), y) + T(r1(x + v + (v > 0 ? 6 : -6)), y + 5, S('v', lb, pr), 'm', v > 0 ? 'start' : 'end');
+            g.innerHTML = `<circle cx="${r1(x1)}" cy="90" r="14" class="solid"/><circle cx="${r1(x2)}" cy="84" r="20" class="solid"/>` +
+              T(r1(x1), 95, S('m', '1'), 'm') + T(r1(x2), 89, S('m', '2'), 'm') +
+              arrow(x1, 56, v1, '1') + arrow(x2, 44, v2, '2') + T(160, 132, after ? 'после удара' : 'до удара', 'sm');
+          };
+        }
+      },
+      springAreaAnim: {
+        cap: 'Тянем груз вправо: пружина растягивается, и сила упругости растёт. Снизу по той же оси $x$ строится график $F_{\\text{упр}}(x)$ – прямая. Закрашенная площадь под ней – работа, в конце это треугольник с площадью $\\dfrac{kx^2}{2}$.',
+        dur: 3.8,
+        svg: svg(320, 304, 'Анимация: груз растягивает пружину, снизу строится график силы упругости и закрашивается площадь',
+          L(10, 20, 10, 90, 'thick') + L(10, 90, 315, 90) + `<rect x="95" y="62" width="30" height="28" class="ghostb"/>` + L(110, 90, 110, 118, 'dash muted') +
+          A(110, 280, 312, 280) + T(312, 298, 'x', 'm', 'end') + A(110, 280, 110, 118) + T(118, 128, S('F', 'упр'), 'm', 'start') + T(110, 298, '0', 'm') +
+          `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const f = Math.min(1, Math.max(0, (r - 0.4) / 3)), X = 110 + 180 * f, gy = 280 - 90 * f, left = X - 15, end = f >= 1;
+            const n = 12, step = (left - 18) / n, sp = [[10, 76], [14, 76]];
+            for (let k = 0; k < n; k++) sp.push([14 + step * (k + 0.5), k % 2 ? 84 : 68]);
+            sp.push([left - 4, 76], [left, 76]);
+            const fl = 8 + 60 * f;
+            g.innerHTML = `<polyline points="${pts(sp)}" class="spring"/><rect x="${r1(left)}" y="62" width="30" height="28" class="solid"/>` +
+              (f > 0.05 ? A(r1(X), 44, r1(X - fl), 44, 'acc thick') + T(r1(X - fl - 6), 49, S('F', 'упр'), 'm acct', 'end') : '') +
+              `<polygon points="${pts([[110, 280], [X, 280], [X, gy]])}" class="accf"/>` + L(110, 280, r1(X), r1(gy), 'acc thick') +
+              L(r1(X), 90, r1(X), 280, 'dash muted') + L(110, r1(gy), r1(X), r1(gy), 'dash') + dot(r1(X), r1(gy), 5) +
+              (end ? T(104, r1(gy + 5), 'kx', 'm', 'end') + T(290, 298, 'x', 'm acct') + T(236, 266, 'площадь = kx²/2', 'sm') : '');
+          };
+        }
+      },
+      frictionAnim: {
+        cap: 'Тянем брусок с растущей силой $F$. Пока он стоит, трение покоя равно $F$ и растёт вместе с ней. Когда $F$ дошла до $\\mu N$, брусок поехал, и дальше трение скольжения постоянно и равно $\\mu N$.',
+        dur: 4.2,
+        svg: svg(320, 282, 'Анимация: брусок тянут с растущей силой, сначала он стоит, потом едет; снизу график силы трения',
+          L(10, 90, 310, 90) + A(40, 262, 300, 262) + T(300, 280, 'F', 'm', 'end') + A(40, 262, 40, 120) + T(50, 128, S('F', 'тр'), 'm', 'start') +
+          `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const t = Math.max(0, r - 0.3), q = Math.min(1.5, t < 2 ? t / 2 : 1 + (t - 2) / 3), slip = q >= 1, fr = Math.min(1, q);
+            const xb = 60 + (slip ? 60 * ((t - 2) / 1.5) ** 2 : 0), line = [[40, 262]];
+            const gx = v => 40 + 150 * v, gy = v => 262 - 90 * Math.min(1, v);
+            if (q > 0) { line.push([gx(Math.min(1, q)), gy(q)]); if (slip) line.push([gx(q), gy(q)]); }
+            g.innerHTML = `<rect x="${r1(xb)}" y="62" width="40" height="28" class="solid"/>` +
+              (q > 0.04 ? A(r1(xb + 40), 76, r1(xb + 44 + 44 * q), 76) + T(r1(xb + 50 + 44 * q), 81, 'F', 'm', 'start') +
+                A(r1(xb), 85, r1(xb - 4 - 44 * fr), 85, 'acc') + T(r1(xb - 10 - 44 * fr), 82, S('F', 'тр'), 'm acct', 'end') : '') +
+              (slip ? L(40, 172, 285, 172, 'dash muted') + T(34, 176, 'μN', 'm', 'end') + L(190, 262, 190, 172, 'dash muted') + T(190, 280, 'поехал', 'sm') : '') +
+              `<polyline points="${pts(line)}" class="wave"/>` + dot(r1(gx(q)), r1(gy(q)), 5) +
+              T(300, 30, slip ? 'скольжение' : 'покой', 'sm acct', 'end');
+          };
+        }
+      },
+      orbitAnim: {
+        cap: 'Спутник летит по окружности. Скорость всё время направлена по касательной, а сила тяготения – к центру планеты. Она и сообщает спутнику центростремительное ускорение.',
+        dur: 5,
+        svg: svg(300, 210, 'Анимация: спутник летит по орбите, сила тяготения направлена к центру',
+          `<circle cx="130" cy="105" r="36" class="planet"/><circle cx="130" cy="105" r="78" class="orbit"/>` + T(130, 110, 'M', 'm') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const a = Math.PI / 2 + 2 * Math.PI * r / 5, c = Math.cos(a), sn = Math.sin(a), x = 130 + 78 * c, y = 105 - 78 * sn;
+            const m = 12, rt = [[x - m * sn, y - m * c], [x - m * sn - m * c, y - m * c + m * sn], [x - m * c, y + m * sn]];
+            g.innerHTML = L(130, 105, r1(x), r1(y), 'dash muted') + T(r1(130 + 43 * c + 12 * sn), r1(105 - 43 * sn + 12 * c + 5), 'R', 'm') +
+              `<polyline points="${pts(rt)}" class="rt"/>` + A(r1(x), r1(y), r1(x - 52 * sn), r1(y - 52 * c)) + A(r1(x), r1(y), r1(x - 28 * c), r1(y + 28 * sn), 'acc') +
+              T(r1(x - 64 * sn), r1(y - 64 * c + 5), 'v', 'm') + T(r1(x - 24 * c - 13 * sn), r1(y + 24 * sn - 13 * c + 5), 'F', 'm acct') + dot(r1(x), r1(y), 6);
+          };
+        }
+      },
+      areaAnim: {
+        cap: 'Идёт время, и под графиком скорости закрашивается площадь – это перемещение. Она складывается из прямоугольника $v_{0x}t$ и треугольника $\\dfrac{a_x t^2}{2}$.',
+        dur: 3.6,
+        svg: svg(320, 190, 'Анимация: под графиком скорости закрашивается площадь',
+          axes(305, 165, 12, false) + L(40, 120, 260, 50, 'muted') + T(34, 124, S('v', '0x'), 'm', 'end') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const f = Math.min(1, Math.max(0, (r - 0.3) / 3)), X = 40 + 220 * f, Y = 120 - 70 * f, end = f >= 1;
+            g.innerHTML = `<rect x="40" y="120" width="${r1(X - 40)}" height="45" class="softf"/><polygon points="${pts([[40, 120], [X, 120], [X, Y]])}" class="accf"/>` +
+              L(40, 120, r1(X), r1(Y), 'acc thick') + L(r1(X), 165, r1(X), r1(Y), 'dash') + dot(r1(X), r1(Y), 5) +
+              (end ? T(150, 148, S('v', '0x', 't'), 'm') + T(205, 111, S('a', 'x', 't²/2'), 'm') + T(268, 90, S('a', 'x', 't'), 'm', 'start') + T(260, 182, 't', 'm') : '');
+          };
+        }
+      },
+      impulseAnim: {
+        cap: 'Одинаковые мячи падают на пол и на подушку, и их импульс меняется одинаково. На подушке торможение длится дольше, поэтому сила удара меньше. Площади под графиками $F(t)$ равны – это $\\Delta p = F\\Delta t$.',
+        dur: 3.5,
+        svg: svg(320, 290, 'Анимация: мяч падает на пол и на подушку, снизу графики силы от времени с равными площадями',
+          L(20, 120, 150, 120, 'thick') + L(170, 120, 300, 120, 'thick') + T(85, 140, 'пол', 'sm') + T(235, 140, 'подушка', 'sm') +
+          [30, 180].map(x0 => A(x0, 262, x0 + 118, 262) + T(x0 + 118, 280, 't', 'm', 'end') + A(x0, 262, x0, 160) + T(x0 + 8, 168, 'F', 'm', 'start')).join('') +
+          `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const tf = 0.9, t = Math.max(0, r - 0.3), fall = Math.min(1, t / tf), ti = Math.max(0, t - tf);
+            const yFall = 28 + 62 * fall * fall;
+            const d1 = Math.min(1, ti / 0.4), d2 = Math.min(1, ti / 1.6);
+            const y1 = t < tf ? yFall + 20 : 110, sink = 12 * (1 - (1 - d2) ** 2), y2 = t < tf ? Math.min(84, yFall) : 84 + sink;
+            const pillowTop = t < tf ? 94 : 94 + sink;
+            const on1 = ti > 0 && d1 < 1, on2 = ti > 0 && d2 < 1;
+            g.innerHTML = `<rect x="195" y="${r1(pillowTop)}" width="80" height="${r1(120 - pillowTop)}" rx="6" class="softf"/>` +
+              `<circle cx="85" cy="${r1(y1)}" r="10" class="solid"/><circle cx="235" cy="${r1(y2)}" r="10" class="solid"/>` +
+              (on1 ? A(60, 112, 60, 40, 'acc thick') + T(52, 60, 'F', 'm acct', 'end') : '') +
+              (on2 ? A(210, r1(y2 + 8), 210, r1(y2 - 12), 'acc thick') + T(202, r1(y2), 'F', 'm acct', 'end') : '') +
+              (ti > 0 ? `<rect x="34" y="182" width="${r1(24 * d1)}" height="80" class="accf"/><rect x="184" y="245" width="${r1(112 * d2)}" height="17" class="accf"/>` : '') +
+              (d2 >= 1 ? T(240, 240, 'Δp', 'm acct') + T(46, 226, 'Δp', 'm acct') : '');
+          };
+        }
+      },
+      kinthmAnim: {
+        cap: 'Сила $F$ разгоняет тело с $v_1$ до $v_2$. Внизу полоса кинетической энергии: серая часть – $E_{\\text{к}1}$, синяя – то, что добавила работа силы. Итог: $E_{\\text{к}2} = E_{\\text{к}1} + A$.',
+        dur: 3.4,
+        svg: svg(320, 176, 'Анимация: тело разгоняется под действием силы, кинетическая энергия растёт на величину работы',
+          L(10, 100, 310, 100) + `<rect x="30" y="70" width="40" height="30" class="ghostb"/>` +
+          `<rect x="60" y="130" width="200" height="14" class="ghostb"/><rect x="60" y="130" width="52" height="14" class="bark"/>` +
+          T(52, 142, S('E', 'к'), 'm', 'end') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const t = Math.min(3, Math.max(0, r - 0.3)), x = 30 + 45 * t + 7.2 * t * t, v = 45 + 14.4 * t, w = 200 * v * v / 7744, end = t >= 3;
+            g.innerHTML = `<rect x="${r1(x)}" y="70" width="40" height="30" class="solid"/>` +
+              A(r1(x + 40), 85, r1(x + 76), 85) + T(r1(x + 58), 79, 'F', 'm') +
+              A(r1(x + 6), 52, r1(x + 6 + 0.7 * v), 52, 'acc') + T(r1(x + 12 + 0.7 * v), 57, 'v', 'm acct', 'start') +
+              `<rect x="112" y="130" width="${r1(w - 52)}" height="14" class="barp"/>` +
+              (end ? T(86, 164, S('E', 'к1'), 'sm') + T(186, 164, 'A', 'm acct') + A(50, 116, 254, 116, 'muted') + T(152, 112, 's', 'm') : '');
+          };
+        }
       },
       wave: {
         cap: 'Длина волны – расстояние между соседними гребнями. Это расстояние волна проходит за один период.',
@@ -1873,6 +2452,31 @@ const App = (() => {
     ov.remove(); ov = null; document.body.style.overflow = '';
     const b = $app.querySelector('[data-expl]'); if (b) b.focus({ preventScroll: true });
   }
+  // анимированные рисунки: при открытии пояснения проигрываются один раз, кнопка «Ещё раз» запускает заново
+  function startAnims(root) {
+    root.querySelectorAll('figure[data-anim]').forEach(fig => {
+      const el = fig.querySelector('svg'), btn = fig.querySelector('[data-anim-toggle]');
+      const def = FIG[fig.dataset.anim], frame = def.anim(el), dur = def.dur;
+      const still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let t0 = null, running = false;
+      btn.textContent = '↻ Ещё раз';
+      const loop = now => {
+        if (!el.isConnected) { running = false; return; }
+        if (t0 === null) t0 = now;
+        const t = Math.min(dur, (now - t0) / 1000);
+        frame(t);
+        if (t < dur) requestAnimationFrame(loop); else running = false;
+      };
+      const play = () => { if (still) { frame(dur); return; } t0 = null; if (!running) { running = true; requestAnimationFrame(loop); } };
+      frame(still ? dur : 0);
+      btn.addEventListener('click', play);
+      // запускается, когда рисунок прокрутили в зону видимости
+      if (window.IntersectionObserver) {
+        const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); play(); } }, { threshold: 0.6 });
+        io.observe(fig);
+      } else play();
+    });
+  }
   function openExpl(f) {
     if (ov) return; const ex = EXPL[f.id] || [];
     ov = document.createElement('div');
@@ -1886,13 +2490,14 @@ const App = (() => {
         <div class="ov-formula">${tex(f.f)}</div>
         ${legend(f).replace('class="legend"', 'class="legend ov-legend"')}
         ${ex.map(b => b.fig && FIG[b.fig]
-          ? `<figure class="fig">${FIG[b.fig].svg}<figcaption>${inline(b.cap || FIG[b.fig].cap)}</figcaption></figure>`
+          ? `<figure class="fig"${FIG[b.fig].anim ? ` data-anim="${b.fig}"` : ''}>${FIG[b.fig].svg}${FIG[b.fig].anim ? '<button class="anim-btn" data-anim-toggle></button>' : ''}<figcaption>${inline(b.cap || FIG[b.fig].cap)}</figcaption></figure>`
           : `<p>${inline(b.p || '')}</p>`).join('')}
         <button class="btn btn-primary" data-ov-close>Понятно</button>
       </div>`;
     document.body.appendChild(ov);
     document.body.style.overflow = 'hidden';
     typeset(ov);
+    startAnims(ov);
     ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('[data-ov-close]')) closeExpl(); });
     ov.querySelector('.icon-btn').focus({ preventScroll: true });
   }
@@ -2011,7 +2616,7 @@ const App = (() => {
   function toTex(n) {
     switch (n.k) {
       case 'atom': return `{${n.tex}}`;
-      case 'num': return String(n.v);
+      case 'num': return String(n.v).replace('.', '{,}');
       case 'pi': return '\\pi';
       case 'hole': return '\\boxed{\\phantom{0}}';
       case 'neg': return '-' + toTex(n.a);
@@ -2134,21 +2739,136 @@ const App = (() => {
     return renderList(ed.root, [], showCaret && !active);
   }
 
+  const atomsIn = toks => [...new Set(toks.filter(t => t.t === 'atom').map(t => t.tex))];
   function qWrite(f) {
-    const answers = f.e.alts.map(t => parseExpr(t).tree);
-    const mine = atomsOf(f);
+    writeTask(f, { kind: 'напиши формулу', ask: `<div class="ask">${esc(f.n)}</div>`, lhs: f.e.lhs, alts: f.e.alts, answer: tex(f.f), mine: atomsOf(f) });
+  }
+  // «Вырази величину»: из формулы выразить одну из величин
+  function qExpr(f) {
+    const x = f.x[Math.random() * f.x.length | 0];
+    writeTask(f, {
+      kind: 'вырази величину', lhs: x.target, alts: x.alts, mine: atomsIn(x.alts[0]),
+      ask: `<div class="ask">Вырази ${tex(x.target)}</div><div class="given">${tex(f.xg || f.f)}</div>`,
+      answer: tex(`${x.target} = ${toTex(parseExpr(x.alts[0]).tree)}`)
+    });
+  }
+  /* ---------- «Посчитай»: задача с числами, ответ из четырёх вариантов ---------- */
+  const stripVec = t => t.replace(/\\vec\s*/g, '').replace(/\\,'/g, "'").trim();
+  const UNIT_OK = u => u && u.length <= 10 && !/\s/.test(u);
+  const legendOf = f => {
+    const m = {};
+    for (const [sym, desc] of f.v || []) {
+      if (!desc) continue;
+      const k = desc.lastIndexOf(', '), unit = k >= 0 ? desc.slice(k + 2).trim() : '', mean = k >= 0 && UNIT_OK(unit) ? desc.slice(0, k) : desc;
+      const many = sym.split(', ');
+      for (const one of many) m[stripVec(one)] = { unit: UNIT_OK(unit) ? unit : null, mean, bare: /коэффициент|число/.test(desc), multi: many.length > 1 };
+    }
+    return m;
+  };
+  let UNITS = null;
+  const unitMap = () => {
+    if (UNITS) return UNITS;
+    UNITS = { g: { unit: 'м/с²', mean: 'ускорение свободного падения' }, m: { unit: 'кг', mean: 'масса' } };
+    for (const f of ALL) for (const [k, v] of Object.entries(legendOf(f))) if (v.unit && !UNITS[k]) UNITS[k] = v;
+    return UNITS;
+  };
+  const infoOf = (f, sym) => { const own = legendOf(f)[sym]; if (own && (own.unit || own.bare)) return { unit: own.unit || '', mean: own.multi ? '' : own.mean }; const g = unitMap()[sym]; return g ? { unit: g.unit, mean: own ? (own.multi ? '' : own.mean) : g.multi ? '' : g.mean } : null; };
+  const calcTasks = f => {
+    const out = [];
+    const add = (target, toks) => {
+      if (toks.some(t => t.t === 'pi' || (t.t === 'fn' && t.name !== 'sqrt') || (t.t === 'atom' && /^G$|100\\%/.test(t.tex)))) return;
+      const tg = stripVec(target), atoms = atomsIn(toks);
+      if (!infoOf(f, tg) || atoms.some(a => !infoOf(f, stripVec(a)))) return;
+      out.push({ target: tg, toks, atoms });
+    };
+    if (f.e && /^[^\s+]+$/.test(f.e.lhs) && !/dfrac/.test(f.e.lhs)) add(f.e.lhs, f.e.alts[0]);
+    for (const x of f.x || []) add(x.target, x.alts[0]);
+    return out;
+  };
+  const canCalc = f => calcTasks(f).length > 0;
+  const NICE = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50];
+  // правдоподобные значения величин (сначала «тема:символ», потом просто символ)
+  const RANGE = {
+    m: [0.5, 1, 2, 3, 4, 5, 10, 20], m_1: [1, 2, 3, 4, 5], m_2: [1, 2, 3, 4, 5],
+    v: [2, 3, 4, 5, 6, 8, 10, 15, 20], v_x: [5, 10, 15, 20, 30], 'v_{0x}': [0, 2, 4, 5, 10], v_1: [2, 4, 6], v_2: [1, 2, 3], "v_2'": [1, 2, 3],
+    a: [1, 2, 3, 4, 5], a_x: [1, 2, 3, 4, 5], 'a_{\\text{ц}}': [2, 4, 5, 8, 10],
+    t: [2, 3, 4, 5, 10], '\\Delta t': [0.1, 0.2, 0.5, 1, 2], x_0: [0, 5, 10, 20],
+    h: [5, 10, 20, 45, 80], R: [0.5, 1, 2, 4, 5, 10], F: [10, 20, 40, 50, 100, 200], 'F_{\\text{упр}}': [2, 4, 5, 10, 20], 'F_{\\text{тр}}': [2, 4, 5, 10, 20],
+    '\\Delta l': [0.02, 0.04, 0.05, 0.1, 0.2], k: [50, 100, 200, 400, 500, 1000], '\\mu': [0.1, 0.2, 0.3, 0.4, 0.5], N: [10, 20, 40, 50, 100],
+    S: [0.01, 0.02, 0.05, 0.1, 0.2, 0.5], S_1: [0.01, 0.02, 0.05], S_2: [0.5, 1, 2], F_1: [10, 20, 50, 100], F_2: [100, 200, 500, 1000],
+    l: [0.2, 0.4, 0.5, 1, 2], l_1: [0.2, 0.5, 1, 2], l_2: [0.5, 1, 2, 4], '\\rho': [800, 1000], '\\rho_{\\text{ж}}': [800, 1000], 'V_{\\text{погр}}': [0.001, 0.002, 0.005, 0.01, 0.02],
+    p: [2, 4, 5, 10, 20], '\\Delta p': [2, 4, 5, 10, 20], s: [2, 5, 10, 20, 50], A: [100, 200, 400, 500, 1000], 'E_{\\text{к}}': [10, 20, 40, 50, 100, 200], 'E_{\\text{п}}': [10, 20, 40, 50, 100, 200],
+    'E_{\\text{к}1}': [10, 20, 50], 'E_{\\text{к}2}': [60, 80, 100, 150], 'E_{\\text{п}1}': [50, 100, 150], 'E_{\\text{п}2}': [0, 10, 20],
+    '\\omega': [2, 3, 4, 5, 10], T: [0.5, 1, 2, 4, 5], '\\nu': [0.5, 1, 2, 4, 5, 10], '\\lambda': [1, 2, 4, 5, 10], 'v_{\\max}': [1, 2, 3, 4, 5],
+    'cons:x': [0.02, 0.04, 0.05, 0.1, 0.2], 'osc:A': [0.02, 0.05, 0.1, 0.2], 'osc:N': [10, 20, 30, 50], 'osc:t': [5, 10, 20, 30], 'osc:m': [0.1, 0.2, 0.4, 0.5, 1],
+    'stat:p': [1000, 2000, 5000, 10000, 20000], 'stat:M': [2, 5, 10, 20, 50], 'kin:x': [10, 20, 30, 50, 100], 'kin:\\Delta v': [2, 4, 5, 10], 'dyn:P': [100, 200, 500, 800]
+  };
+  const rangeOf = (f, sym) => RANGE[`${f.topic.id}:${sym}`] || RANGE[sym] || NICE;
+  const isNice = v => isFinite(v) && v >= 0.01 && v < 1e6 && Math.abs(v * 100 - Math.round(v * 100)) < 1e-6;
+  const fmtN = v => { const r = Math.round(v * 1e4) / 1e4, [i, d] = String(r).split('.'); return (i.length > 4 ? i.replace(/\B(?=(\d{3})+$)/g, ' ') : i) + (d ? ',' + d : ''); };
+  const fmtT = v => fmtN(v).replace(',', '{,}').replace(/ /g, '\\,');
+  const withUnit = (v, u) => u ? `${fmtT(v)}\\ \\text{${u}}` : fmtT(v);
+  // типичные ошибки: перевёрнутая дробь, забытый квадрат или корень, потерянная двойка
+  function mistakes(tree) {
+    const res = [];
+    const walk = (n, repl) => {
+      if (!n || typeof n !== 'object') return;
+      if (n.k === 'bin' && n.op === '/') res.push(repl({ ...n, a: n.b, b: n.a }));
+      if (n.k === 'bin' && (n.op === '/' || n.op === '*' || n.op === 'imp')) res.push(repl({ ...n, op: n.op === '/' ? '*' : '/' }));
+      if (n.k === 'sq') res.push(repl(n.a));
+      if (n.k === 'fn' && n.name === 'sqrt') res.push(repl(n.a));
+      if (n.k === 'num' && n.v === 2) res.push(repl({ k: 'num', v: 1 }));
+      if (n.k === 'bin' && (n.op === '+' || n.op === '-')) res.push(repl({ ...n, op: n.op === '+' ? '-' : '+' }));
+      for (const key of ['a', 'b']) if (n[key]) walk(n[key], x => repl({ ...n, [key]: x }));
+    };
+    walk(tree, x => x);
+    return res;
+  }
+  function makeCalc(f) {
+    const tasks = calcTasks(f);
+    for (let tries = 0; tries < 400; tries++) {
+      const c = tasks[Math.random() * tasks.length | 0], tree = parseExpr(c.toks).tree, vals = {};
+      for (const a of c.atoms) { const sy = stripVec(a), r = sy === 'g' ? [10] : rangeOf(f, sy); vals[a] = r[Math.random() * r.length | 0]; }
+      const ans = evalExpr(tree, a => vals[a]);
+      if (!isNice(ans)) continue;
+      const key = v => Math.round(v * 100);
+      const wrong = [...new Set(mistakes(tree).map(t => evalExpr(t, a => vals[a])).filter(v => isNice(v) && key(v) !== key(ans)).map(key))].map(k => k / 100);
+      for (const m of [2, 0.5, 4, 0.25, 10, 0.1, 3]) { const v = ans * m; if (isNice(v) && key(v) !== key(ans) && !wrong.some(w => key(w) === key(v))) wrong.push(v); }
+      if (wrong.length < 3) continue;
+      return { ...c, tree, vals, ans, wrong: shuffle(wrong.slice(0, 5)).slice(0, 3) };
+    }
+    return null;
+  }
+  function qCalc(f) {
+    const t = makeCalc(f);
+    if (!t) return qPick(f);
+    const info = a => infoOf(f, stripVec(a)), tu = infoOf(f, t.target).unit;
+    const given = t.atoms.map(a => tex(`${stripVec(a)} = ${withUnit(t.vals[a], info(a).unit)}`)).join('<span class="sep">,</span> ');
+    const sub = n => n.k === 'atom' ? { k: 'num', v: t.vals[n.tex] } : Object.fromEntries(Object.entries(n).map(([k, v]) => [k, k === 'op' && v === 'imp' ? '*' : v && typeof v === 'object' ? sub(v) : v]));
+    const clean = n => n.k === 'atom' ? { ...n, tex: stripVec(n.tex) } : Object.fromEntries(Object.entries(n).map(([k, v]) => [k, v && typeof v === 'object' ? clean(v) : v]));
+    const correct = withUnit(t.ans, tu);
+    choice(f, {
+      eyebrow: `${esc(f.topic.title)} · посчитай <span class="nocells">без клеток и серии</span>`,
+      askHtml: `<div class="ask">Найди ${tex(t.target)}${infoOf(f, t.target).mean ? ` <span class="mean">– ${esc(infoOf(f, t.target).mean)}</span>` : ''}</div><div class="given-vals"><span class="lbl">Дано:</span> ${given}</div>`,
+      options: shuffle([correct, ...t.wrong.map(v => withUnit(v, tu))]), correct, isTex: true,
+      solution: tex(`${t.target} = ${toTex(clean(t.tree))} = ${toTex(sub(t.tree))} = ${correct}`)
+    });
+  }
+  function writeTask(f, { kind, ask, lhs, alts, answer, mine }) {
+    const answers = alts.map(t => parseExpr(t).tree);
     const low = new Set(mine.map(a => a.toLowerCase()));
     // не подмешиваем ту же букву в другом регистре (m и M), чтобы не путать, какую брать
     const pool = [...new Set(f.topic.items.filter(x => x !== f).flatMap(atomsOf))].filter(a => !low.has(a.toLowerCase()));
     const atoms = shuffle([...mine, ...shuffle(pool).slice(0, 3)]);
-    const fns = [...new Set(f.e.tokens.filter(t => t.t === 'fn' && t.name !== 'sqrt').map(t => t.name))];
+    const fns = [...new Set(alts[0].filter(t => t.t === 'fn' && t.name !== 'sqrt').map(t => t.name))];
+    const nums = [...new Set([1, 2, ...alts[0].filter(t => t.t === 'num').map(t => t.v)])].sort((a, b) => a - b);
     if (fns.includes('cos')) fns.push('sin');
     const KEYS = [
       ...atoms.map(a => ({ tok: { t: 'atom', tex: a }, label: tex(a), cls: 'var' })),
       { tok: { t: 'op', v: '+' }, label: '+' }, { tok: { t: 'op', v: '-' }, label: '−' }, { tok: { t: 'op', v: '*' }, label: tex('\\cdot') },
       { act: 'frac', label: tex('\\frac{\\square}{\\square}') }, { tok: { t: 'sq' }, label: tex('\\square^2') },
       { tok: { t: 'lp' }, label: '(' }, { tok: { t: 'rp' }, label: ')', id: 'rp' }, { act: 'sqrt', label: tex('\\sqrt{\\square}') },
-      { tok: { t: 'num', v: 1 }, label: '1' }, { tok: { t: 'num', v: 2 }, label: '2' }, { tok: { t: 'pi' }, label: tex('\\pi') },
+      ...nums.map(v => ({ tok: { t: 'num', v }, label: String(v) })), { tok: { t: 'pi' }, label: tex('\\pi') },
       ...fns.map(n => ({ act: 'fn:' + n, label: tex(`\\${n}`) }))
     ];
     const ed = makeEditor();
@@ -2161,13 +2881,13 @@ const App = (() => {
       const hint = done ? '' : ed.hint();
       paint(`${top()}
         <article class="qcard" style="min-height:0">
-          <span class="eyebrow">${esc(f.topic.title)} · напиши формулу</span>
-          <div class="ask">${esc(f.n)}</div>
-          <div class="formula write-line">${tex(`${f.e.lhs} = ${body}`)}</div>
+          <span class="eyebrow">${esc(f.topic.title)} · ${kind}</span>
+          ${ask}
+          <div class="formula write-line">${tex(`${lhs} = ${body}`)}</div>
           ${hint ? `<p class="hint">${hint}</p>` : ''}
         </article>
         ${done ? `
-          <div class="verdict-line"><span class="verdict ${ok ? 'ok' : 'bad'}">${ok ? 'Верно' : 'Ошибка. Правильно так:'}</span>${ok ? earlyNote() : `<span class="tex-inline">${tex(f.f)}</span>`}</div>
+          <div class="verdict-line"><span class="verdict ${ok ? 'ok' : 'bad'}">${ok ? 'Верно' : 'Ошибка. Правильно так:'}</span>${ok ? earlyNote() : `<span class="tex-inline">${answer}</span>`}</div>
           ${afterActions(f)}` : `
           <div class="kb">
             ${KEYS.map((k, i) => `<button class="key ${k.cls || ''}" data-k="${i}" data-key="${esc(k.tok ? (k.tok.tex || k.tok.v || k.tok.t) : k.act)}" ${k.id === 'rp' && !ed.openParens() ? 'disabled' : ''}>${k.label}</button>`).join('')}
@@ -2220,13 +2940,14 @@ const App = (() => {
   /* ---------- результат ---------- */
   function result() {
     const r = S.results, ok = r.filter(x => x.ok).length, miss = r.filter(x => !x.ok);
-    const note = !r.length ? '' : ok === r.length ? 'Чисто! Эти формулы будут попадаться реже.' : ok / r.length >= .7 ? 'Хорошо. Ошибки ниже — повтори их ещё раз.' : 'Нормально для начала. Ошибки будут попадаться чаще, пока не запомнишь.';
+    const note = !r.length ? '' : S.mode === 'calc' ? 'Режим «Посчитай» тренирует расчёты и не меняет клетки прогресса и серию дней.' : ok === r.length ? 'Чисто! Эти формулы будут попадаться реже.' : ok / r.length >= .7 ? 'Хорошо. Ошибки ниже — повтори их ещё раз.' : 'Нормально для начала. Ошибки будут попадаться чаще, пока не запомнишь.';
     paint(`
       <div class="bar"><span class="title">${esc(S.label)}</span></div>
       <section class="result">
         <span class="eyebrow">Результат</span>
         <div class="score num">${ok}<small> / ${r.length}</small></div>
         <p class="muted" style="margin:0; max-width:34ch">${note}</p>
+        ${streakUp ? `<p class="streak-up">🔥 ${streakNow()} ${daysWord(streakNow())} подряд${streakNow() > 1 ? ' — серия продолжается!' : ' — серия началась!'}</p>` : !doneToday() && r.length && S.mode !== 'calc' ? `<p class="muted" style="margin:0">Ещё ${leftToday()} ${plural(leftToday(), 'задание', 'задания', 'заданий')} сегодня — и день засчитается в серию.</p>` : ''}
         ${(() => { const d = dueList().length; if (d) return `<p class="muted" style="margin:0">На повторение ещё ${plural(d, 'ждёт', 'ждут', 'ждут')} ${d} ${plural(d, 'формула', 'формулы', 'формул')}.</p>`; const tm = ALL.filter(f => lvl(f.id) >= 1 && whenLabel(dueAt(f.id)) === 'завтра').length; return tm ? `<p class="muted" style="margin:0">Завтра на повторение: ${tm} ${plural(tm, 'формула', 'формулы', 'формул')}.</p>` : ''; })()}
       </section>
       ${miss.length ? `
@@ -2284,11 +3005,13 @@ const App = (() => {
 
   /* ---------- запуск ---------- */
   function boot() {
-    cloudLoad(['p', 's', 'd', 'o'], data => {
+    cloudLoad(['p', 's', 'd', 'o', 'k'], data => {
       const has = o => o && typeof o === 'object' && Object.keys(o).length;
       if (has(data.p)) { progress = data.p; seen = has(data.s) ? data.s : seen; sched = has(data.d) ? data.d : sched; try { localStorage.setItem(KEY, JSON.stringify(progress)); localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); localStorage.setItem(SCHED_KEY, JSON.stringify(sched)); } catch (e) {} }
       else if (Object.keys(progress).length) { cloudQueue('p', progress); cloudQueue('s', seen); cloudQueue('d', sched); }
       if (data.o) onboarded = true;
+      if (data.k && typeof data.k === 'object' && (data.k.n || 0) >= (streak.n || 0) && data.k.d) { streak = { ...streak, ...data.k }; try { localStorage.setItem(STREAK_KEY, JSON.stringify(streak)); } catch (e) {} }
+      else if (streak.d) cloudQueue('k', streak);
       home();
       syncTheme();
       if (inTg) { try { tg.onEvent('themeChanged', () => { syncTheme(); }); } catch (e) {} }
