@@ -1,0 +1,2098 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Формулы по физике</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{
+  --paper:#F5F7FB; --grid:rgba(47,85,212,.075); --card:#FFFFFF; --ink:#162033; --ink-2:#5A6480; --ink-3:#8A93AB;
+  --line:#DDE2EE; --accent:#2F55D4; --accent-ink:#FFFFFF; --accent-soft:#E7ECFD;
+  --ok:#1C8A5B; --ok-soft:#E1F3EA; --bad:#CF3A31; --bad-soft:#FBE8E6; --cell:#E3E8F3;
+  --shadow:0 1px 2px rgba(22,32,51,.06),0 6px 20px rgba(22,32,51,.06);
+  --display:"Unbounded","Onest",system-ui,sans-serif;
+  --body:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#10131A; --grid:rgba(124,155,255,.055); --card:#181C27; --ink:#E8EBF4; --ink-2:#A0A8BE; --ink-3:#6C7590;
+    --line:#272D3C; --accent:#7F9CFF; --accent-ink:#0D1230; --accent-soft:#1E2747;
+    --ok:#4FC48C; --ok-soft:#14291F; --bad:#FF6F66; --bad-soft:#36191A; --cell:#262C3B;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#10131A; --grid:rgba(124,155,255,.055); --card:#181C27; --ink:#E8EBF4; --ink-2:#A0A8BE; --ink-3:#6C7590;
+  --line:#272D3C; --accent:#7F9CFF; --accent-ink:#0D1230; --accent-soft:#1E2747;
+  --ok:#4FC48C; --ok-soft:#14291F; --bad:#FF6F66; --bad-soft:#36191A; --cell:#262C3B;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  margin:0; background-color:var(--paper); color:var(--ink); font:16px/1.45 var(--body);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px; -webkit-tap-highlight-color:transparent;
+}
+#app{max-width:540px; margin:0 auto; padding-inline:16px; padding-block:18px 40px; display:flex; flex-direction:column; gap:22px}
+button{font:inherit; color:inherit; cursor:pointer; border:0; background:none}
+button:focus-visible,summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:10px}
+h1,h2,h3{margin:0; text-wrap:balance}
+.eyebrow{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); font-weight:600}
+.muted{color:var(--ink-2)}
+.num{font-variant-numeric:proportional-nums}
+
+/* top bar */
+.bar{display:flex; align-items:center; gap:10px; min-height:40px}
+.icon-btn{width:40px; height:40px; border-radius:12px; display:grid; place-items:center; background:var(--card); border:1px solid var(--line); flex:none}
+.icon-btn svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.bar .title{font-weight:600; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+
+/* home */
+.brand{display:flex; flex-direction:column; gap:6px}
+.brand h1{font-family:var(--display); font-weight:700; font-size:30px; letter-spacing:-.01em; line-height:1.1}
+.brand h1 i{font-style:normal; color:var(--accent)}
+.summary{display:grid; grid-template-columns:1fr; gap:14px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow:var(--shadow)}
+.summary .big{font-family:var(--display); font-size:26px; font-weight:700; line-height:1}
+.summary .big small{font-size:14px; color:var(--ink-3); font-weight:500}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:46px; padding:10px 16px; border-radius:12px; font-weight:600}
+.btn-primary{background:var(--accent); color:var(--accent-ink)}
+.btn-ghost{background:var(--card); border:1px solid var(--line)}
+.btn-bad{background:var(--bad-soft); color:var(--bad)}
+.btn-ok{background:var(--ok); color:#fff}
+.btn:disabled{opacity:.45; cursor:default}
+
+.section-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px}
+.section-head h2{font-family:var(--display); font-size:17px; font-weight:500}
+.topics{display:flex; flex-direction:column; gap:8px}
+.topic{display:grid; grid-template-columns:44px 1fr auto; gap:12px; align-items:center; width:100%; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px}
+.topic:hover{border-color:var(--accent)}
+.topic .code{width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:var(--accent-soft); color:var(--accent); font-size:15px; font-weight:700; letter-spacing:-.02em; font-variant-numeric:proportional-nums}
+.topic .name{font-weight:600}
+.topic .meta{font-size:13px; color:var(--ink-2)}
+.topic .pct{font-size:14px; font-weight:600; color:var(--ink-2)}
+.meter{display:block; height:4px; border-radius:4px; background:var(--cell); overflow:hidden; margin-top:8px}
+.meter > span{display:block; height:100%; background:var(--accent); border-radius:4px; transition:width .4s}
+.locked{border-style:dashed; background:transparent; color:var(--ink-3); cursor:default}
+.locked .code{color:var(--ink-3); background:transparent; border:1px dashed var(--line)}
+.foot{display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; font-size:13px; color:var(--ink-3)}
+.link{color:var(--ink-2); text-decoration:underline; text-underline-offset:3px; padding:4px 0}
+
+/* topic screen */
+.topic-head{display:flex; flex-direction:column; gap:6px}
+.topic-head h1{font-family:var(--display); font-size:26px; font-weight:700; line-height:1.15}
+.modes{display:flex; flex-direction:column; gap:8px}
+.mode{display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px}
+.mode:hover{border-color:var(--accent)}
+.mode b{font-weight:600}
+.mode span{font-size:13px; color:var(--ink-2); text-align:right}
+.mode.primary{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); padding-block:16px}
+.mode.primary span{color:inherit; opacity:.8}
+.mode.idea{background:transparent; border-style:dashed; flex-direction:column; align-items:flex-start; gap:3px; cursor:default}
+.mode.idea:hover{border-color:var(--line)}
+.mode.idea span{text-align:left}
+.chip{font-style:normal; font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:var(--ok-soft); color:var(--ok); padding:2px 7px; border-radius:6px; margin-left:8px; vertical-align:2px}
+.qcard .sub{font-size:17px; color:var(--ink-2); text-align:center}
+.qcard .sub .tex{color:var(--ink); font-size:20px}
+.options.row{flex-direction:row}
+.options.row .opt{justify-content:center; font-weight:600}
+.note{font-size:14px; color:var(--ink-2)}
+.tiles{display:flex; flex-wrap:wrap; gap:8px; justify-content:center}
+.tile{min-width:56px; min-height:52px; padding:8px 14px; background:var(--card); border:1.5px solid var(--line); border-radius:12px; font-size:19px; display:inline-flex; align-items:center; justify-content:center}
+.tile:hover:not(:disabled){border-color:var(--accent)}
+.tile:disabled{opacity:.25; cursor:default}
+.sheet{display:flex; flex-direction:column; background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden}
+.sheet details + details{border-top:1px solid var(--line)}
+.sheet summary{list-style:none; display:grid; grid-template-columns:1fr auto; gap:6px 12px; padding:14px 16px; cursor:pointer}
+.sheet summary::-webkit-details-marker{display:none}
+.sheet .fname{font-size:14px; color:var(--ink-2)}
+.sheet .fbody{grid-column:1 / -1; overflow-x:auto; overflow-y:hidden; font-size:18px; padding-block:2px}
+.legend{margin:0; padding:0 16px 14px; list-style:none; display:flex; flex-direction:column; gap:6px; font-size:14px; color:var(--ink-2)}
+.legend li{display:flex; gap:8px; align-items:baseline}
+.legend li .tex{color:var(--ink); flex:none; min-width:34px}
+
+/* level cells */
+.cells{display:inline-flex; gap:3px; align-items:center}
+.cells i{width:9px; height:9px; border-radius:2px; background:var(--cell)}
+.cells i.on{background:var(--accent)}
+.cells.l5 i.on{background:var(--ok)}
+
+/* session */
+.progress{flex:1; height:6px; border-radius:6px; background:var(--cell); overflow:hidden}
+.progress span{display:block; height:100%; background:var(--accent); transition:width .3s}
+.count{font-size:14px; color:var(--ink-2); min-width:44px; text-align:right}
+.qcard{background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:22px 20px; display:flex; flex-direction:column; gap:14px; min-height:230px}
+.qcard .ask{font-family:var(--display); font-size:21px; font-weight:500; line-height:1.3}
+.qcard .formula{font-size:26px; text-align:center; overflow-x:auto; overflow-y:hidden; padding-block:14px; min-height:84px; display:flex; align-items:center; justify-content:center}
+.qcard .hint{margin-top:auto; font-size:13px; color:var(--ink-3); text-align:center}
+.reveal{display:flex; flex-direction:column; gap:12px; border-top:1px dashed var(--line); padding-top:14px; animation:rise .25s ease-out}
+.reveal .legend{padding:0}
+.options{display:flex; flex-direction:column; gap:8px}
+.opt{display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:12px 14px; min-height:60px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .k{flex:none; width:24px; height:24px; border-radius:7px; background:var(--cell); display:grid; place-items:center; font-size:12px; font-weight:600; color:var(--ink-2)}
+.opt .tex{flex:1; min-width:0; font-size:19px; overflow-x:auto; overflow-y:hidden; padding-block:4px; text-align:left}
+.opt.text{font-weight:500}
+.opt.right{border-color:var(--ok); background:var(--ok-soft)}
+.opt.right .k{background:var(--ok); color:#fff}
+.opt.wrong{border-color:var(--bad); background:var(--bad-soft)}
+.opt.wrong .k{background:var(--bad); color:#fff}
+.opt:disabled{cursor:default}
+.opt.dim{opacity:.55}
+.verdict{font-weight:600}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
+.verdict-line{display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px 12px; padding:4px 0; text-align:center}
+.verdict-line .tex-inline{font-size:20px; overflow-x:auto; overflow-y:hidden; max-width:100%}
+.ov-legend{padding:0 4px}
+.actions{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.actions.one{grid-template-columns:1fr}
+
+/* result */
+.result{display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding-block:10px}
+.result .score{font-family:var(--display); font-size:56px; font-weight:700; line-height:1}
+.result .score small{font-size:22px; color:var(--ink-3)}
+.missed{display:flex; flex-direction:column; gap:8px}
+.missed .row{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--bad); border-radius:12px; padding:12px 14px; display:flex; flex-direction:column; gap:4px}
+.missed .row .tex{font-size:18px; overflow-x:auto; overflow-y:hidden; padding-block:4px}
+
+.confirm{display:inline-flex; gap:10px; align-items:center}
+.tex mjx-container{margin:0 !important}
+.tex svg{overflow:visible}
+.raw{font-family:ui-monospace,Menlo,monospace; font-size:.8em}
+
+/* пояснение */
+.ov{position:fixed; inset:0; z-index:50; background:rgba(8,11,20,.55); display:flex; align-items:flex-end; justify-content:center; padding-top:env(safe-area-inset-top, 0px)}
+.ov-card{width:100%; max-width:560px; max-height:92%; overflow-y:auto; overscroll-behavior:contain; background:var(--card); color:var(--ink); border-radius:22px 22px 0 0; padding:18px 16px; padding-bottom:calc(18px + env(safe-area-inset-bottom, 0px)); display:flex; flex-direction:column; gap:14px; animation:up .25s ease-out}
+.ov-card > *{flex-shrink:0}
+.ov-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px}
+.ov-head h2{font-family:var(--display); font-size:20px; font-weight:500; line-height:1.25; margin-top:4px}
+.ov-formula{font-size:24px; text-align:center; padding:12px; background:var(--accent-soft); border-radius:14px; overflow-x:auto; overflow-y:hidden}
+.ov-card p{margin:0; line-height:1.6; max-width:62ch}
+.ov-card p .tex{font-size:1.06em}
+.fig{margin:0; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:8px}
+.fig > svg{display:block; width:100%; max-width:420px; height:auto; margin:0 auto; color:var(--ink); overflow:visible}
+.fig figcaption{font-size:13.5px; line-height:1.5; color:var(--ink-2)}
+.fig > svg text{fill:currentColor; font:13px var(--body)}
+.fig > svg text.m{font-family:"Times New Roman",Georgia,serif; font-style:italic; font-size:16px}
+.fig > svg text.sm{font-size:11.5px}
+.fig > svg text.acct{fill:var(--accent)}
+.fig > svg .sb{font-size:11px}
+.fig > svg .ln{stroke:currentColor; stroke-width:1.5}
+.fig > svg .ah{fill:currentColor}
+.fig > svg .ln.acc{stroke:var(--accent)} .fig > svg .ah.acc{fill:var(--accent)}
+.fig > svg .ln.muted{stroke:var(--ink-3)} .fig > svg .ah.muted{fill:var(--ink-3)}
+.fig > svg .ln.thick{stroke-width:2.5}
+.fig > svg .ln.dash{stroke-dasharray:4 4; stroke-width:1.2}
+.fig > svg .dot{fill:var(--accent)}
+.fig > svg .ghost{fill:none; stroke:var(--ink-3); stroke-width:1.5; stroke-dasharray:3 3}
+.fig > svg .softf{fill:var(--accent-soft)}
+.fig > svg .accf{fill:var(--accent); opacity:.3}
+.fig > svg .ring{fill:none; stroke:currentColor; stroke-width:1.5}
+.fig > svg .arc{fill:none; stroke:var(--accent); stroke-width:3.5}
+.fig > svg .seg{fill:var(--accent-soft); stroke:currentColor; stroke-width:1.2}
+.fig > svg .seg.first{fill:var(--accent); fill-opacity:.35}
+.fig > svg .block{fill:var(--accent-soft); stroke:currentColor; stroke-width:1.5}
+.fig > svg .planet{fill:var(--accent-soft); stroke:currentColor; stroke-width:1.5}
+.fig > svg .orbit{fill:none; stroke:var(--ink-3); stroke-width:1.2; stroke-dasharray:4 4}
+.fig > svg .spring{fill:none; stroke:currentColor; stroke-width:1.6; stroke-linejoin:round}
+.fig > svg .cab{fill:none; stroke:currentColor; stroke-width:2}
+.fig > svg .rt{fill:none; stroke:var(--accent); stroke-width:1.2}
+.fig > svg .water{fill:var(--accent-soft)}
+.fig > svg .piston{fill:currentColor}
+.fig > svg .arcthin{fill:none; stroke:currentColor; stroke-width:1.2}
+.fig > svg .ghostb{fill:none; stroke:var(--ink-3); stroke-width:1.5; stroke-dasharray:4 3}
+.fig > svg .barp{fill:var(--accent)}
+.fig > svg .bark{fill:var(--ink-3)}
+.fig > svg .lossf{fill:var(--bad); opacity:.35}
+.fig > svg .wave{fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linejoin:round}
+.kb{display:grid; grid-template-columns:repeat(5, 1fr); gap:6px}
+.key{min-height:50px; padding:4px; border-radius:11px; background:var(--card); border:1px solid var(--line); font-size:19px; font-weight:500; display:flex; align-items:center; justify-content:center; overflow:hidden}
+.key.var{background:var(--accent-soft); border-color:transparent; font-size:20px}
+.key:active:not(:disabled){transform:scale(.96)}
+.key:disabled{opacity:.35; cursor:default}
+.key.del{grid-column:span 2; font-size:20px}
+.key .tex svg{max-width:100%}
+.write-line{min-height:96px; font-size:24px}
+.sum-top{display:flex; align-items:center; gap:10px}
+.help{flex:none; width:26px; height:26px; border-radius:50%; border:1px solid var(--line); background:var(--card); color:var(--ink-2); font-size:13px; font-weight:700; display:inline-grid; place-items:center; font-family:var(--body)}
+.help:hover{border-color:var(--accent); color:var(--accent)}
+.with-help{display:inline-flex; align-items:center; gap:8px}
+.counts{display:flex; flex-wrap:wrap; gap:4px 14px; margin-top:10px; font-size:13px; color:var(--ink-2)}
+.counts i{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px}
+.c-done{background:var(--ok)} .c-prog{background:var(--accent)} .c-new{background:var(--cell)}
+.help-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
+.help-list li{display:flex; align-items:center; gap:12px; font-size:15px}
+.help-list .cells{flex:none}
+.sec{display:flex; flex-direction:column; gap:10px}
+.topic .soon{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)}
+.sec-card{display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px}
+.sec-top{display:flex; align-items:baseline; gap:6px}
+.sec-top b{font-family:var(--display); font-size:20px; font-weight:700}
+.sec-top .muted{font-size:14px}
+.sec-card .counts{margin-top:8px}
+.summary .eyebrow{display:block; margin-bottom:6px}
+@media (max-width:480px){ .sec-card{grid-template-columns:1fr} .sec-card .btn{width:100%} }
+.review{display:grid; grid-template-columns:1fr; gap:12px; background:var(--card); border:1px dashed var(--line); border-radius:16px; padding:16px}
+.review.hot{border:1.5px solid var(--accent); background:var(--accent-soft)}
+.rv-big{font-family:var(--display); font-size:26px; font-weight:700; line-height:1.1; margin-top:6px}
+.rv-big small{font-family:var(--body); font-size:14px; font-weight:500; color:var(--ink-2)}
+.rv-text{margin:6px 0 0; color:var(--ink-2); font-size:15px}
+.rv-help{justify-self:start; font-size:13px}
+.due-note{padding:0 16px 10px; font-size:13px; color:var(--accent)}
+.steps{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:0; border:1px solid var(--line); border-radius:12px; overflow:hidden}
+.steps li{display:grid; grid-template-columns:110px 1fr; gap:10px; padding:10px 12px; font-size:14.5px}
+.steps li + li{border-top:1px solid var(--line)}
+.steps b{font-weight:600}
+.steps span{color:var(--ink-2)}
+.verdict-line .note{flex-basis:100%; font-size:13px}
+.testbox{display:flex; flex-direction:column; gap:8px; border:1.5px dashed var(--bad); border-radius:14px; padding:14px; font-size:14px}
+.testbox .eyebrow{color:var(--bad)}
+.testbtns{display:flex; flex-wrap:wrap; gap:8px}
+.testbtns .btn{min-height:40px; padding:6px 12px; font-size:14px}
+.rv-warn{margin:0; font-size:13px; color:var(--ink-2)}
+.rv-lost{margin:0; padding:10px 12px; border-radius:10px; background:var(--bad-soft); color:var(--bad); font-size:14px; font-weight:500}
+.welcome h2{font-family:var(--display); font-size:22px; font-weight:700}
+.welcome p{margin:0}
+.dots{display:flex; gap:6px; justify-content:center; padding-top:4px}
+.dots i{width:7px; height:7px; border-radius:50%; background:var(--cell)}
+.dots i.on{background:var(--accent)}
+html.tg .bar:has(> [data-back]:only-child){display:none}
+html.tg [data-back]{display:none}
+.why{padding:0 16px 14px}
+@keyframes up{from{transform:translateY(24px); opacity:0} to{transform:none; opacity:1}}
+@keyframes rise{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important} }
+@media (max-width:380px){ .qcard .formula{font-size:22px} }
+</style>
+
+
+</head>
+<body>
+<div id="app" aria-live="polite"></div>
+
+<script type="text/plain" id="data">
+# 1.1 | Кинематика | kin
+= Координата при равномерном движении
+f: x = x_0 + v_x t
+v: x — координата тела, м; x_0 — начальная координата, м; v_x — проекция скорости, м/с; t — время, с
+w: x = x_0 + \frac{v_x}{t} ;; x = x_0 t + v_x ;; x = x_0 + \frac{v_x t^2}{2}
+b: x = ⟦x_0@a⟧ + ⟦v_x t@a⟧ ;; v_x t^2 ;; \frac{v_x}{t} ;; x_0 t
+e: x :: [x_0] + [v_x] [t]
+= Ускорение
+f: \vec a = \frac{\Delta \vec v}{\Delta t}
+v: \vec a — ускорение, м/с²; \Delta \vec v — изменение скорости, м/с; \Delta t — промежуток времени, с
+w: \vec a = \frac{\Delta t}{\Delta \vec v} ;; \vec a = \frac{\Delta \vec r}{\Delta t} ;; \vec a = \Delta \vec v \cdot \Delta t
+b: \vec a = \frac{⟦\Delta \vec v⟧}{⟦\Delta t⟧} ;; \Delta \vec r ;; \Delta t^2 ;; \vec v
+e: \vec a :: [\Delta \vec v] / [\Delta t]
+= Скорость при равноускоренном движении
+f: v_x = v_{0x} + a_x t
+v: v_x — проекция скорости в момент t, м/с; v_{0x} — проекция начальной скорости, м/с; a_x — проекция ускорения, м/с²; t — время, с
+w: v_x = v_{0x} + \frac{a_x t^2}{2} ;; v_x = v_{0x} t + a_x ;; v_x = \frac{v_{0x} + a_x}{t}
+b: v_x = ⟦v_{0x}@a⟧ + ⟦a_x t@a⟧ ;; \frac{a_x t^2}{2} ;; a_x ;; v_{0x} t
+e: v_x :: [v_{0x}] + [a_x] [t]
+= Координата при равноускоренном движении
+f: x = x_0 + v_{0x} t + \frac{a_x t^2}{2}
+v: x_0 — начальная координата, м; v_{0x} — проекция начальной скорости, м/с; a_x — проекция ускорения, м/с²; t — время, с
+w: x = x_0 + v_{0x} t + a_x t^2 ;; x = x_0 + v_{0x} t + \frac{a_x t}{2} ;; x = x_0 t + v_{0x} + \frac{a_x t^2}{2}
+b: x = x_0 + ⟦v_{0x} t@a⟧ + ⟦\frac{a_x t^2}{2}@a⟧ ;; a_x t^2 ;; \frac{a_x t}{2} ;; v_{0x}
+e: x :: [x_0] + [v_{0x}] [t] + [a_x] [t] ^2 / 2
+= Перемещение без времени
+f: s_x = \frac{v_x^2 - v_{0x}^2}{2 a_x}
+v: s_x — проекция перемещения, м; v_x — проекция конечной скорости, м/с; v_{0x} — проекция начальной скорости, м/с; a_x — проекция ускорения, м/с²
+w: s_x = \frac{v_x - v_{0x}}{2 a_x} ;; s_x = \frac{v_x^2 - v_{0x}^2}{a_x} ;; s_x = \frac{2 a_x}{v_x^2 - v_{0x}^2}
+b: s_x = \frac{⟦v_x^2 - v_{0x}^2⟧}{⟦2 a_x⟧} ;; v_x - v_{0x} ;; a_x ;; 2 a_x t
+e: s_x :: ( [v_x] ^2 - [v_{0x}] ^2 ) / ( 2 [a_x] )
+= Перемещение через среднюю скорость
+f: s_x = \frac{v_{0x} + v_x}{2}\, t
+v: s_x — проекция перемещения, м; v_{0x} — проекция начальной скорости, м/с; v_x — проекция конечной скорости, м/с; t — время, с
+w: s_x = (v_{0x} + v_x)\, t ;; s_x = \frac{v_x - v_{0x}}{2}\, t ;; s_x = \frac{v_{0x} + v_x}{2t}
+b: s_x = \frac{⟦v_{0x} + v_x⟧}{⟦2⟧}\,⟦t⟧ ;; v_x - v_{0x} ;; t^2 ;; 2t
+e: s_x :: ( [v_{0x}] + [v_x] ) / 2 * [t]
+= Время падения с высоты без начальной скорости
+f: t = \sqrt{\frac{2h}{g}}
+v: t — время падения, с; h — высота, м; g — ускорение свободного падения, м/с²
+w: t = \sqrt{\frac{h}{2g}} ;; t = \frac{2h}{g} ;; t = \sqrt{2gh}
+b: t = \sqrt{\frac{⟦2h⟧}{⟦g⟧}} ;; h ;; 2g ;; gh
+e: t :: sqrt( 2 [h] / [g] )
+= Сложение скоростей
+f: \vec v = \vec v_{\text{отн}} + \vec v_{\text{пер}}
+v: \vec v — скорость тела относительно неподвижной системы отсчёта; \vec v_{\text{отн}} — скорость тела относительно подвижной системы; \vec v_{\text{пер}} — скорость подвижной системы отсчёта
+w: \vec v = \vec v_{\text{отн}} - \vec v_{\text{пер}} ;; \vec v = \vec v_{\text{отн}} \cdot \vec v_{\text{пер}} ;; \vec v = \frac{\vec v_{\text{отн}} + \vec v_{\text{пер}}}{2}
+b: \vec v = ⟦\vec v_{\text{отн}}@a⟧ + ⟦\vec v_{\text{пер}}@a⟧ ;; -\vec v_{\text{пер}} ;; 2\vec v_{\text{отн}} ;; \vec a
+e: \vec v :: [\vec v_{\text{отн}}] + [\vec v_{\text{пер}}]
+= Период и частота обращения
+f: T = \frac{1}{\nu}
+v: T — период, с; \nu — частота, Гц
+w: T = 2\pi\nu ;; T = \frac{2\pi}{\nu} ;; T = \nu^2
+b: T = \frac{⟦1⟧}{⟦\nu⟧} ;; 2\pi ;; \nu^2 ;; \omega
+e: T :: 1 / [\nu]
+= Угловая скорость
+f: \omega = \frac{2\pi}{T}
+v: \omega — угловая скорость, рад/с; T — период обращения, с
+w: \omega = 2\pi T ;; \omega = \frac{T}{2\pi} ;; \omega = \frac{\pi}{T}
+b: \omega = \frac{⟦2\pi⟧}{⟦T⟧} ;; \pi ;; \nu ;; T^2
+e: \omega :: 2 pi / [T]
+= Линейная скорость при движении по окружности
+f: v = \omega R
+v: v — линейная скорость, м/с; \omega — угловая скорость, рад/с; R — радиус окружности, м
+w: v = \frac{\omega}{R} ;; v = \omega R^2 ;; v = \frac{R}{\omega}
+b: v = ⟦\omega@a⟧\,⟦R@a⟧ ;; R^2 ;; \nu ;; T
+e: v :: [\omega] [R]
+= Центростремительное ускорение
+f: a_{\text{ц}} = \frac{v^2}{R}
+v: a_{\text{ц}} — центростремительное ускорение, м/с²; v — линейная скорость, м/с; R — радиус окружности, м
+w: a_{\text{ц}} = \frac{v}{R} ;; a_{\text{ц}} = v^2 R ;; a_{\text{ц}} = \frac{v^2}{2R}
+b: a_{\text{ц}} = \frac{⟦v^2⟧}{⟦R⟧} ;; v ;; 2R ;; R^2
+e: a_{\text{ц}} :: [v] ^2 / [R]
+
+# 1.2 | Динамика | dyn
+= Второй закон Ньютона
+f: m\vec a = \vec F_1 + \vec F_2 + \ldots + \vec F_n
+v: m — масса тела, кг; \vec a — ускорение тела, м/с²; \vec F_i — силы, действующие на тело, Н
+w: \vec a = m(\vec F_1 + \vec F_2 + \ldots + \vec F_n) ;; m\vec v = \vec F_1 + \vec F_2 + \ldots + \vec F_n ;; \frac{\vec a}{m} = \vec F_1 + \vec F_2 + \ldots + \vec F_n
+b: ⟦m@a⟧⟦\vec a@a⟧ = \vec F_1 + \vec F_2 + \ldots + \vec F_n ;; \vec v ;; \vec p ;; \frac{1}{2}
+e: \vec a :: [\vec F] / [m]
+= Третий закон Ньютона
+f: \vec F_{12} = -\vec F_{21}
+v: \vec F_{12} — сила, с которой первое тело действует на второе, Н; \vec F_{21} — сила, с которой второе тело действует на первое, Н
+w: \vec F_{12} = \vec F_{21} ;; \vec F_{12} = -2\vec F_{21} ;; \vec F_{12} + \vec F_{21} = m\vec a
+b: \vec F_{12} = ⟦-⟧\,⟦\vec F_{21}⟧ ;; + ;; 2 ;; \vec F_{12}
+e: \vec F_{12} :: - [\vec F_{21}]
+= Закон всемирного тяготения
+f: F = G\frac{m_1 m_2}{R^2}
+v: G — гравитационная постоянная, 6,67·10⁻¹¹ Н·м²/кг²; m_1, m_2 — массы тел, кг; R — расстояние между центрами тел, м
+w: F = G\frac{m_1 m_2}{R} ;; F = G\frac{m_1 + m_2}{R^2} ;; F = \frac{m_1 m_2}{G R^2}
+b: F = G\frac{⟦m_1 m_2⟧}{⟦R^2⟧} ;; R ;; m_1 + m_2 ;; G
+e: F :: [G] [m_1] [m_2] / [R] ^2
+= Ускорение свободного падения на высоте h
+f: g = G\frac{M}{(R + h)^2}
+v: M — масса планеты, кг; R — радиус планеты, м; h — высота над поверхностью, м
+w: g = G\frac{M}{R^2 + h} ;; g = G\frac{M}{R + h} ;; g = G\frac{M h}{R^2}
+b: g = G\frac{⟦M⟧}{⟦(R + h)^2⟧} ;; R^2 + h ;; R + h ;; M h
+e: g :: [G] [M] / ( [R] + [h] ) ^2
+= Первая космическая скорость
+f: v_1 = \sqrt{\frac{GM}{R}}
+v: v_1 — первая космическая скорость, м/с; M — масса планеты, кг; R — радиус орбиты, м
+w: v_1 = \sqrt{\frac{2GM}{R}} ;; v_1 = \frac{GM}{R} ;; v_1 = \sqrt{\frac{GM}{R^2}}
+b: v_1 = \sqrt{\frac{⟦GM⟧}{⟦R⟧}} ;; 2GM ;; R^2 ;; g
+e: v_1 :: sqrt( [G] [M] / [R] )
+= Закон Гука
+f: F_{\text{упр}} = k\,|\Delta l|
+v: F_{\text{упр}} — сила упругости, Н; k — жёсткость, Н/м; \Delta l — удлинение, м
+w: F_{\text{упр}} = \frac{|\Delta l|}{k} ;; F_{\text{упр}} = \frac{k\,\Delta l^2}{2} ;; F_{\text{упр}} = k\,\Delta l^2
+b: F_{\text{упр}} = ⟦k@a⟧\,⟦|\Delta l|@a⟧ ;; \Delta l^2 ;; \frac{1}{2} ;; m
+e: F_{\text{упр}} :: [k] [\Delta l]
+= Сила трения скольжения
+f: F_{\text{тр}} = \mu N
+v: \mu — коэффициент трения; N — сила нормальной реакции опоры, Н
+w: F_{\text{тр}} = \frac{N}{\mu} ;; F_{\text{тр}} = \frac{\mu}{N} ;; F_{\text{тр}} = \mu N^2
+b: F_{\text{тр}} = ⟦\mu@a⟧\,⟦N@a⟧ ;; N^2 ;; \frac{1}{\mu} ;; g
+e: F_{\text{тр}} :: [\mu] [N]
+= Вес тела в лифте, ускорение направлено вверх
+f: P = m(g + a)
+v: P — вес тела, Н; m — масса, кг; g — ускорение свободного падения, м/с²; a — ускорение лифта, м/с²
+w: P = m(g - a) ;; P = mg ;; P = m(a - g)
+b: P = ⟦m⟧(⟦g + a⟧) ;; g - a ;; a - g ;; M
+e: P :: [m] ( [g] + [a] )
+
+# 1.3 | Статика | stat
+= Момент силы
+f: M = F l
+v: M — момент силы, Н·м; F — сила, Н; l — плечо силы (расстояние от оси до линии действия силы), м
+w: M = \frac{F}{l} ;; M = F l^2 ;; M = \frac{l}{F}
+b: M = ⟦F@a⟧\,⟦l@a⟧ ;; l^2 ;; \frac{1}{l} ;; m
+e: M :: [F] [l]
+= Правило рычага
+f: F_1 l_1 = F_2 l_2
+v: F_1, F_2 — силы, приложенные к рычагу, Н; l_1, l_2 — плечи этих сил, м
+w: F_1 l_2 = F_2 l_1 ;; \frac{F_1}{l_1} = \frac{F_2}{l_2} ;; F_1 F_2 = l_1 l_2
+b: F_1 ⟦l_1⟧ = F_2 ⟦l_2⟧ ;; \frac{1}{l_1} ;; l_1^2 ;; F_1
+e: F_1 l_1 :: [F_2] [l_2]
+= Давление
+f: p = \frac{F}{S}
+v: p — давление, Па; F — сила давления, Н; S — площадь, м²
+w: p = F S ;; p = \frac{S}{F} ;; p = \frac{F}{S^2}
+b: p = \frac{⟦F⟧}{⟦S⟧} ;; S^2 ;; m ;; V
+e: p :: [F] / [S]
+= Давление столба жидкости
+f: p = \rho g h
+v: \rho — плотность жидкости, кг/м³; g — ускорение свободного падения, м/с²; h — глубина, м
+w: p = \frac{\rho g}{h} ;; p = \rho g h^2 ;; p = \frac{\rho h}{g}
+b: p = ⟦\rho@a⟧\,⟦g@a⟧\,⟦h@a⟧ ;; h^2 ;; V ;; m
+e: p :: [\rho] [g] [h]
+= Сила Архимеда
+f: F_{\text{А}} = \rho_{\text{ж}}\, g\, V_{\text{погр}}
+v: \rho_{\text{ж}} — плотность жидкости, кг/м³; V_{\text{погр}} — объём погружённой части тела, м³
+w: F_{\text{А}} = \rho_{\text{т}}\, g\, V_{\text{т}} ;; F_{\text{А}} = \frac{\rho_{\text{ж}}\, g}{V_{\text{погр}}} ;; F_{\text{А}} = \rho_{\text{ж}}\, V_{\text{погр}}
+b: F_{\text{А}} = ⟦\rho_{\text{ж}}@a⟧\,⟦g@a⟧\,⟦V_{\text{погр}}@a⟧ ;; \rho_{\text{т}} ;; V_{\text{т}} ;; m
+e: F_{\text{А}} :: [\rho_{\text{ж}}] [g] [V_{\text{погр}}]
+= Гидравлический пресс
+f: \frac{F_1}{S_1} = \frac{F_2}{S_2}
+v: F_1, F_2 — силы, действующие на поршни, Н; S_1, S_2 — площади поршней, м²
+w: F_1 S_1 = F_2 S_2 ;; \frac{F_1}{S_2} = \frac{F_2}{S_1} ;; \frac{F_1}{S_1^2} = \frac{F_2}{S_2^2}
+b: \frac{F_1}{⟦S_1⟧} = \frac{F_2}{⟦S_2⟧} ;; F_1 ;; F_2 ;; S_1^2
+e: \dfrac{F_1}{S_1} :: [F_2] / [S_2]
+
+# 1.4 | Законы сохранения | cons
+= Импульс тела
+f: \vec p = m\vec v
+v: \vec p — импульс, кг·м/с; m — масса, кг; \vec v — скорость, м/с
+w: \vec p = \frac{m\vec v^2}{2} ;; \vec p = \frac{\vec v}{m} ;; \vec p = m\vec a
+b: \vec p = ⟦m@a⟧\,⟦\vec v@a⟧ ;; \vec a ;; \frac{1}{2} ;; v^2
+e: \vec p :: [m] [\vec v]
+= Изменение импульса
+f: \Delta\vec p = \vec F\,\Delta t
+v: \Delta\vec p — изменение импульса, кг·м/с; \vec F — сила, Н; \Delta t — время действия силы, с
+w: \Delta\vec p = \frac{\vec F}{\Delta t} ;; \Delta\vec p = \vec F\,\Delta s ;; \Delta\vec p = m\,\Delta t
+b: \Delta\vec p = ⟦\vec F@a⟧\,⟦\Delta t@a⟧ ;; \Delta s ;; m ;; \frac{1}{\Delta t}
+e: \Delta\vec p :: [\vec F] [\Delta t]
+= Закон сохранения импульса
+f: m_1\vec v_1 + m_2\vec v_2 = m_1\vec v_1\,' + m_2\vec v_2\,'
+v: m_1, m_2 — массы тел, кг; \vec v_1, \vec v_2 — скорости до взаимодействия, м/с; \vec v_1\,', \vec v_2\,' — скорости после взаимодействия, м/с
+w: m_1\vec v_1 - m_2\vec v_2 = m_1\vec v_1\,' - m_2\vec v_2\,' ;; \frac{\vec v_1}{m_1} + \frac{\vec v_2}{m_2} = \frac{\vec v_1\,'}{m_1} + \frac{\vec v_2\,'}{m_2} ;; m_1\vec v_1 + m_2\vec v_2 = (m_1 - m_2)\,\vec v\,'
+b: m_1\vec v_1 + m_2\vec v_2 = ⟦m_1\vec v_1\,'@a⟧ + ⟦m_2\vec v_2\,'@a⟧ ;; m_1\vec v_2\,' ;; m_2\vec v_1\,' ;; (m_1 + m_2)\,\vec v_1
+e: m_1\vec v_1 + m_2\vec v_2 :: [m_1] [\vec v_1\,'] + [m_2] [\vec v_2\,']
+= Работа силы
+f: A = F s \cos\alpha
+v: A — работа, Дж; F — сила, Н; s — модуль перемещения, м; \alpha — угол между силой и перемещением
+w: A = F s \sin\alpha ;; A = \frac{F}{s}\cos\alpha ;; A = F s \,\mathrm{tg}\,\alpha
+b: A = ⟦F@a⟧\,⟦s@a⟧\,⟦\cos\alpha@a⟧ ;; \sin\alpha ;; \mathrm{tg}\,\alpha ;; t
+e: A :: [F] [s] cos( [\alpha] )
+= Мощность
+f: N = \frac{A}{t}
+v: N — мощность, Вт; A — работа, Дж; t — время, с
+w: N = A t ;; N = \frac{t}{A} ;; N = \frac{A}{t^2}
+b: N = \frac{⟦A⟧}{⟦t⟧} ;; t^2 ;; F ;; s
+e: N :: [A] / [t]
+= Мощность через силу и скорость
+f: N = F v
+v: N — мощность, Вт; F — сила тяги, Н; v — скорость, м/с
+w: N = \frac{F}{v} ;; N = \frac{F v^2}{2} ;; N = F v t
+b: N = ⟦F@a⟧\,⟦v@a⟧ ;; t ;; v^2 ;; \frac{1}{2}
+e: N :: [F] [v]
+= Кинетическая энергия
+f: E_{\text{к}} = \frac{m v^2}{2}
+v: E_{\text{к}} — кинетическая энергия, Дж; m — масса, кг; v — скорость, м/с
+w: E_{\text{к}} = m v^2 ;; E_{\text{к}} = \frac{m v}{2} ;; E_{\text{к}} = \frac{m^2 v}{2}
+b: E_{\text{к}} = \frac{⟦m v^2⟧}{⟦2⟧} ;; m v ;; m^2 v ;; 4
+e: E_{\text{к}} :: [m] [v] ^2 / 2
+= Потенциальная энергия тела над землёй
+f: E_{\text{п}} = m g h
+v: E_{\text{п}} — потенциальная энергия, Дж; h — высота над нулевым уровнем, м
+w: E_{\text{п}} = \frac{m g h}{2} ;; E_{\text{п}} = \frac{m g}{h} ;; E_{\text{п}} = m g h^2
+b: E_{\text{п}} = ⟦m@a⟧\,⟦g@a⟧\,⟦h@a⟧ ;; h^2 ;; \frac{1}{2} ;; v
+e: E_{\text{п}} :: [m] [g] [h]
+= Энергия деформированной пружины
+f: E_{\text{п}} = \frac{k x^2}{2}
+v: k — жёсткость пружины, Н/м; x — деформация, м
+w: E_{\text{п}} = k x ;; E_{\text{п}} = \frac{k x}{2} ;; E_{\text{п}} = k x^2
+b: E_{\text{п}} = \frac{⟦k x^2⟧}{⟦2⟧} ;; k x ;; m x^2 ;; 4
+e: E_{\text{п}} :: [k] [x] ^2 / 2
+= Теорема о кинетической энергии
+f: A = E_{\text{к}2} - E_{\text{к}1}
+v: A — работа всех сил, Дж; E_{\text{к}1}, E_{\text{к}2} — начальная и конечная кинетическая энергия, Дж
+w: A = E_{\text{к}1} - E_{\text{к}2} ;; A = E_{\text{к}1} + E_{\text{к}2} ;; A = \frac{E_{\text{к}2}}{E_{\text{к}1}}
+b: A = ⟦E_{\text{к}2}⟧ - ⟦E_{\text{к}1}⟧ ;; E_{\text{п}2} ;; E_{\text{п}1} ;; E_{\text{к}}
+e: A :: [E_{\text{к}2}] - [E_{\text{к}1}]
+= Закон сохранения механической энергии
+f: E_{\text{к}} + E_{\text{п}} = \text{const}
+v: E_{\text{к}} — кинетическая энергия, Дж; E_{\text{п}} — потенциальная энергия, Дж
+w: E_{\text{к}} - E_{\text{п}} = \text{const} ;; E_{\text{к}} \cdot E_{\text{п}} = \text{const} ;; \frac{E_{\text{к}}}{E_{\text{п}}} = \text{const}
+b: ⟦E_{\text{к}}@a⟧ + ⟦E_{\text{п}}@a⟧ = \text{const} ;; A ;; p ;; E_{\text{к}}^2
+e: E_{\text{к}1} + E_{\text{п}1} :: [E_{\text{к}2}] + [E_{\text{п}2}]
+= КПД механизма
+f: \eta = \frac{A_{\text{пол}}}{A_{\text{затр}}} \cdot 100\%
+v: \eta — КПД, %; A_{\text{пол}} — полезная работа, Дж; A_{\text{затр}} — затраченная работа, Дж
+w: \eta = \frac{A_{\text{затр}}}{A_{\text{пол}}} \cdot 100\% ;; \eta = \frac{A_{\text{затр}} - A_{\text{пол}}}{A_{\text{затр}}} \cdot 100\% ;; \eta = A_{\text{пол}} \cdot A_{\text{затр}} \cdot 100\%
+b: \eta = \frac{⟦A_{\text{пол}}⟧}{⟦A_{\text{затр}}⟧} \cdot 100\% ;; A_{\text{пол}} + A_{\text{затр}} ;; Q ;; N
+e: \eta :: [A_{\text{пол}}] / [A_{\text{затр}}] * [100\%]
+
+# 1.5 | Механические колебания и волны | osc
+= Гармонические колебания
+f: x = A\cos(\omega t + \varphi_0)
+v: x — смещение, м; A — амплитуда, м; \omega — циклическая частота, рад/с; \varphi_0 — начальная фаза, рад
+w: x = A\cos(\omega + \varphi_0 t) ;; x = \omega\cos(A t + \varphi_0) ;; x = A t\cos(\omega\varphi_0)
+b: x = ⟦A⟧\cos(⟦\omega t@a⟧ + ⟦\varphi_0@a⟧) ;; \omega ;; A t ;; \nu
+e: x :: [A] cos( [\omega] [t] + [\varphi_0] )
+= Частота колебаний
+f: \nu = \frac{N}{t}
+v: \nu — частота, Гц; N — число колебаний; t — время, с
+w: \nu = N t ;; \nu = \frac{t}{N} ;; \nu = \frac{2\pi N}{t}
+b: \nu = \frac{⟦N⟧}{⟦t⟧} ;; 2\pi ;; T ;; t^2
+e: \nu :: [N] / [t]
+= Циклическая частота
+f: \omega = 2\pi\nu
+v: \omega — циклическая частота, рад/с; \nu — частота, Гц
+w: \omega = \frac{2\pi}{\nu} ;; \omega = \pi\nu ;; \omega = \frac{\nu}{2\pi}
+b: \omega = ⟦2\pi@a⟧\,⟦\nu@a⟧ ;; T ;; \pi ;; \frac{1}{2\pi}
+e: \omega :: 2 pi [\nu]
+= Период математического маятника
+f: T = 2\pi\sqrt{\frac{l}{g}}
+v: T — период, с; l — длина нити, м; g — ускорение свободного падения, м/с²
+w: T = 2\pi\sqrt{\frac{g}{l}} ;; T = 2\pi\sqrt{\frac{m}{k}} ;; T = 2\pi\,\frac{l}{g}
+b: T = ⟦2\pi⟧\sqrt{\frac{⟦l⟧}{⟦g⟧}} ;; m ;; k ;; \pi
+e: T :: 2 pi sqrt( [l] / [g] )
+= Период пружинного маятника
+f: T = 2\pi\sqrt{\frac{m}{k}}
+v: T — период, с; m — масса груза, кг; k — жёсткость пружины, Н/м
+w: T = 2\pi\sqrt{\frac{k}{m}} ;; T = 2\pi\sqrt{\frac{l}{g}} ;; T = \frac{1}{2\pi}\sqrt{\frac{m}{k}}
+b: T = ⟦2\pi⟧\sqrt{\frac{⟦m⟧}{⟦k⟧}} ;; l ;; g ;; \frac{1}{2\pi}
+e: T :: 2 pi sqrt( [m] / [k] )
+= Максимальная скорость при колебаниях
+f: v_{\max} = \omega A
+v: v_{\max} — амплитуда скорости, м/с; \omega — циклическая частота, рад/с; A — амплитуда, м
+w: v_{\max} = \frac{A}{\omega} ;; v_{\max} = \omega^2 A ;; v_{\max} = \omega A^2
+b: v_{\max} = ⟦\omega@a⟧\,⟦A@a⟧ ;; A^2 ;; \omega^2 ;; T
+e: v_{\max} :: [\omega] [A]
+= Энергия пружинного маятника
+f: \frac{k A^2}{2} = \frac{m v_{\max}^2}{2}
+v: k — жёсткость, Н/м; A — амплитуда, м; m — масса груза, кг; v_{\max} — максимальная скорость, м/с
+w: k A = m v_{\max} ;; \frac{k A}{2} = \frac{m v_{\max}}{2} ;; \frac{k A^2}{2} = m v_{\max}^2
+b: \frac{⟦k A^2⟧}{2} = \frac{⟦m v_{\max}^2⟧}{2} ;; k A ;; m v_{\max} ;; m g h
+e: \dfrac{kA^2}{2} :: [m] [v_{\max}] ^2 / 2
+= Длина волны
+f: \lambda = v T
+v: \lambda — длина волны, м; v — скорость волны, м/с; T — период, с
+w: \lambda = \frac{v}{T} ;; \lambda = \frac{T}{v} ;; \lambda = v\nu
+b: \lambda = ⟦v@a⟧\,⟦T@a⟧ ;; \nu ;; \frac{1}{T} ;; t
+e: \lambda :: [v] [T]
+</script>
+
+<script type="text/plain" id="expl">
+@ kin-1
+p: При равномерном прямолинейном движении тело за любые равные промежутки времени совершает одинаковые перемещения. Скорость при этом постоянна.
+p: Направим ось OX вдоль движения. Проекция перемещения равна разности конечной и начальной координаты: $s_x = x - x_0$.
+fig: uniform
+p: С другой стороны, при равномерном движении $s_x = v_x t$. Приравняем и выразим координату: $x = x_0 + v_x t$.
+p: Если тело движется против оси OX, то $v_x < 0$, и координата с течением времени уменьшается. Формула при этом та же.
+
+@ kin-2
+p: При равноускоренном движении скорость тела за любые равные промежутки времени меняется на одну и ту же величину. Ускорение показывает, на сколько меняется скорость за одну секунду.
+p: Буквой $\Delta$ обозначают изменение величины. Если за время $\Delta t$ скорость изменилась на $\Delta\vec v$, то ускорение равно $\vec a = \dfrac{\Delta\vec v}{\Delta t}$.
+fig: slope
+p: На графике зависимости скорости от времени ускорение равно тангенсу угла наклона прямой. Если скорость уменьшается, график идёт вниз, и проекция ускорения отрицательная.
+p: Единица ускорения: $\dfrac{\text{м/с}}{\text{с}} = \text{м/с}^2$.
+
+@ kin-3
+p: Запишем формулу ускорения: $a_x = \dfrac{v_x - v_{0x}}{t}$.
+p: Выведем из неё скорость. Умножим обе части на $t$ и перенесём $v_{0x}$: $v_x = v_{0x} + a_x t$.
+fig: vel
+p: Получается, что при равноускоренном движении скорость зависит от времени линейно, и её график является прямой.
+p: При торможении ускорение направлено против скорости, проекция $a_x$ отрицательная, и скорость уменьшается.
+
+@ kin-4
+p: Как и при равномерном движении, площадь под графиком зависимости скорости от времени равна перемещению.
+fig: area
+p: Фигуру под графиком разобьём на прямоугольник и треугольник. Площадь прямоугольника $v_{0x} t$, площадь треугольника $\dfrac{1}{2}\cdot t\cdot a_x t = \dfrac{a_x t^2}{2}$.
+p: Сложим их и получим перемещение: $s_x = v_{0x} t + \dfrac{a_x t^2}{2}$.
+p: Так как $x = x_0 + s_x$, координата тела равна $x = x_0 + v_{0x} t + \dfrac{a_x t^2}{2}$.
+p: Зависимость координаты от времени квадратичная, её график называется параболой. Если ветви направлены вверх, проекция ускорения положительная, если вниз, то отрицательная.
+p: Формула есть в кодификаторе, на экзамене её можно использовать без вывода.
+
+@ kin-5
+p: Выведем формулу перемещения, в которой нет времени. Для этого возьмём две формулы: $s_x = \dfrac{v_{0x} + v_x}{2}\,t$ и $v_x = v_{0x} + a_x t$.
+p: Из второй формулы выразим время: $t = \dfrac{v_x - v_{0x}}{a_x}$.
+p: Подставим его в первую формулу и выполним преобразования: $s_x = \dfrac{(v_x + v_{0x})(v_x - v_{0x})}{2a_x} = \dfrac{v_x^2 - v_{0x}^2}{2a_x}$.
+fig: avg
+p: Формулой удобно пользоваться, когда время в задаче не дано и не спрашивается. Она есть в кодификаторе, поэтому её можно применять без вывода.
+
+@ kin-6
+p: Площадь под графиком скорости равна перемещению. При равноускоренном движении фигура под графиком является трапецией.
+fig: avg
+p: Найдём её площадь: полусумма оснований, умноженная на высоту. Основания трапеции равны $v_{0x}$ и $v_x$, высота равна $t$.
+p: Получаем формулу перемещения: $s_x = \dfrac{v_{0x} + v_x}{2}\,t$.
+p: Выражение $\dfrac{v_{0x} + v_x}{2}$ равно средней скорости, но только при равноускоренном движении. Формула есть в кодификаторе, её можно использовать без вывода.
+
+@ kin-7
+p: Тело падает с высоты $h$ без начальной скорости. Введём ось OY вертикально вверх, начало отсчёта поместим на уровень земли.
+p: Тогда $y_0 = h$ и $v_{0y} = 0$. Ускорение свободного падения направлено вниз, против оси, поэтому его проекция равна $-g$. Уравнение координаты: $y = h - \dfrac{g t^2}{2}$.
+fig: fall
+p: В момент удара о землю координата $y = 0$: $0 = h - \dfrac{g t^2}{2}$. Выразим время падения: $t = \sqrt{\dfrac{2h}{g}}$.
+p: Например, с высоты 20 м тело падает за $\sqrt{2\cdot 20 / 10} = 2$ с. На ЕГЭ берут $g = 10$ м/с².
+p: Скорость перед ударом найдём из $v_y = -g t$. По модулю $v = g t = \sqrt{2gh}$. Не путайте её со временем падения, в тестах эти формулы часто стоят рядом.
+p: Этой формулы нет в кодификаторе, поэтому на экзамене её нужно выводить.
+
+@ kin-8
+p: Скорость тела зависит от системы отсчёта. Рассмотрим лодку, которая переплывает реку.
+p: Относительно воды лодка движется со скоростью $\vec v_{\text{отн}}$, а сама вода движется относительно берега со скоростью $\vec v_{\text{пер}}$.
+fig: boat
+p: Скорость лодки относительно берега равна их векторной сумме: $\vec v = \vec v_{\text{отн}} + \vec v_{\text{пер}}$. Складываем по правилу треугольника: совмещаем конец первого вектора с началом второго.
+p: Если лодка плывёт по течению, модули скоростей складываются, против течения вычитаются. Если векторы перпендикулярны, модуль находим по теореме Пифагора: $v = \sqrt{v_{\text{отн}}^2 + v_{\text{пер}}^2}$.
+p: Так же находится скорость сближения двух тел. При движении навстречу скорости складываются, при движении в одну сторону из большей скорости вычитается меньшая.
+
+@ kin-9
+p: Период обращения $T$ равен времени одного полного оборота. Частота обращения $\nu$ равна количеству полных оборотов за единицу времени.
+p: Если тело совершило $N$ оборотов за время $t$, то $T = \dfrac{t}{N}$ и $\nu = \dfrac{N}{t}$.
+fig: freq
+p: Из этих определений следует, что частота обратно пропорциональна периоду: $T = \dfrac{1}{\nu}$.
+p: Например, человек сделал 10 оборотов вокруг своей оси за 13,2 с. Тогда $T = 13{,}2 / 10 = 1{,}32$ с, а $\nu = 10 / 13{,}2 \approx 0{,}76$ Гц.
+p: Частоту измеряют в герцах: 1 Гц = 1 с⁻¹. Отдельное название нужно, чтобы не путать частоту с угловой скоростью.
+
+@ kin-10
+p: Чтобы понять, как быстро поворачивается тело, вводят угловую скорость. Она равна углу поворота, делённому на время: $\omega = \dfrac{\varphi}{t}$, единица измерения рад/с.
+fig: ang
+p: При полном обороте тело возвращается в ту же точку и поворачивается на $360^\circ$, то есть на $2\pi$ радиан. Время одного оборота равно периоду $T$.
+p: Подставим в определение: $\omega = \dfrac{2\pi}{T}$. Так как $\dfrac{1}{T} = \nu$, можно записать ещё $\omega = 2\pi\nu$.
+p: Радиан является безразмерной величиной, поэтому угловую скорость можно записывать и в с⁻¹.
+
+@ kin-11
+p: Пусть точка движется по окружности радиуса $R$. Распишем модуль скорости как отношение пройденного пути ко времени.
+p: За один оборот точка проходит длину окружности $2\pi R$ за время $T$, поэтому $v = \dfrac{2\pi R}{T}$.
+fig: lin
+p: Так как $\dfrac{2\pi}{T} = \omega$, получаем $v = \omega R$.
+p: У всех точек вращающегося диска угловая скорость одинаковая. Линейная скорость тем больше, чем дальше точка от центра.
+p: Если две шестерёнки соединены цепью, как у велосипеда, одинаковыми будут линейные скорости, а угловые скорости будут разными.
+
+@ kin-12
+p: При равномерном движении по окружности модуль скорости не меняется, а направление меняется постоянно. Скорость всегда направлена по касательной к окружности.
+fig: cent
+p: Направление скорости меняет центростремительное ускорение. Оно направлено к центру окружности.
+p: Его модуль равен $a_{\text{ц}} = \dfrac{v^2}{R}$. Подставим $v = \omega R$ и получим вторую форму: $a_{\text{ц}} = \omega^2 R$.
+p: Если модуль скорости тоже меняется, появляется ещё тангенциальное ускорение, направленное вдоль скорости. Полное ускорение находят по теореме Пифагора: $a = \sqrt{a_{\text{ц}}^2 + a_\tau^2}$.
+p: Формулу легко проверить по единицам: $\dfrac{(\text{м/с})^2}{\text{м}} = \text{м/с}^2$.
+
+@ dyn-1
+p: Второй закон Ньютона: в инерциальной системе отсчёта ускорение тела прямо пропорционально и сонаправлено силе, которая его вызывает, и обратно пропорционально массе тела.
+p: Если на тело действует сразу несколько сил, применяем принцип суперпозиции: заменяем их одной результирующей силой, равной векторной сумме всех сил.
+fig: newton2
+p: Для бруска на рисунке: $m\vec a = \vec F + \vec F_{\text{тр}} + m\vec g + \vec N$. Дальше закон расписывают в проекциях на оси. Например, на ось OX: $ma = F - F_{\text{тр}}$.
+p: Если сумма сил равна нулю, ускорения нет, и тело покоится или движется равномерно прямолинейно. Это первый закон Ньютона.
+p: Частая ошибка в тестах: $m\vec v$ вместо $m\vec a$. Сила связана с ускорением, а не со скоростью.
+
+@ dyn-2
+p: Третий закон Ньютона: силы, с которыми взаимодействуют два тела, равны по модулю, противоположны по направлению, имеют одинаковую природу и лежат на одной прямой.
+fig: newton3
+p: Рассмотрим два шара, которые опираются друг на друга. Левый шар действует на правый с силой $\vec F_{12}$, правый на левый с силой $\vec F_{21}$. Эти силы равны по модулю и направлены в разные стороны: $\vec F_{12} = -\vec F_{21}$.
+p: Силы приложены к разным телам, поэтому они не компенсируют друг друга.
+p: Из третьего закона следует, что вес тела по модулю равен силе реакции опоры: тело давит на опору с той же силой, с какой опора давит на тело.
+
+@ dyn-3
+p: Два тела массами $m_1$ и $m_2$, центры масс которых находятся на расстоянии $R$, притягиваются друг к другу с силой $F = G\dfrac{m_1 m_2}{R^2}$.
+fig: grav
+p: Где $G$ – гравитационная постоянная. Она одинакова на любых планетах и во всех галактиках. В справочных материалах ЕГЭ $G = 6{,}7\cdot 10^{-11}$ Н·м²/кг².
+p: По третьему закону Ньютона тела притягивают друг друга с одинаковыми по модулю силами, даже если одно тело намного массивнее другого.
+p: Сила обратно пропорциональна квадрату расстояния: если расстояние увеличить в 2 раза, сила уменьшится в 4 раза.
+
+@ dyn-4
+p: На поверхности планеты сила тяжести равна силе тяготения: $mg = G\dfrac{mM}{R^2}$. Сократим массу тела и получим $g = G\dfrac{M}{R^2}$.
+fig: height
+p: Если тело находится на высоте $h$ над поверхностью, расстояние до центра планеты равно уже не $R$, а $R + h$. Поэтому $g = G\dfrac{M}{(R + h)^2}$.
+p: Частая ошибка: забыть скобку и написать $R^2 + h$. В квадрат возводится всё расстояние до центра планеты.
+p: Этой формулы нет в кодификаторе, поэтому на ЕГЭ её нужно выводить.
+
+@ dyn-5
+p: Первая космическая скорость – скорость, с которой должно двигаться тело, чтобы стать искусственным спутником планеты.
+fig: orbit
+p: Спутник движется по окружности, и на него действует только сила тяготения. Она и сообщает ему центростремительное ускорение. Запишем второй закон Ньютона: $G\dfrac{mM}{R^2} = m\dfrac{v^2}{R}$.
+p: Сократим массу спутника и один радиус, получим $v_1 = \sqrt{\dfrac{GM}{R}}$. Так как $g = G\dfrac{M}{R^2}$, можно записать и так: $v_1 = \sqrt{gR}$.
+p: Для Земли первая космическая скорость равна 7,9 км/с. Вторая космическая, с которой тело покидает Землю, равна 11,2 км/с.
+p: Формул космических скоростей нет в кодификаторе, на ЕГЭ их нужно выводить.
+
+@ dyn-6
+p: Сила упругости возникает при деформации упругого тела. Её находят по закону Гука: $F_{\text{упр}\,x} = -kx$.
+fig: spring
+p: Где $k$ – жёсткость пружины, Н/м, а $x$ – удлинение пружины, м.
+p: Минус показывает направление: сила упругости всегда направлена против удлинения и пытается вернуть пружину в недеформированное состояние. По модулю $F_{\text{упр}} = k\,|\Delta l|$.
+p: Не путайте с энергией пружины $\dfrac{kx^2}{2}$: там удлинение в квадрате и двойка в знаменателе.
+
+@ dyn-7
+p: Сила трения возникает при соприкосновении двух тел и препятствует их относительному движению.
+p: Проведём эксперимент: будем тянуть брусок динамометром, постепенно увеличивая силу. Пока брусок покоится, на него действует сила трения покоя, и она равна приложенной силе.
+fig: friction
+p: Когда брусок начинает скользить, действует сила трения скольжения: $F_{\text{тр}} = \mu N$. Где $\mu$ – коэффициент трения, безразмерная величина, $N$ – сила реакции опоры.
+p: В рамках ЕГЭ максимальную силу трения покоя принимают равной силе трения скольжения, поэтому $F_{\text{тр.пок}} \le \mu N$.
+p: Обратите внимание: в формуле стоит $N$, а не $mg$. Они равны, только если тело лежит на горизонтальной поверхности и других вертикальных сил нет.
+
+@ dyn-8
+p: Вес тела – сила, с которой тело действует на опору или подвес. По третьему закону Ньютона вес по модулю равен силе реакции опоры: $P = N$.
+fig: lift
+p: Пусть тело стоит на полу лифта, ускорение которого направлено вверх. Направим ось OY вверх и запишем второй закон Ньютона: $ma = N - mg$.
+p: Отсюда $N = m(g + a)$, значит и $P = m(g + a)$. Вес больше силы тяжести, поэтому в таком лифте человека прижимает к полу.
+p: Если ускорение направлено вниз, получится $P = m(g - a)$, и вес станет меньше силы тяжести. При $a = g$ вес равен нулю, это невесомость.
+
+@ stat-1
+p: Одна и та же сила может повернуть тело сильнее или слабее, смотря где и как её приложить. Поэтому для вращения вводят момент силы: $M = Fl$, единица Н·м.
+fig: arm
+p: Где $l$ – плечо силы, кратчайшее расстояние от оси вращения до линии действия силы. Если сила направлена под углом, плечо не равно расстоянию до точки приложения.
+p: Чтобы найти плечо, продлеваем линию действия силы и опускаем на неё перпендикуляр из оси. Длина этого перпендикуляра и есть плечо.
+p: Если линия действия силы проходит через ось, плечо равно нулю, и сила тело не поворачивает. Поэтому дверь не открыть, если толкать её в сторону петель.
+
+@ stat-2
+p: Рычаг находится в равновесии, если моменты сил, которые вращают его в разные стороны, равны: $M_1 = M_2$.
+fig: lever
+p: Распишем моменты через силы и плечи: $F_1 l_1 = F_2 l_2$.
+p: Выигрыш в силе получается за счёт длинного плеча: во сколько раз плечо больше, во столько раз меньше нужна сила. На рисунке $l_2 = 2l_1$, поэтому $F_2 = \dfrac{F_1}{2}$.
+p: Если сил больше двух, сумма моментов, вращающих по часовой стрелке, равна сумме моментов против часовой. Для равновесия тела также должна быть равна нулю сумма всех сил.
+
+@ stat-3
+p: Давление показывает, какая сила приходится на единицу площади поверхности: $p = \dfrac{F}{S}$. Единица давления – паскаль: 1 Па = 1 Н/м².
+fig: pressure
+p: Один и тот же брусок давит на стол с одинаковой силой, как его ни положи. Но если поставить его на меньшую грань, площадь опоры уменьшится, и давление вырастет.
+p: Поэтому острый нож режет лучше тупого, а на лыжах человек не проваливается в снег.
+p: Частая ошибка – умножить силу на площадь. Проверить можно по смыслу: чем меньше площадь, тем больше давление, значит площадь стоит в знаменателе.
+
+@ stat-4
+p: Рассмотрим столб жидкости высотой $h$ с площадью основания $S$. Его масса $m = \rho V = \rho S h$, и он давит на дно с силой $mg = \rho S h g$.
+fig: column
+p: Разделим силу на площадь: $p = \dfrac{\rho S h g}{S} = \rho g h$.
+p: Давление жидкости зависит только от глубины и плотности, но не от формы сосуда. На одной глубине давление одинаковое во всех направлениях.
+p: Если нужно полное давление на глубине, к нему прибавляют атмосферное: $p = p_0 + \rho g h$.
+
+@ stat-5
+p: На тело, погружённое в жидкость, действует выталкивающая сила. Она возникает, потому что снизу, на большей глубине, давление больше, чем сверху.
+fig: archimedes
+p: Сила Архимеда равна весу жидкости в объёме погружённой части тела: $F_{\text{А}} = \rho_{\text{ж}}\, g\, V_{\text{погр}}$.
+p: В формулу входит плотность жидкости, а не тела. Плотность тела нужна, только чтобы найти его массу и сравнить силу тяжести с силой Архимеда.
+p: Если $F_{\text{А}} > mg$, тело всплывает, если меньше, то тонет. Плавающее тело погружается ровно настолько, чтобы $F_{\text{А}} = mg$.
+
+@ stat-6
+p: По закону Паскаля давление, которое создают на жидкость, передаётся в любую её точку без изменений.
+fig: press
+p: Малый поршень создаёт давление $p = \dfrac{F_1}{S_1}$. Такое же давление действует на большой поршень: $p = \dfrac{F_2}{S_2}$. Приравниваем: $\dfrac{F_1}{S_1} = \dfrac{F_2}{S_2}$.
+p: Выигрыш в силе равен отношению площадей: $\dfrac{F_2}{F_1} = \dfrac{S_2}{S_1}$. Если площадь большого поршня в 100 раз больше, то и сила будет в 100 раз больше.
+p: Выигрыша в работе при этом нет: малый поршень приходится двигать на большее расстояние.
+
+@ cons-1
+p: Импульс тела – векторная величина, равная произведению массы тела на его скорость: $\vec p = m\vec v$, единица кг·м/с.
+fig: momentum
+p: Вектор импульса направлен так же, как скорость. В задачах импульс расписывают в проекциях на оси, и знак проекции зависит от направления движения.
+p: Импульс показывает, насколько трудно остановить тело. У грузовика и мяча с одинаковой скоростью импульсы разные, потому что разные массы.
+p: Не путайте с кинетической энергией $\dfrac{mv^2}{2}$: энергия скалярная и зависит от квадрата скорости.
+
+@ cons-2
+p: Запишем второй закон Ньютона, выразив ускорение через изменение скорости: $\vec F = m\dfrac{\Delta\vec v}{\Delta t}$.
+p: Умножим обе части на $\Delta t$: $\vec F\,\Delta t = m\,\Delta\vec v = \Delta\vec p$.
+fig: impulse
+p: Произведение $\vec F\,\Delta t$ называют импульсом силы. Изменение импульса тела равно импульсу силы, которая на него подействовала.
+p: Поэтому удар смягчают, увеличивая время: при том же изменении импульса сила получается меньше. Так работают подушки безопасности, и поэтому при прыжке приседают.
+
+@ cons-3
+p: Рассмотрим замкнутую систему тел: внешние силы на неё не действуют или скомпенсированы, и тела взаимодействуют только друг с другом.
+fig: collision
+p: По третьему закону Ньютона при столкновении тела действуют друг на друга с равными и противоположными силами одно и то же время. Значит, изменения их импульсов равны по модулю и противоположны по направлению.
+p: Поэтому суммарный импульс системы не меняется: $m_1\vec v_1 + m_2\vec v_2 = m_1\vec v_1\,' + m_2\vec v_2\,'$.
+p: В задачах закон записывают в проекциях, и скорость, направленная против оси, входит со знаком минус. Если после удара тела движутся вместе, справа будет $(m_1 + m_2)\,\vec v\,'$.
+
+@ cons-4
+p: Механическая работа совершается, когда сила перемещает тело: $A = Fs\cos\alpha$, где $\alpha$ – угол между силой и перемещением. Единица работы – джоуль.
+fig: work
+p: Работу совершает только составляющая силы вдоль перемещения, $F\cos\alpha$. Составляющая, перпендикулярная перемещению, тело не двигает.
+p: Если $\alpha = 90^\circ$, работа равна нулю. Например, сила тяжести не совершает работы при движении по горизонтали, а сила реакции опоры – при скольжении по поверхности.
+p: Если угол тупой, $\cos\alpha < 0$, и работа отрицательная. Так, работа силы трения скольжения всегда отрицательная.
+
+@ cons-5
+p: Мощность показывает, как быстро совершается работа: $N = \dfrac{A}{t}$. Единица мощности – ватт: 1 Вт = 1 Дж/с.
+p: Два подъёмных крана поднимают одинаковые грузы на одну высоту и совершают одинаковую работу. Мощнее тот кран, который сделает это быстрее.
+p: Отсюда же находят работу при известной мощности: $A = Nt$. На этом основан киловатт-час, по которому платят за электричество.
+p: Частая ошибка – умножить работу на время. Проверка по смыслу: чем меньше время при той же работе, тем больше мощность.
+
+@ cons-6
+p: Возьмём формулу мощности $N = \dfrac{A}{t}$ и распишем работу силы, направленной вдоль перемещения: $A = Fs$.
+p: Получаем $N = \dfrac{Fs}{t}$, а $\dfrac{s}{t}$ равно скорости. Поэтому $N = Fv$.
+fig: powerFv
+p: Формула удобна для машин и двигателей. При постоянной мощности двигателя сила тяги тем больше, чем меньше скорость. Поэтому в гору едут на пониженной передаче.
+p: Если сила направлена под углом к скорости, $N = Fv\cos\alpha$.
+
+@ cons-7
+p: Найдём, какую работу нужно совершить, чтобы разогнать тело массой $m$ из состояния покоя до скорости $v$.
+fig: kin
+p: Пусть на тело действует постоянная сила $F = ma$. Её работа $A = Fs = mas$. Из кинематики при $v_0 = 0$ путь равен $s = \dfrac{v^2}{2a}$.
+p: Подставим: $A = ma\cdot\dfrac{v^2}{2a} = \dfrac{mv^2}{2}$. Эта работа запасается в теле в виде кинетической энергии: $E_{\text{к}} = \dfrac{mv^2}{2}$.
+p: Энергия зависит от квадрата скорости: если скорость увеличить в 2 раза, кинетическая энергия вырастет в 4 раза.
+
+@ cons-8
+p: Поднимем тело массой $m$ на высоту $h$ равномерно. Для этого нужно приложить силу, равную силе тяжести $mg$, и совершить работу $A = mgh$.
+fig: lifth
+p: Эта работа запасается в виде потенциальной энергии: $E_{\text{п}} = mgh$.
+p: Высоту $h$ отсчитывают от нулевого уровня, который выбирают сами, обычно это поверхность земли. В задачах важно изменение энергии, а оно от выбора нулевого уровня не зависит.
+p: Формула работает вблизи поверхности Земли, где $g$ можно считать постоянным.
+
+@ cons-9
+p: При растяжении пружины сила упругости меняется: $F = kx$. Поэтому работу нельзя найти просто как силу, умноженную на перемещение.
+fig: springgraph
+p: Воспользуемся графиком: работа равна площади под графиком силы. Под графиком треугольник с катетами $x$ и $kx$, его площадь $\dfrac{1}{2}\cdot x\cdot kx = \dfrac{kx^2}{2}$.
+p: Эта работа запасается в пружине в виде потенциальной энергии: $E_{\text{п}} = \dfrac{kx^2}{2}$.
+p: Энергия зависит от квадрата деформации: если растянуть пружину вдвое сильнее, энергии в ней будет в 4 раза больше.
+
+@ cons-10
+p: Изменение кинетической энергии тела равно работе всех сил, которые на него действуют: $A = E_{\text{к}2} - E_{\text{к}1}$.
+fig: kin | Сила совершает работу, и кинетическая энергия тела увеличивается ровно на эту работу.
+p: Вывод тот же, что и для кинетической энергии: работа постоянной силы $A = mas$, а $s = \dfrac{v_2^2 - v_1^2}{2a}$. Получаем $A = \dfrac{mv_2^2}{2} - \dfrac{mv_1^2}{2}$.
+p: Если работа положительная, тело разгоняется, если отрицательная, тормозит. Например, при торможении до остановки работа силы трения $A_{\text{тр}} = 0 - \dfrac{mv^2}{2}$.
+p: Порядок важен: из конечной энергии вычитают начальную. Для потенциальной энергии знак обратный: $A = E_{\text{п}1} - E_{\text{п}2}$.
+
+@ cons-11
+p: Если на тело действуют только сила тяжести и сила упругости, а трения нет, полная механическая энергия сохраняется: $E_{\text{к}} + E_{\text{п}} = \text{const}$.
+fig: energy
+p: Энергия при этом переходит из одного вида в другой. Падающее тело теряет потенциальную энергию и на столько же набирает кинетическую.
+p: В задачах записывают энергию в двух точках и приравнивают: $E_{\text{к}1} + E_{\text{п}1} = E_{\text{к}2} + E_{\text{п}2}$. Например, для падения с высоты $h$: $mgh = \dfrac{mv^2}{2}$, откуда $v = \sqrt{2gh}$.
+p: Если есть трение, механическая энергия уменьшается, и часть её переходит во внутреннюю. Тогда $E_1 = E_2 + |A_{\text{тр}}|$.
+
+@ cons-12
+p: Ни один механизм не отдаёт всю затраченную работу на полезное дело: часть уходит на трение, нагрев, сопротивление.
+fig: kpd
+p: Коэффициент полезного действия показывает, какая доля затраченной работы стала полезной: $\eta = \dfrac{A_{\text{пол}}}{A_{\text{затр}}}\cdot 100\%$.
+p: Полезная работа всегда меньше затраченной, поэтому КПД меньше 100%. Если в ответе получилось больше, значит работы перепутаны местами.
+p: Вместо работ можно подставлять мощности или энергии: $\eta = \dfrac{N_{\text{пол}}}{N_{\text{затр}}}\cdot 100\%$.
+
+@ osc-1
+p: Гармонические колебания – колебания, при которых смещение от положения равновесия меняется со временем по закону косинуса или синуса: $x = A\cos(\omega t + \varphi_0)$.
+fig: cosine
+p: Где $A$ – амплитуда, наибольшее смещение от положения равновесия; $\omega$ – циклическая частота; $\varphi_0$ – начальная фаза, она показывает, где было тело в момент $t = 0$.
+p: Выражение в скобках называют фазой колебаний. За один период фаза меняется на $2\pi$, и движение повторяется.
+p: Если в начальный момент тело было в крайнем положении, удобно брать косинус с $\varphi_0 = 0$. Если в положении равновесия, то синус.
+
+@ osc-2
+p: Частота колебаний равна числу полных колебаний за единицу времени: $\nu = \dfrac{N}{t}$. Единица – герц: 1 Гц соответствует одному колебанию в секунду.
+fig: cosine | За время $t$ тело совершает $N$ полных колебаний. На графике одно колебание – это один повтор кривой длиной $T$.
+p: Период – время одного полного колебания: $T = \dfrac{t}{N}$. Частота и период обратны друг другу: $\nu = \dfrac{1}{T}$.
+p: Например, маятник совершил 30 колебаний за 1 минуту. Тогда $\nu = \dfrac{30}{60} = 0{,}5$ Гц, а $T = 2$ с.
+p: Частая ошибка – перевернуть дробь. Проверка: чем больше колебаний за то же время, тем больше частота, значит $N$ стоит в числителе.
+
+@ osc-3
+p: За один период фаза колебаний $\omega t$ должна измениться на $2\pi$, тогда движение повторится: $\omega T = 2\pi$.
+fig: cosine | За время $T$ фаза меняется на $2\pi$, и график начинает повторяться.
+p: Отсюда $\omega = \dfrac{2\pi}{T}$. Так как $\dfrac{1}{T} = \nu$, получаем $\omega = 2\pi\nu$.
+p: Циклическую частоту измеряют в рад/с, а частоту в герцах. Это разные величины: $\omega$ больше $\nu$ в $2\pi$ раз.
+p: Связь такая же, как у угловой скорости при движении по окружности. Гармонические колебания можно представить как проекцию точки, которая равномерно вращается по окружности.
+
+@ osc-4
+p: Математический маятник – материальная точка, подвешенная на невесомой нерастяжимой нити. Модель работает, если груз мал по сравнению с длиной нити, а отклонения небольшие.
+fig: pendulum
+p: Период малых колебаний: $T = 2\pi\sqrt{\dfrac{l}{g}}$.
+p: Период не зависит от массы груза и от амплитуды. Чем длиннее нить, тем медленнее колебания. На планете с меньшим $g$ маятник качается медленнее.
+p: Не путайте с пружинным маятником $2\pi\sqrt{\dfrac{m}{k}}$: у математического в формуле длина нити и ускорение свободного падения, а масса не входит.
+
+@ osc-5
+p: Пружинный маятник – груз массой $m$ на пружине жёсткостью $k$. Если вывести груз из положения равновесия, сила упругости будет возвращать его обратно.
+fig: springosc | Груз колеблется между точками $-A$ и $A$ около положения равновесия.
+p: Период колебаний: $T = 2\pi\sqrt{\dfrac{m}{k}}$.
+p: Тяжёлый груз труднее разогнать и остановить, поэтому с ростом массы период растёт. Жёсткая пружина возвращает груз сильнее, поэтому с ростом жёсткости период уменьшается.
+p: Период не зависит от амплитуды и от $g$. На Луне такой маятник колебался бы с тем же периодом.
+
+@ osc-6
+p: При гармонических колебаниях $x = A\cos\omega t$ скорость тоже меняется гармонически: $v_x = -A\omega\sin\omega t$.
+fig: springosc
+p: Синус по модулю не больше единицы, поэтому наибольшая скорость равна $v_{\max} = \omega A$.
+p: Скорость максимальна, когда тело проходит положение равновесия. В крайних точках тело на мгновение останавливается, и скорость равна нулю.
+p: Так же находится максимальное ускорение: $a_{\max} = \omega^2 A$. Оно, наоборот, наибольшее в крайних точках.
+
+@ osc-7
+p: При колебаниях пружинного маятника без трения полная механическая энергия сохраняется. Она переходит из потенциальной энергии пружины в кинетическую энергию груза и обратно.
+fig: springosc | В крайних точках вся энергия запасена в пружине, в положении равновесия вся энергия у движущегося груза.
+p: В крайнем положении груз останавливается, а деформация максимальна: $E = \dfrac{kA^2}{2}$.
+p: В положении равновесия пружина не деформирована, а скорость максимальна: $E = \dfrac{mv_{\max}^2}{2}$. Приравниваем: $\dfrac{kA^2}{2} = \dfrac{mv_{\max}^2}{2}$.
+p: Из этого равенства удобно находить максимальную скорость: $v_{\max} = A\sqrt{\dfrac{k}{m}} = \omega A$.
+
+@ osc-8
+p: Волна – колебания, которые распространяются в пространстве. Длина волны $\lambda$ – расстояние, на которое волна распространяется за один период.
+fig: wave
+p: Волна движется с постоянной скоростью $v$, поэтому за время $T$ она проходит расстояние $\lambda = vT$.
+p: Так как $T = \dfrac{1}{\nu}$, можно записать и так: $\lambda = \dfrac{v}{\nu}$, или $v = \lambda\nu$.
+p: На рисунке длину волны удобно искать как расстояние между соседними гребнями. При переходе волны в другую среду частота не меняется, а скорость и длина волны меняются.
+</script>
+
+
+<script>
+window.MathJax = {
+  loader: { load: ['[tex]/color'] },
+  tex: { packages: { '[+]': ['color'] } },
+  svg: { fontCache: 'none', mtextInheritFont: true },
+  startup: {
+    typeset: false,
+    ready() { MathJax.startup.defaultReady(); MathJax.startup.promise.then(() => { window.__mjReady = true; if (window.__onMath) window.__onMath(); }); }
+  }
+};
+</script>
+<script src="mathjax/tex-svg.js" async></script>
+
+<script>
+const App = (() => {
+  /* ---------- Телеграм: окружение, облако, навигация, вибрация ---------- */
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const inTg = !!(tg && tg.initData);
+  const tgAtLeast = v => { try { return tg.isVersionAtLeast(v); } catch (e) { return false; } };
+  const cloudOK = inTg && tg.CloudStorage && tgAtLeast('6.9');
+  if (inTg) {
+    document.documentElement.classList.add('tg');
+    try { tg.ready(); tg.expand(); } catch (e) {}
+    try { if (tgAtLeast('7.7')) tg.disableVerticalSwipes(); } catch (e) {}
+  }
+  const CHUNK = 3900;
+  const cloudDirty = {};
+  let cloudTimer = null;
+  function cloudQueue(key, obj) {
+    if (!cloudOK) return;
+    cloudDirty[key] = obj;
+    clearTimeout(cloudTimer);
+    cloudTimer = setTimeout(cloudFlush, 700);
+  }
+  function cloudFlush() {
+    for (const [key, obj] of Object.entries(cloudDirty)) {
+      const str = JSON.stringify(obj), n = Math.max(1, Math.ceil(str.length / CHUNK));
+      for (let i = 0; i < n; i++) tg.CloudStorage.setItem(`${key}_${i}`, str.slice(i * CHUNK, (i + 1) * CHUNK), () => {});
+      tg.CloudStorage.setItem(`${key}_n`, String(n), () => {});
+      delete cloudDirty[key];
+    }
+  }
+  function cloudLoad(keys, done) {
+    if (!cloudOK) return done({});
+    let finished = false;
+    const finish = v => { if (!finished) { finished = true; done(v); } };
+    setTimeout(() => finish({}), 4000);
+    try {
+      tg.CloudStorage.getItems(keys.map(k => `${k}_n`), (err, counts) => {
+        if (err || !counts) return finish({});
+        const parts = [];
+        keys.forEach(k => { const n = +counts[`${k}_n`] || 0; for (let i = 0; i < n; i++) parts.push(`${k}_${i}`); });
+        if (!parts.length) return finish({});
+        tg.CloudStorage.getItems(parts, (err2, vals) => {
+          if (err2 || !vals) return finish({});
+          const out = {};
+          keys.forEach(k => {
+            const n = +counts[`${k}_n`] || 0; if (!n) return;
+            try { out[k] = JSON.parse(Array.from({ length: n }, (_, i) => vals[`${k}_${i}`] || '').join('')); } catch (e) {}
+          });
+          finish(out);
+        });
+      });
+    } catch (e) { finish({}); }
+  }
+  let backFn = null;
+  function setBack(fn) {
+    backFn = fn;
+    if (inTg) { try { fn ? tg.BackButton.show() : tg.BackButton.hide(); } catch (e) {} }
+  }
+  if (inTg) { try { tg.BackButton.onClick(() => { if (ov) return closeExpl(); if (backFn) backFn(); }); } catch (e) {} }
+  const haptic = kind => {
+    if (!inTg || !tg.HapticFeedback) return;
+    try { kind === 'ok' ? tg.HapticFeedback.notificationOccurred('success') : kind === 'bad' ? tg.HapticFeedback.notificationOccurred('error') : tg.HapticFeedback.selectionChanged(); } catch (e) {}
+  };
+  function syncTheme() {
+    if (!inTg) return;
+    document.documentElement.dataset.theme = tg.colorScheme === 'dark' ? 'dark' : 'light';
+    const bg = getComputedStyle(document.body).backgroundColor;
+    const hex = (bg.match(/\d+/g) || []).slice(0, 3).map(x => (+x).toString(16).padStart(2, '0')).join('');
+    try { if (hex.length === 6 && tgAtLeast('6.9')) { tg.setHeaderColor('#' + hex); tg.setBackgroundColor('#' + hex); } } catch (e) {}
+  }
+
+  /* ---------- данные ---------- */
+  const TOPICS = [];
+  (function parse() {
+    let t = null, f = null;
+    for (const raw of document.getElementById('data').textContent.split('\n')) {
+      const line = raw.trim();
+      if (!line) continue;
+      if (line.startsWith('# ')) {
+        const [code, title, id] = line.slice(2).split('|').map(s => s.trim());
+        t = { code, title, id, items: [] }; TOPICS.push(t);
+      } else if (line.startsWith('= ')) {
+        f = { id: t.id + '-' + (t.items.length + 1), topic: t, n: line.slice(2), f: '', v: [], w: [] };
+        t.items.push(f);
+      } else if (line.startsWith('f: ')) f.f = line.slice(3);
+      else if (line.startsWith('v: ')) f.v = line.slice(3).split(';').map(s => s.split(' — ').map(x => x.trim()));
+      else if (line.startsWith('w: ')) f.w = line.slice(3).split(';;').map(s => s.trim());
+      else if (line.startsWith('e: ')) { const [lhs, ans] = line.slice(3).split(' :: '); f.e = { lhs: lhs.trim(), tokens: tokenize(ans) }; }
+      else if (line.startsWith('b: ')) {
+        const [tpl, ...extra] = line.slice(3).split(';;').map(s => s.trim());
+        const slots = [...tpl.matchAll(/⟦([^⟧]+)⟧/g)].map(m => { const [c, g] = m[1].split('@'); return { c: c.trim(), g: g || null }; });
+        f.b = { tpl, slots, extra };
+      }
+    }
+  })();
+  const ALL = TOPICS.flatMap(t => t.items);
+  const byId = Object.fromEntries(ALL.map(f => [f.id, f]));
+  const SECTION_TITLES = { '1': 'Механика', '2': 'Молекулярная физика и термодинамика', '3': 'Электродинамика', '4': 'Квантовая физика' };
+  const SECTIONS = [...new Set(TOPICS.map(t => t.code.split('.')[0]))].map(code => {
+    const topics = TOPICS.filter(t => t.code.split('.')[0] === code);
+    return { code, title: SECTION_TITLES[code] || `Раздел ${code}`, topics, items: topics.flatMap(t => t.items) };
+  });
+  const UPCOMING = [
+    ['2', 'Молекулярная физика и термодинамика'],
+    ['3', 'Электродинамика'],
+    ['4', 'Квантовая физика']
+  ];
+
+  /* ---------- прогресс (позже: Telegram CloudStorage) ---------- */
+  const KEY = 'formuly.progress.v1';
+  let progress = {};
+  try { progress = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { progress = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(progress)); } catch (e) {} cloudQueue('p', progress); };
+  const lvl = id => progress[id] || 0;
+  const MAX = 5;
+  const SEEN_KEY = 'formuly.seen.v1';
+  let seen = {};
+  try { seen = JSON.parse(localStorage.getItem(SEEN_KEY) || '{}') || {}; } catch (e) { seen = {}; }
+  const saveSeen = () => { try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch (e) {} cloudQueue('s', seen); };
+  /* интервальные повторения: когда формулу можно продвинуть на следующую клетку */
+  const SCHED_KEY = 'formuly.sched.v1';
+  let sched = {};
+  try { sched = JSON.parse(localStorage.getItem(SCHED_KEY) || '{}') || {}; } catch (e) { sched = {}; }
+  const saveSched = () => { try { localStorage.setItem(SCHED_KEY, JSON.stringify(sched)); } catch (e) {} cloudQueue('d', sched); };
+  const DAY = 864e5;
+  const WAIT = { 1: 1, 2: 1, 3: 3, 4: 7, 5: 14 };   // через сколько дней после достижения уровня можно получить следующую клетку
+  const KEEP = 30;                                  // проверка выученной на 5 формулы
+  const now = () => Date.now();
+  const today0 = () => { const d = new Date(now()); d.setHours(0, 0, 0, 0); return +d; };
+  const dueAt = id => sched[id] ? sched[id] : 0;
+  const isDue = id => lvl(id) >= 1 && now() >= dueAt(id);
+  const canAdvance = id => lvl(id) < 2 || now() >= dueAt(id);
+  const whenLabel = t => {
+    const d = Math.round((new Date(t).setHours(0, 0, 0, 0) - today0()) / DAY);
+    return d <= 0 ? 'сегодня' : d === 1 ? 'завтра' : `через ${d} ${plural(d, 'день', 'дня', 'дней')}`;
+  };
+  const bump = (id, ok) => {
+    const l = lvl(id); let counted = false;
+    if (ok) {
+      if (canAdvance(id)) {
+        const nl = Math.min(MAX, l + 1), days = l === MAX ? KEEP : WAIT[nl];
+        progress[id] = nl; sched[id] = days ? today0() + days * DAY : now(); counted = true;
+      }
+    } else { progress[id] = Math.max(0, l - 2); sched[id] = now(); }
+    seen[id] = 1; save(); saveSeen(); saveSched();
+    return { counted, due: dueAt(id) };
+  };
+  /* просрочка: каждые 3 дня без повторения — минус клетка (но не ниже 1) */
+  const DECAY = 3;
+  let decayNotice = 0;
+  function applyDecay() {
+    let lost = 0;
+    for (const f of ALL) {
+      const l = lvl(f.id); if (l < 2) continue;
+      const over = now() - dueAt(f.id);
+      if (over < DECAY * DAY) continue;
+      const k = Math.floor(over / (DECAY * DAY)), nl = Math.max(1, l - k);
+      lost += l - nl; progress[f.id] = nl; sched[f.id] = dueAt(f.id) + k * DECAY * DAY;
+    }
+    if (lost) { save(); saveSched(); decayNotice += lost; }
+  }
+  const dueList = () => ALL.filter(f => isDue(f.id)).sort((a, b) => dueAt(a.id) - dueAt(b.id));
+  const learned = items => items.filter(f => lvl(f.id) >= 4).length;
+  const started = items => items.filter(f => seen[f.id] || lvl(f.id) > 0).length;
+  const pct = items => Math.round(items.reduce((s, f) => s + lvl(f.id), 0) / (items.length * MAX) * 100);
+
+  /* ---------- утилиты ---------- */
+  const $app = document.getElementById('app');
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const unit = s => esc(s).replace(/\//g, '/\u2060');
+  const tex = s => `<span class="tex" data-tex="${esc(s)}"></span>`;
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const cells = id => { const l = lvl(id); return `<span class="cells ${l >= 4 ? 'l5' : ''}" title="Уровень ${l} из ${MAX}">${Array.from({ length: MAX }, (_, i) => `<i class="${i < l ? 'on' : ''}"></i>`).join('')}</span>`; };
+  const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 10 || h >= 20) ? b : c; };
+  const legend = f => `<ul class="legend">${f.v.map(([s, m]) => `<li>${tex(s)}<span>— ${unit(m)}</span></li>`).join('')}</ul>`;
+  const ICON = {
+    back: '<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>',
+    close: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+  };
+
+  let mathReady = false;
+  const cache = new Map();
+  function typeset(root = $app) {
+    root.querySelectorAll('.tex[data-tex]').forEach(el => {
+      const s = el.dataset.tex;
+      if (mathReady && window.MathJax && MathJax.tex2svg) {
+        let node = cache.get(s);
+        if (!node) {
+          try { node = MathJax.tex2svg(s, { display: false }); } catch (e) { node = null; }
+          if (!node && s.includes('\\color')) { try { node = MathJax.tex2svg(s.replace(/\\color\{[^}]*\}/g, ''), { display: false }); } catch (e) { node = null; } }
+          if (node) cache.set(s, node);
+        }
+        if (node) { el.replaceChildren(node.cloneNode(true)); el.classList.remove('raw'); return; }
+      }
+      el.textContent = s; el.classList.add('raw');
+    });
+  }
+
+  let keyHandler = null;
+  document.addEventListener('keydown', e => {
+    if (ov) { if (e.key === 'Escape') closeExpl(); return; }
+    if (keyHandler && !e.metaKey && !e.ctrlKey && !e.altKey) keyHandler(e);
+  });
+
+  function paint(html, onKey = null) {
+    $app.innerHTML = html; keyHandler = onKey; typeset();
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- главный экран ---------- */
+  let resetAsk = false;
+  const dueText = f => {
+    const l = lvl(f.id);
+    if (!l && !seen[f.id]) return 'Ещё не встречалась в тренировке';
+    if (l < 2) return 'Следующую клетку можно получить сразу, в тренировке';
+    if (isDue(f.id)) return 'Пора повторить';
+    return `Следующая клетка — ${whenLabel(dueAt(f.id))}, при повторении`;
+  };
+  function reviewCard() {
+    const due = dueList();
+    const future = ALL.filter(f => lvl(f.id) >= 1 && !isDue(f.id)).map(f => dueAt(f.id)).sort((a, b) => a - b);
+    let body;
+    if (due.length) body = `
+        <div><span class="eyebrow">Повторение</span>
+          <div class="rv-big num">${due.length} <small>${plural(due.length, 'формула ждёт', 'формулы ждут', 'формул ждут')} повторения</small></div></div>
+        <button class="btn btn-primary" data-review>Повторить</button>`;
+    else if (future.length) {
+      const next = future[0], n = future.filter(t => whenLabel(t) === whenLabel(next)).length;
+      body = `<div><span class="eyebrow">Повторение</span>
+          <p class="rv-text">На сегодня всё повторено. Следующее повторение ${whenLabel(next)}: ${n} ${plural(n, 'формула', 'формулы', 'формул')}.</p></div>`;
+    } else body = `<div><span class="eyebrow">Повторение</span>
+          <p class="rv-text">Здесь появятся формулы, которые пора повторить. Начни с тренировки.</p></div>`;
+    const warn = due.length ? `<p class="rv-warn">Если не повторить формулу 3 дня, она теряет клетку.</p>` : '';
+    const lostMsg = decayNotice ? `<p class="rv-lost">Пока тебя не было, формулы потеряли ${decayNotice} ${plural(decayNotice, 'клетку', 'клетки', 'клеток')}. Повтори их, чтобы вернуть.</p>` : '';
+    decayNotice = 0;
+    return `<section class="review ${due.length ? 'hot' : ''}">${lostMsg}${body}${warn}<button class="link rv-help" data-help>Как работает повторение</button></section>`;
+  }
+  function home() {
+    setBack(null);
+    applyDecay();
+    const total = ALL.length, done = learned(ALL);
+    const weak = ALL.filter(f => lvl(f.id) < MAX).length;
+    paint(`
+      <header class="brand">
+        <span class="eyebrow">Физика</span>
+        <h1>Формулы <i>для ЕГЭ</i></h1>
+      </header>
+      <section class="summary">
+        <div>
+          <span class="eyebrow">Весь курс</span>
+          <div class="big num">${pct(ALL)}%<small> освоено</small></div>
+          <div class="meter"><span style="width:${pct(ALL)}%"></span></div>
+          <div class="counts num">Начато ${started(ALL)} из ${total} · выучено ${done}</div>
+        </div>
+        <button class="btn ${dueList().length ? 'btn-ghost' : 'btn-primary'}" data-go="mix-all" ${weak ? '' : 'disabled'}>Тренировка</button>
+      </section>
+      ${reviewCard()}
+      <section class="sec">
+        <div class="section-head"><h2>Разделы</h2></div>
+        <div class="topics">
+          ${SECTIONS.map(sec => `
+            <button class="topic" data-section="${sec.code}">
+              <span class="code">${sec.code}</span>
+              <span>
+                <span class="name">${esc(sec.title)}</span><br>
+                <span class="meta num">начато ${started(sec.items)} из ${sec.items.length} · выучено ${learned(sec.items)}</span>
+                <span class="meter"><span style="width:${pct(sec.items)}%"></span></span>
+              </span>
+              <span class="pct num">${pct(sec.items)}%</span>
+            </button>`).join('')}
+          ${UPCOMING.filter(([c]) => !SECTIONS.some(x => x.code === c)).map(([c, n]) => `<div class="topic locked"><span class="code">${c}</span><span class="name">${n}</span><span class="soon">скоро</span></div>`).join('')}
+        </div>
+      </section>
+      <footer class="foot">
+        ${resetAsk
+          ? `<span class="confirm">Сбросить весь прогресс? <button class="link" data-reset="yes">Да, сбросить</button><button class="link" data-reset="no">Отмена</button></span>`
+          : `<button class="link" data-welcome>Как пользоваться</button><button class="link" data-reset="ask">Сбросить прогресс</button>`}
+      </footer>
+    `);
+    $app.querySelectorAll('[data-section]').forEach(b => b.onclick = () => section(b.dataset.section));
+    const wl = $app.querySelector('[data-welcome]'); if (wl) wl.onclick = () => openWelcome();
+    const rv = $app.querySelector('[data-review]'); if (rv) rv.onclick = () => start({ pool: dueList(), mode: 'mix', label: 'Повторение', back: home });
+    $app.querySelectorAll('[data-help]').forEach(b => b.onclick = openHelp);
+    $app.querySelector('[data-go="mix-all"]').onclick = () => start({ pool: ALL, mode: 'mix', label: 'Тренировка', back: home });
+    $app.querySelectorAll('[data-reset]').forEach(b => b.onclick = () => {
+      const a = b.dataset.reset;
+      if (a === 'yes') { progress = {}; seen = {}; sched = {}; save(); saveSeen(); saveSched(); }
+      resetAsk = a === 'ask'; home();
+    });
+  }
+
+  /* ---------- экран темы ---------- */
+  const MODES = {
+    pick:  ['Найди формулу', 'Выбери верную из четырёх'],
+    name:  ['Узнай формулу', 'По формуле назови закон'],
+    gap:   ['Заполни пропуск', 'Что стоит в пустой клетке'],
+    build: ['Собери формулу', 'Расставь кусочки по местам'],
+    write: ['Напиши формулу', 'Набери формулу сам'],
+    mix:   ['Тренировка', 'Всё вперемешку, слабые чаще']
+  };
+  function section(code) {
+    const sec = SECTIONS.find(x => x.code === code);
+    paint(`
+      <div class="bar"><button class="icon-btn" data-back aria-label="Назад">${ICON.back}</button></div>
+      <header class="topic-head">
+        <span class="eyebrow">Раздел ${sec.code} · ${sec.items.length} ${plural(sec.items.length, 'формула', 'формулы', 'формул')}</span>
+        <h1>${esc(sec.title)}</h1>
+      </header>
+      <div class="sec-card">
+        <div class="sec-stats">
+          <div class="sec-top"><b class="num">${pct(sec.items)}%</b><span class="muted">освоено</span></div>
+          <div class="meter"><span style="width:${pct(sec.items)}%"></span></div>
+          <div class="counts num">Начато ${started(sec.items)} из ${sec.items.length} · выучено ${learned(sec.items)}</div>
+        </div>
+        <button class="btn btn-primary" data-sec>Тренировка</button>
+      </div>
+      <section class="sec">
+        <div class="section-head"><h2>Темы</h2></div>
+        <div class="topics">
+          ${sec.topics.map(t => `
+            <button class="topic" data-topic="${t.id}">
+              <span class="code">${t.code}</span>
+              <span>
+                <span class="name">${esc(t.title)}</span><br>
+                <span class="meta num">начато ${started(t.items)} из ${t.items.length} · выучено ${learned(t.items)}</span>
+                <span class="meter"><span style="width:${pct(t.items)}%"></span></span>
+              </span>
+              <span class="pct num">${pct(t.items)}%</span>
+            </button>`).join('')}
+        </div>
+      </section>
+    `, e => { if (e.key === 'Escape') home(); });
+    $app.querySelector('[data-back]').onclick = home;
+    setBack(home);
+    $app.querySelector('[data-sec]').onclick = () => start({ pool: sec.items, mode: 'mix', label: sec.title, back: () => section(code) });
+    $app.querySelectorAll('[data-topic]').forEach(b => b.onclick = () => topic(b.dataset.topic));
+  }
+  function topic(id) {
+    const t = TOPICS.find(x => x.id === id);
+    const back = () => topic(id);
+    paint(`
+      <div class="bar"><button class="icon-btn" data-back aria-label="Назад">${ICON.back}</button></div>
+      <header class="topic-head">
+        <span class="eyebrow">Раздел ${t.code} · ${t.items.length} ${plural(t.items.length, 'формула', 'формулы', 'формул')}</span>
+        <h1>${esc(t.title)}</h1>
+        <div class="meter"><span style="width:${pct(t.items)}%"></span></div>
+        <span class="muted num" style="font-size:14px">Освоено ${pct(t.items)}% · начато ${started(t.items)} из ${t.items.length} · выучено ${learned(t.items)}</span>
+      </header>
+      <section class="modes">
+        <button class="mode primary" data-mode="mix"><b>${MODES.mix[0]}</b></button>
+        ${['pick', 'name', 'gap', 'build', 'write'].map(m => `<button class="mode" data-mode="${m}"><b>${MODES[m][0]}</b></button>`).join('')}
+      </section>
+      <section style="display:flex;flex-direction:column;gap:10px">
+        <div class="section-head"><h2 class="with-help">Шпаргалка <button class="help" data-help aria-label="Что значат клетки">?</button></h2><span class="eyebrow">нажми, чтобы раскрыть</span></div>
+        <div class="sheet">
+          ${t.items.map(f => `
+            <details>
+              <summary><span class="fname">${esc(f.n)}</span>${cells(f.id)}<span class="fbody">${tex(f.f)}</span></summary>
+              <div class="due-note">${dueText(f)}</div>
+              ${legend(f)}
+              ${EXPL[f.id] ? `<div class="why"><button class="link" data-why="${f.id}">Откуда берётся формула</button></div>` : ''}
+            </details>`).join('')}
+        </div>
+      </section>
+    `, e => { if (e.key === 'Escape') section(t.code.split('.')[0]); });
+    $app.querySelector('[data-back]').onclick = () => section(t.code.split('.')[0]);
+    setBack(() => section(t.code.split('.')[0]));
+    $app.querySelectorAll('[data-help]').forEach(b => b.onclick = openHelp);
+    $app.querySelectorAll('[data-why]').forEach(b => b.onclick = () => openExpl(byId[b.dataset.why]));
+    $app.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => start({ pool: t.items, mode: b.dataset.mode, label: t.title, back }));
+  }
+
+  /* ---------- сессия ---------- */
+  let S = null;
+  const SESSION = 10;
+  function start({ pool, mode, label, back }) {
+    const rank = f => { const l = lvl(f.id); if (l >= 1 && isDue(f.id)) return 0; if (l >= 1 && l < 2) return 1; if (!seen[f.id] && l === 0) return 1.5; if (l === 0) return 1; return 2.5 + l / 2; };
+    const ordered = pool.map(f => ({ f, k: rank(f) + Math.random() * 1.2 })).sort((a, b) => a.k - b.k).map(x => x.f);
+    const items = shuffle(ordered.slice(0, Math.min(SESSION, pool.length)));
+    const modes = items.map(() => mode === 'mix' ? ['pick', 'name', 'gap', 'build', 'write'][Math.random() * 5 | 0] : mode);
+    S = { pool, mode, label, back, items, modes, i: 0, results: [] };
+    question();
+  }
+
+  function top() {
+    return `<div class="bar">
+      <button class="icon-btn" data-close aria-label="Закончить">${ICON.close}</button>
+      <div class="progress"><span style="width:${S.i / S.items.length * 100}%"></span></div>
+      <span class="count num">${S.i + 1} / ${S.items.length}</span>
+    </div>`;
+  }
+  function wireTop() { const fn = () => S.results.length ? result() : S.back(); $app.querySelector('[data-close]').onclick = fn; setBack(fn); }
+
+  function record(f, ok) { haptic(ok ? 'ok' : 'bad'); const info = bump(f.id, ok); S.results.push({ f, ok, ...info }); }
+  const earlyNote = () => { const r = S.results[S.results.length - 1]; return r && r.ok && !r.counted ? `<span class="note">Следующая клетка — ${whenLabel(r.due)}, при повторении</span>` : ''; };
+  function next() { S.i++; S.i < S.items.length ? question() : result(); }
+
+  function question() {
+    const f = S.items[S.i], mode = S.modes[S.i];
+    if (mode === 'pick') return qPick(f);
+    if (mode === 'gap') return qGap(f);
+    if (mode === 'build') return qBuild(f);
+    if (mode === 'write') return qWrite(f);
+    return qName(f);
+  }
+
+  function choice(f, { eyebrow, ask, askTex, sub, options, correct, isTex, row, note }) {
+    let picked = null;
+    const render = () => {
+      const done = picked !== null;
+      paint(`${top()}
+        <article class="qcard" style="min-height:0">
+          <span class="eyebrow">${eyebrow}</span>
+          ${ask ? `<div class="ask">${esc(ask)}</div>` : ''}
+          ${askTex ? `<div class="formula">${tex(askTex)}</div>` : ''}
+          ${sub ? `<div class="sub">${sub}</div>` : ''}
+        </article>
+        <div class="options ${row ? 'row' : ''}" role="group">
+          ${options.map((o, i) => {
+            let cls = '';
+            if (done) cls = o === correct ? 'right' : (o === picked ? 'wrong' : 'dim');
+            return `<button class="opt ${isTex ? '' : 'text'} ${cls}" data-i="${i}" ${done ? 'disabled' : ''}><span class="k">${i + 1}</span>${isTex ? tex(o) : `<span>${unit(o)}</span>`}</button>`;
+          }).join('')}
+        </div>
+        ${done ? `
+          <div class="verdict-line"><span class="verdict ${picked === correct ? 'ok' : 'bad'}">${picked === correct ? 'Верно' : 'Ошибка — верный вариант подсвечен зелёным'}</span>${earlyNote()}</div>
+          ${afterActions(f)}` : ''}
+      `, e => {
+        if (!done && /^[1-4]$/.test(e.key)) pick(options[+e.key - 1]);
+        else if (done && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); next(); }
+        else if (e.key === 'Escape') S.results.length ? result() : S.back();
+      });
+      wireTop();
+      $app.querySelectorAll('[data-i]').forEach(b => b.onclick = () => pick(options[+b.dataset.i]));
+      const n = $app.querySelector('[data-next]'); if (n) { n.onclick = next; n.focus({ preventScroll: true }); }
+      const xb = $app.querySelector('[data-expl]'); if (xb) xb.onclick = () => openExpl(f);
+    };
+    const pick = o => { if (picked !== null || o === undefined) return; picked = o; record(f, o === correct); render(); };
+    render();
+  }
+
+  function qPick(f) {
+    choice(f, { eyebrow: `${esc(f.topic.title)} · найди верную формулу`, ask: f.n, options: shuffle([f.f, ...f.w.slice(0, 3)]), correct: f.f, isTex: true });
+  }
+  function qName(f) {
+    const same = f.topic.items.filter(x => x !== f);
+    const others = (same.length >= 3 ? shuffle(same) : shuffle(ALL.filter(x => x !== f))).slice(0, 3).map(x => x.n);
+    choice(f, { eyebrow: `${esc(f.topic.title)} · что это за формула?`, askTex: f.f, options: shuffle([f.n, ...others]), correct: f.n, isTex: false });
+  }
+
+  /* шаблон с клетками: fill[k] — содержимое клетки или null */
+  const OKC = '#2FA36B', BADC = '#E5534B';
+  function tpl(f, fill, { cur = -1, marks = null } = {}) {
+    let k = 0;
+    return f.b.tpl.replace(/⟦[^⟧]+⟧/g, () => {
+      const i = k++, c = fill[i];
+      if (c == null) return i === cur ? '\\boxed{\\,?\\,}' : '\\boxed{\\phantom{00}}';
+      const col = marks ? (marks[i] ? OKC : BADC) : null;
+      return col ? `\\boxed{\\color{${col}}{${c}}}` : `\\boxed{${c}}`;
+    });
+  }
+  function qGap(f) {
+    const sl = f.b.slots, k = Math.random() * sl.length | 0, correct = sl[k].c;
+    const fill = sl.map((x, i) => i === k ? null : x.c);
+    const pool = [...new Set([...f.b.extra, ...sl.map(x => x.c)])].filter(x => x !== correct);
+    choice(f, { eyebrow: `${esc(f.topic.title)} · заполни пропуск`, ask: f.n, askTex: tpl(f, fill, { cur: k }), options: shuffle([correct, ...shuffle(pool).slice(0, 3)]), correct, isTex: true });
+  }
+  function checkBuild(f, fill) {
+    const sl = f.b.slots, left = {};
+    sl.forEach(x => { if (x.g) (left[x.g] = left[x.g] || []).push(x.c); });
+    return sl.map((x, i) => {
+      if (!x.g) return fill[i] === x.c;
+      const j = left[x.g].indexOf(fill[i]);
+      if (j < 0) return false;
+      left[x.g].splice(j, 1); return true;
+    });
+  }
+  function qBuild(f) {
+    const sl = f.b.slots;
+    const tiles = shuffle([...sl.map(x => x.c), ...f.b.extra]).map(t => ({ t, used: false }));
+    let placed = [], marks = null;
+    const render = () => {
+      const fill = sl.map((_, i) => placed[i] != null ? tiles[placed[i]].t : null);
+      const full = placed.length === sl.length, done = marks !== null, ok = done && marks.every(Boolean);
+      paint(`${top()}
+        <article class="qcard" style="min-height:0">
+          <span class="eyebrow">${esc(f.topic.title)} · собери формулу</span>
+          <div class="ask">${esc(f.n)}</div>
+          <div class="formula">${tex(tpl(f, fill, { cur: placed.length, marks }))}</div>
+        </article>
+        ${done ? '' : `
+          <div class="tiles">${tiles.map((x, i) => `<button class="tile" data-t="${i}" ${x.used ? 'disabled' : ''}>${tex(x.t)}</button>`).join('')}</div>
+          <div class="actions">
+            <button class="btn btn-ghost" data-undo ${placed.length ? '' : 'disabled'}>Стереть</button>
+            <button class="btn btn-primary" data-check ${full ? '' : 'disabled'}>Проверить</button>
+          </div>`}
+        ${done ? `
+          <div class="verdict-line"><span class="verdict ${ok ? 'ok' : 'bad'}">${ok ? 'Верно' : 'Ошибка. Правильно так:'}</span>${ok ? earlyNote() : `<span class="tex-inline">${tex(f.f)}</span>`}</div>
+          ${afterActions(f)}` : ''}
+      `, e => {
+        if (done) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); next(); } }
+        else if (/^[1-9]$/.test(e.key)) put(+e.key - 1);
+        else if (e.key === 'Backspace') undo();
+        else if (e.key === 'Enter' && full) check();
+        if (e.key === 'Escape') S.results.length ? result() : S.back();
+      });
+      wireTop();
+      $app.querySelectorAll('[data-t]').forEach(b => b.onclick = () => put(+b.dataset.t));
+      const u = $app.querySelector('[data-undo]'); if (u) u.onclick = undo;
+      const c = $app.querySelector('[data-check]'); if (c) c.onclick = check;
+      const n = $app.querySelector('[data-next]'); if (n) { n.onclick = next; n.focus({ preventScroll: true }); }
+      const xb = $app.querySelector('[data-expl]'); if (xb) xb.onclick = () => openExpl(f);
+    };
+    const put = i => { const x = tiles[i]; if (!x || x.used || placed.length >= sl.length) return; haptic('tap'); x.used = true; placed.push(i); render(); };
+    const undo = () => { const i = placed.pop(); if (i == null) return; tiles[i].used = false; render(); };
+    const check = () => {
+      if (placed.length < sl.length || marks) return;
+      marks = checkBuild(f, placed.map(i => tiles[i].t));
+      record(f, marks.every(Boolean)); render();
+    };
+    render();
+  }
+
+  /* ---------- пояснения: откуда берётся формула ---------- */
+  const FIG = (() => {
+    const r1 = n => Math.round(n * 10) / 10;
+    const L = (x1, y1, x2, y2, c = '') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="ln ${c}"/>`;
+    const A = (x1, y1, x2, y2, c = '') => {
+      const g = Math.atan2(y2 - y1, x2 - x1), bx = x2 - 9 * Math.cos(g), by = y2 - 9 * Math.sin(g);
+      const px = -Math.sin(g) * 4.5, py = Math.cos(g) * 4.5;
+      return L(x1, y1, r1(bx), r1(by), c) + `<polygon points="${x2},${y2} ${r1(bx + px)},${r1(by + py)} ${r1(bx - px)},${r1(by - py)}" class="ah ${c}"/>`;
+    };
+    const T = (x, y, t, c = '', a = 'middle') => `<text x="${x}" y="${y}" text-anchor="${a}" class="${c}">${t}</text>`;
+    const S = (b, s, rest = '') => `${b}<tspan class="sb" dy="4">${s}</tspan>${rest ? `<tspan dy="-4">${rest}</tspan>` : ''}`;
+    const dot = (x, y, r = 4) => `<circle cx="${x}" cy="${y}" r="${r}" class="dot"/>`;
+    const axes = (w, h, top = 12, tl = true) => A(40, h, w, h) + (tl ? T(w, h + 17, 't', 'm', 'end') : '') + A(40, h, 40, top) + T(52, top + 8, 'v', 'm', 'start');
+    const svg = (w, h, label, body) => `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${body}</svg>`;
+    return {
+      uniform: {
+        cap: 'Тело начинает движение из точки $x_0$ и за время $t$ смещается на $v_x t$.',
+        svg: svg(320, 116, 'Тело на оси x сдвигается от x0 на vx·t',
+          A(20, 82, 306, 82) + T(306, 72, 'x', 'm', 'end') +
+          [[40, '0'], [110, S('x', '0')], [250, 'x']].map(([x, l]) => L(x, 77, x, 87) + T(x, 104, l, 'm')).join('') +
+          `<circle cx="110" cy="68" r="8" class="ghost"/><circle cx="250" cy="68" r="8" class="dot"/>` +
+          T(110, 48, 't = 0', 'm') + T(250, 48, 'через время t') +
+          A(110, 24, 250, 24, 'acc') + L(110, 18, 110, 30, 'acc') + T(180, 15, S('v', 'x', 't'), 'm acct'))
+      },
+      slope: {
+        cap: 'Чем круче график скорости, тем больше ускорение: $a = \\dfrac{\\Delta v}{\\Delta t}$.',
+        svg: svg(320, 190, 'График скорости: прямая, треугольник Δv и Δt',
+          axes(305, 165) + L(40, 135, 285, 45, 'acc thick') +
+          L(110, 109.3, 230, 109.3, 'dash') + L(230, 109.3, 230, 65.2, 'dash') +
+          dot(110, 109.3) + dot(230, 65.2) +
+          T(170, 127, 'Δt', 'm') + T(240, 92, 'Δv', 'm', 'start') + T(86, 92, 'наклон = a', 'acct'))
+      },
+      vel: {
+        cap: 'Скорость в момент $t$ складывается из начальной скорости $v_{0x}$ и прибавки $a_x t$.',
+        svg: svg(320, 190, 'График скорости: v0x плюс ax·t',
+          axes(305, 165, 12, false) + L(40, 120, 270, 120, 'dash') + L(40, 40, 270, 40, 'dash') +
+          L(40, 120, 270, 40, 'acc thick') + L(270, 165, 270, 120, 'thick') + L(270, 120, 270, 40, 'thick acc') +
+          T(280, 147, S('v', '0x'), 'm', 'start') + T(280, 85, S('a', 'x', 't'), 'm acct', 'start') +
+          T(34, 124, S('v', '0x'), 'm', 'end') + T(34, 44, S('v', 'x'), 'm', 'end') + T(270, 182, 't', 'm'))
+      },
+      area: {
+        cap: 'Площадь под графиком скорости равна перемещению. Трапецию удобно разбить на прямоугольник и треугольник.',
+        svg: svg(320, 190, 'Площадь под графиком скорости: прямоугольник и треугольник',
+          `<rect x="40" y="120" width="220" height="45" class="softf"/><polygon points="40,120 260,120 260,50" class="accf"/>` +
+          axes(305, 165, 12, false) + L(40, 120, 260, 50, 'acc thick') + L(260, 165, 260, 50, 'dash') +
+          T(150, 148, S('v', '0x', 't'), 'm') + T(205, 111, S('a', 'x', 't²/2'), 'm') +
+          T(268, 90, S('a', 'x', 't'), 'm', 'start') + T(34, 124, S('v', '0x'), 'm', 'end') + T(260, 182, 't', 'm'))
+      },
+      avg: {
+        cap: 'Закрашенные треугольники равны, поэтому площадь трапеции равна площади прямоугольника, высота которого равна средней скорости.',
+        svg: svg(360, 190, 'Трапеция под графиком скорости и равный ей прямоугольник средней скорости',
+          `<polygon points="40,165 40,120 260,50 260,165" class="softf"/><polygon points="150,85 260,85 260,50" class="accf"/><polygon points="40,85 40,120 150,85" class="accf"/>` +
+          A(40, 165, 345, 165) + A(40, 165, 40, 12) + T(52, 20, 'v', 'm', 'start') +
+          L(40, 120, 260, 50, 'acc thick') + L(40, 85, 260, 85, 'dash acc') + L(260, 165, 260, 50, 'dash') +
+          T(34, 124, S('v', '0x'), 'm', 'end') + T(268, 54, S('v', 'x'), 'm', 'start') +
+          T(268, 89, '(' + S('v', '0x', ' + ') + S('v', 'x', ') / 2'), 'm acct', 'start') +
+          T(150, 135, 'путь = площадь') + T(260, 182, 't', 'm'))
+      },
+      fall: {
+        cap: 'Положения тела через равные промежутки времени. За каждый следующий промежуток тело пролетает больше, потому что скорость растёт.',
+        svg: svg(300, 200, 'Падающее тело через равные промежутки времени и высота h',
+          L(50, 20, 150, 20, 'thick') + L(30, 184, 170, 184, 'thick') +
+          [28, 37, 64, 109].map(y => `<circle cx="100" cy="${y}" r="4.5" class="ghost"/>`).join('') +
+          `<circle cx="100" cy="172" r="6" class="dot"/>` + T(116, 32, S('v', '0', ' = 0'), 'm', 'start') +
+          A(200, 101, 200, 22) + A(200, 101, 200, 182) + T(212, 106, 'h', 'm', 'start') +
+          A(252, 70, 252, 120, 'acc') + T(264, 100, 'g', 'm acct', 'start'))
+      },
+      boat: {
+        cap: 'Скорость лодки относительно берега $\\vec v$ равна сумме скорости относительно воды и скорости течения (правило треугольника).',
+        svg: svg(320, 180, 'Сложение векторов: скорость лодки относительно воды плюс скорость течения',
+          L(10, 12, 310, 12, 'muted') + L(10, 168, 310, 168, 'muted') +
+          A(70, 140, 70, 42) + L(70, 40, 202, 40, 'dash') + A(190, 40, 210, 40) + A(70, 140, 210, 40, 'acc thick') +
+          `<circle cx="70" cy="140" r="3" class="dot"/>` +
+          T(60, 95, S('v', 'отн'), 'm', 'end') + T(140, 31, S('v', 'пер'), 'm') + T(150, 104, 'v', 'm acct', 'start') +
+          A(236, 156, 296, 156, 'muted') + T(266, 150, 'течение', 'sm'))
+      },
+      freq: {
+        cap: 'Если за 1 с тело совершает 4 оборота ($\\nu = 4$ Гц), то один оборот длится $T = \\dfrac{1}{4}$ с.',
+        svg: svg(320, 110, 'Одна секунда делится на 4 оборота по 0,25 секунды',
+          [0, 1, 2, 3].map(i => `<rect x="${20 + 70 * i}" y="40" width="70" height="26" class="seg ${i ? '' : 'first'}"/>` + T(55 + 70 * i, 58, `оборот ${i + 1}`, 'sm')).join('') +
+          L(20, 30, 90, 30, 'acc') + L(20, 25, 20, 35, 'acc') + L(90, 25, 90, 35, 'acc') + T(55, 19, 'T = 0,25 с', 'm acct') +
+          L(20, 80, 300, 80) + L(20, 75, 20, 85) + L(300, 75, 300, 85) + T(160, 100, '1 секунда'))
+      },
+      ang: {
+        cap: 'За полный оборот тело поворачивается на $360^\\circ$, то есть на $2\\pi$ радиан, и тратит на это время $T$.',
+        svg: svg(320, 190, 'Окружность, угол поворота φ',
+          `<path d="M100,95 L165,95 A65,65 0 0 0 141.8,45.2 Z" class="softf"/><circle cx="100" cy="95" r="65" class="ring"/>` +
+          L(100, 95, 165, 95) + L(100, 95, 141.8, 45.2) + `<path d="M165,95 A65,65 0 0 0 141.8,45.2" class="arc"/>` +
+          dot(100, 95, 3) + dot(141.8, 45.2, 6) + T(126, 86, 'φ', 'm') +
+          T(190, 72, 'полный оборот:', '', 'start') + T(190, 96, 'φ = 2π', 'm acct', 'start') + T(190, 120, 'за время T', '', 'start'))
+      },
+      lin: {
+        cap: 'Линейная скорость всегда направлена по касательной к окружности. Угол $\\varphi$ вырезает дугу длиной $l = \\varphi R$.',
+        svg: svg(300, 200, 'Дуга l равна φR, скорость по касательной',
+          `<circle cx="110" cy="110" r="70" class="ring"/>` + L(110, 110, 180, 110, 'muted') + L(110, 110, 145, 49.4, 'muted') +
+          `<path d="M180,110 A70,70 0 0 0 145,49.4" class="arc"/>` + dot(110, 110, 3) + dot(145, 49.4, 6) +
+          A(145, 49.4, 93, 19.4) + T(86, 24, 'v', 'm', 'end') + T(145, 126, 'R', 'm') + T(133, 101, 'φ', 'm') +
+          T(182, 70, 'l = φR', 'm acct', 'start'))
+      },
+      cent: {
+        cap: 'Модуль скорости не меняется, а направление меняется постоянно. Центростремительное ускорение направлено к центру окружности.',
+        svg: svg(280, 190, 'Движение по окружности: скорость по касательной, ускорение к центру',
+          `<circle cx="120" cy="100" r="70" class="ring"/>` + dot(120, 100, 3) +
+          dot(120, 30, 5) + A(120, 30, 66, 30) + A(120, 30, 120, 68, 'acc') + T(62, 34, 'v', 'm', 'end') + T(128, 60, 'a', 'm acct', 'start') +
+          dot(190, 100, 5) + A(190, 100, 190, 46) + A(190, 100, 152, 100, 'acc') + T(198, 56, 'v', 'm', 'start') + T(168, 93, 'a', 'm acct') +
+          dot(70.5, 149.5, 5) + A(70.5, 149.5, 97, 176) + A(70.5, 149.5, 97.4, 122.6, 'acc'))
+      },
+      newton2: {
+        cap: 'Силы, действующие на брусок, который тянут по горизонтальной поверхности. Ускорение направлено туда же, куда результирующая сила.',
+        svg: svg(320, 196, 'Брусок на поверхности: сила тяги, трение, сила тяжести и реакция опоры',
+          L(20, 140, 300, 140) + `<rect x="120" y="90" width="80" height="50" class="block"/>` +
+          A(160, 115, 160, 42) + T(170, 52, 'N', 'm', 'start') +
+          A(160, 115, 160, 188) + T(170, 186, 'mg', 'm', 'start') +
+          A(200, 115, 276, 115) + T(268, 106, 'F', 'm') +
+          A(120, 128, 58, 128) + T(84, 120, S('F', 'тр'), 'm') +
+          A(214, 70, 274, 70, 'acc') + T(244, 62, 'a', 'm acct'))
+      },
+      newton3: {
+        cap: 'Шары действуют друг на друга с равными по модулю и противоположно направленными силами. Силы приложены к разным шарам.',
+        svg: svg(320, 150, 'Два шара давят друг на друга с равными противоположными силами',
+          `<circle cx="110" cy="80" r="45" class="block"/><circle cx="200" cy="80" r="45" class="block"/>` +
+          A(155, 80, 222, 80, 'acc thick') + A(155, 80, 88, 80, 'thick') +
+          T(192, 70, S('F', '12'), 'm acct') + T(118, 70, S('F', '21'), 'm') +
+          T(110, 112, 'шар 1', 'sm') + T(200, 112, 'шар 2', 'sm'))
+      },
+      grav: {
+        cap: 'Тела притягиваются друг к другу с одинаковыми по модулю силами. $R$ – расстояние между центрами тел.',
+        svg: svg(320, 130, 'Два тела притягиваются, расстояние между центрами R',
+          `<circle cx="60" cy="60" r="22" class="block"/><circle cx="260" cy="60" r="14" class="block"/>` +
+          A(82, 60, 142, 60, 'acc') + A(246, 60, 188, 60, 'acc') +
+          T(112, 50, 'F', 'm acct') + T(217, 50, 'F', 'm acct') +
+          T(60, 28, S('m', '1'), 'm') + T(260, 36, S('m', '2'), 'm') +
+          L(60, 105, 260, 105) + L(60, 99, 60, 111) + L(260, 99, 260, 111) + T(160, 99, 'R', 'm'))
+      },
+      height: {
+        cap: 'На высоте $h$ тело находится на расстоянии $R + h$ от центра планеты.',
+        svg: svg(320, 200, 'Тело на высоте h над планетой радиуса R',
+          `<circle cx="100" cy="130" r="60" class="planet"/>` + dot(100, 130, 3) + T(84, 158, 'M', 'm') +
+          L(100, 130, 142.4, 87.6) + T(128, 118, 'R', 'm') +
+          L(100, 70, 100, 30, 'dash') + T(108, 54, 'h', 'm', 'start') + dot(100, 24, 6) +
+          L(100, 130, 200, 130, 'dash') + L(106, 24, 200, 24, 'dash') +
+          A(200, 77, 200, 27) + A(200, 77, 200, 127) + T(208, 81, 'R + h', 'm', 'start'))
+      },
+      orbit: {
+        cap: 'Сила тяготения направлена к центру планеты и сообщает спутнику центростремительное ускорение.',
+        svg: svg(300, 200, 'Спутник на круговой орбите вокруг планеты',
+          `<circle cx="130" cy="105" r="36" class="planet"/><circle cx="130" cy="105" r="78" class="orbit"/>` +
+          T(130, 110, 'M', 'm') + dot(130, 27, 6) +
+          A(130, 27, 70, 27) + T(62, 31, 'v', 'm', 'end') +
+          A(130, 27, 130, 64, 'acc') + T(138, 52, 'F', 'm acct', 'start') +
+          L(130, 105, 185.2, 49.8, 'dash') + T(172, 88, 'R', 'm'))
+      },
+      spring: {
+        cap: 'Пружину растянули на $x$. Сила упругости направлена против удлинения, к положению равновесия.',
+        svg: svg(320, 130, 'Растянутая пружина с грузом и сила упругости',
+          L(20, 20, 20, 110, 'thick') + L(20, 110, 300, 110) +
+          `<polyline points="${[[20, 80], [30, 80], ...Array.from({ length: 12 }, (_, i) => [30 + (i + 1) * 10, i % 2 ? 90 : 70]), [160, 80], [170, 80]].map(p => p.join(',')).join(' ')}" class="spring"/>` +
+          `<rect x="170" y="60" width="50" height="50" class="block"/>` +
+          L(130, 40, 130, 110, 'dash') + A(130, 40, 170, 40) + T(150, 32, 'x', 'm') +
+          A(224, 48, 178, 48, 'acc thick') + T(230, 53, S('F', 'упр'), 'm acct', 'start'))
+      },
+      friction: {
+        cap: 'Пока брусок покоится, сила трения покоя равна приложенной силе. Когда брусок поехал, трение скольжения постоянно и равно $\\mu N$.',
+        svg: svg(320, 180, 'График силы трения от приложенной силы',
+          A(40, 150, 300, 150) + T(300, 168, 'F', 'm', 'end') + A(40, 150, 40, 15) + T(50, 22, S('F', 'тр'), 'm', 'start') +
+          L(40, 70, 160, 70, 'dash') + L(160, 150, 160, 70, 'dash') + T(34, 74, 'μN', 'm', 'end') +
+          L(40, 150, 160, 70, 'acc thick') + L(160, 70, 285, 70, 'acc thick') +
+          T(152, 138, 'трение покоя', 'sm', 'end') + T(222, 60, 'трение скольжения', 'sm') + T(160, 168, 'брусок поехал', 'sm'))
+      },
+      lift: {
+        cap: 'Лифт движется с ускорением вверх. Сила реакции опоры больше силы тяжести, поэтому вес тела увеличивается.',
+        svg: svg(300, 212, 'Тело в лифте, ускорение вверх',
+          L(150, 0, 150, 20) + `<rect x="90" y="20" width="120" height="170" class="cab"/><rect x="125" y="125" width="50" height="65" class="block"/>` +
+          A(150, 158, 150, 88) + T(160, 98, 'N', 'm', 'start') +
+          A(150, 158, 150, 208) + T(160, 206, 'mg', 'm', 'start') +
+          A(245, 140, 245, 70, 'acc thick') + T(255, 110, 'a', 'm acct', 'start'))
+      },
+      arm: {
+        cap: 'Плечо $l$ – перпендикуляр от оси O до линии действия силы, а не расстояние до точки, где приложена сила.',
+        svg: svg(320, 190, 'Плечо силы: перпендикуляр от оси до линии действия силы',
+          L(260, 180, 180, 19, 'dash muted') + T(174, 16, 'линия действия силы', 'sm', 'end') +
+          L(60, 140, 280, 140, 'thick') + `<polygon points="60,140 48,162 72,162" class="block"/>` + dot(60, 140, 3) + T(60, 180, 'O', 'm') +
+          L(60, 140, 204, 68, 'acc') + `<polyline points="196.8,71.6 200.4,78.8 207.6,75.2" class="rt"/>` + T(122, 96, 'l', 'm acct') +
+          A(240, 140, 212, 84, 'thick') + T(234, 104, 'F', 'm', 'start'))
+      },
+      lever: {
+        cap: 'Плечо $l_2$ в 2 раза длиннее $l_1$, поэтому для равновесия хватает силы $F_2$ в 2 раза меньше.',
+        svg: svg(320, 172, 'Рычаг в равновесии: большая сила на коротком плече, малая на длинном',
+          L(40, 100, 300, 100, 'thick') + `<polygon points="130,100 118,124 142,124" class="block"/>` + L(100, 124, 160, 124) +
+          A(50, 100, 50, 162) + T(58, 152, S('F', '1'), 'm', 'start') +
+          A(290, 100, 290, 131) + T(298, 128, S('F', '2'), 'm', 'start') +
+          L(50, 80, 290, 80) + [50, 130, 290].map(x => L(x, 75, x, 85)).join('') +
+          T(90, 71, S('l', '1'), 'm') + T(210, 71, S('l', '2'), 'm acct'))
+      },
+      pressure: {
+        cap: 'Сила одна и та же, а площадь опоры разная. Где площадь меньше, там давление больше.',
+        svg: svg(320, 150, 'Один брусок лежит плашмя, другой стоит на торце',
+          L(10, 120, 310, 120) + `<rect x="30" y="90" width="80" height="30" class="block"/><rect x="220" y="40" width="30" height="80" class="block"/>` +
+          A(70, 52, 70, 88) + T(78, 66, 'F', 'm', 'start') + A(235, 4, 235, 38) + T(243, 24, 'F', 'm', 'start') +
+          L(30, 120, 110, 120, 'acc thick') + L(220, 120, 250, 120, 'acc thick') +
+          T(70, 140, 'большая S', 'sm') + T(235, 140, 'маленькая S', 'sm'))
+      },
+      column: {
+        cap: 'Давление на глубине $h$ одинаково во всех направлениях и зависит только от глубины и плотности жидкости.',
+        svg: svg(300, 190, 'Сосуд с жидкостью, точка на глубине h',
+          `<rect x="61" y="50" width="138" height="119" class="water"/><polyline points="60,20 60,170 200,170 200,20" class="cab"/>` +
+          L(60, 50, 200, 50, 'acc') + dot(130, 130, 4) +
+          A(130, 106, 130, 123, 'acc') + A(130, 154, 130, 137, 'acc') + A(106, 130, 123, 130, 'acc') + A(154, 130, 137, 130, 'acc') +
+          L(200, 50, 230, 50, 'dash') + L(134, 130, 230, 130, 'dash') + A(230, 90, 230, 52) + A(230, 90, 230, 128) + T(238, 94, 'h', 'm', 'start') +
+          T(88, 158, 'ρ', 'm'))
+      },
+      archimedes: {
+        cap: 'На погружённое тело действуют сила тяжести вниз и сила Архимеда вверх.',
+        svg: svg(300, 200, 'Тело в жидкости: сила Архимеда вверх, сила тяжести вниз',
+          `<rect x="41" y="60" width="178" height="129" class="water"/><polyline points="40,20 40,190 220,190 220,20" class="cab"/>` +
+          L(40, 60, 220, 60, 'acc') + `<rect x="100" y="95" width="60" height="45" class="block"/>` +
+          A(130, 117, 130, 36, 'acc thick') + T(140, 44, S('F', 'А'), 'm acct', 'start') +
+          A(130, 117, 130, 182, 'thick') + T(140, 178, 'mg', 'm', 'start') + T(214, 54, 'уровень воды', 'sm', 'end'))
+      },
+      press: {
+        cap: 'Давление в жидкости везде одинаковое, поэтому на большой поршень действует во столько раз большая сила, во сколько раз больше его площадь.',
+        svg: svg(320, 186, 'Гидравлический пресс: малый и большой поршни',
+          `<rect x="50" y="60" width="30" height="115" class="water"/><rect x="170" y="80" width="120" height="95" class="water"/><rect x="80" y="150" width="90" height="25" class="water"/>` +
+          `<rect x="50" y="52" width="30" height="8" class="piston"/><rect x="170" y="72" width="120" height="8" class="piston"/>` +
+          L(50, 52, 50, 175) + L(80, 52, 80, 150) + L(80, 150, 170, 150) + L(170, 150, 170, 72) + L(290, 72, 290, 175) + L(50, 175, 290, 175) +
+          A(65, 8, 65, 50) + T(73, 26, S('F', '1'), 'm', 'start') + A(230, 70, 230, 16, 'acc thick') + T(240, 30, S('F', '2'), 'm acct', 'start') +
+          T(65, 110, S('S', '1'), 'm') + T(230, 125, S('S', '2'), 'm'))
+      },
+      momentum: {
+        cap: 'Импульс направлен так же, как скорость тела.',
+        svg: svg(320, 110, 'Тело массой m со скоростью v и импульсом p',
+          `<circle cx="80" cy="56" r="22" class="block"/>` + T(80, 61, 'm', 'm') +
+          A(102, 56, 170, 56) + T(136, 48, 'v', 'm') +
+          A(80, 94, 240, 94, 'acc thick') + T(248, 99, 'p = mv', 'm acct', 'start'))
+      },
+      impulse: {
+        cap: 'При постоянной силе изменение импульса равно площади под графиком $F(t)$.',
+        svg: svg(320, 170, 'График силы от времени, площадь прямоугольника равна FΔt',
+          `<rect x="100" y="60" width="120" height="80" class="softf"/>` +
+          A(40, 140, 300, 140) + T(300, 158, 't', 'm', 'end') + A(40, 140, 40, 15) + T(50, 22, 'F', 'm', 'start') +
+          L(40, 60, 100, 60, 'dash') + L(100, 60, 220, 60, 'acc thick') + L(100, 140, 100, 60, 'dash') + L(220, 140, 220, 60, 'dash') +
+          T(34, 64, 'F', 'm', 'end') + T(160, 158, 'Δt', 'm') + T(160, 106, 'Δp = FΔt', 'm acct'))
+      },
+      collision: {
+        cap: 'Скорости тел после удара меняются, а суммарный импульс системы остаётся прежним.',
+        svg: svg(320, 160, 'Два тела до и после столкновения',
+          T(14, 54, 'до', 'sm', 'start') + `<circle cx="80" cy="50" r="15" class="block"/><circle cx="220" cy="50" r="20" class="block"/>` +
+          A(95, 50, 145, 50) + T(120, 40, S('v', '1'), 'm') + A(200, 50, 160, 50) + T(180, 40, S('v', '2'), 'm') +
+          L(10, 88, 310, 88, 'dash muted') +
+          T(14, 130, 'после', 'sm', 'start') + `<circle cx="110" cy="126" r="15" class="block"/><circle cx="220" cy="126" r="20" class="block"/>` +
+          A(95, 126, 60, 126) + T(78, 116, S('v', '1', '′'), 'm') + A(240, 126, 292, 126) + T(266, 116, S('v', '2', '′'), 'm'))
+      },
+      work: {
+        cap: 'Работу совершает только составляющая силы вдоль перемещения, $F\\cos\\alpha$.',
+        svg: svg(320, 172, 'Сила под углом к перемещению и её составляющая вдоль перемещения',
+          L(10, 130, 310, 130) + `<rect x="60" y="100" width="60" height="30" class="block"/>` +
+          L(120, 100, 194, 100, 'dash') + L(194, 48, 194, 100, 'dash') + A(120, 100, 194, 48, 'acc thick') + T(198, 46, 'F', 'm acct', 'start') +
+          `<path d="M150,100 A30,30 0 0 0 144.6,82.8" class="arcthin"/>` + T(158, 93, 'α', 'm', 'start') +
+          T(200, 118, 'F cos α', 'm', 'start') + A(60, 152, 250, 152) + T(155, 168, 's', 'm'))
+      },
+      powerFv: {
+        cap: 'Сила тяги двигателя направлена вдоль скорости, поэтому мощность равна $N = Fv$.',
+        svg: svg(320, 120, 'Машина с силой тяги F и скоростью v',
+          L(10, 104, 310, 104) + `<rect x="110" y="55" width="80" height="40" rx="6" class="block"/><circle cx="130" cy="95" r="9" class="block"/><circle cx="170" cy="95" r="9" class="block"/>` +
+          A(190, 75, 252, 75, 'thick') + T(260, 80, 'F', 'm', 'start') + A(130, 32, 200, 32, 'acc') + T(165, 24, 'v', 'm acct'))
+      },
+      kin: {
+        cap: 'Сила $F$ разгоняет тело из состояния покоя на пути $s$ до скорости $v$.',
+        svg: svg(320, 130, 'Тело разгоняется силой F из покоя до скорости v',
+          L(10, 100, 310, 100) + `<rect x="30" y="70" width="40" height="30" class="ghostb"/><rect x="230" y="70" width="40" height="30" class="block"/>` +
+          T(50, 60, S('v', '0', ' = 0'), 'm') + A(70, 85, 112, 85) + T(92, 78, 'F', 'm') +
+          A(236, 55, 292, 55, 'acc') + T(264, 47, 'v', 'm acct') + A(50, 118, 250, 118) + T(150, 113, 's', 'm'))
+      },
+      lifth: {
+        cap: 'Тело на высоте $h$ над нулевым уровнем. Если оно упадёт, сила тяжести совершит работу $mgh$.',
+        svg: svg(300, 170, 'Тело на высоте h над нулевым уровнем',
+          L(20, 150, 280, 150) + T(276, 142, 'нулевой уровень', 'sm', 'end') + dot(100, 40, 9) +
+          A(100, 52, 100, 96, 'acc') + T(90, 84, 'mg', 'm acct', 'end') +
+          L(112, 40, 150, 40, 'dash') + A(150, 95, 150, 43) + A(150, 95, 150, 147) + T(158, 99, 'h', 'm', 'start'))
+      },
+      springgraph: {
+        cap: 'Сила упругости растёт линейно, поэтому работа равна площади треугольника под графиком.',
+        svg: svg(320, 170, 'График силы упругости от удлинения, площадь треугольника',
+          `<polygon points="40,140 220,140 220,50" class="accf"/>` +
+          A(40, 140, 300, 140) + T(300, 158, 'x', 'm', 'end') + A(40, 140, 40, 15) + T(50, 22, S('F', 'упр'), 'm', 'start') +
+          L(40, 140, 250, 35, 'acc thick') + L(220, 140, 220, 50, 'dash') + L(40, 50, 220, 50, 'dash') +
+          T(34, 54, 'kx', 'm', 'end') + T(220, 158, 'x', 'm') + T(168, 126, 'площадь = kx²/2', 'sm'))
+      },
+      energy: {
+        cap: 'При падении потенциальная энергия переходит в кинетическую, а их сумма остаётся постоянной.',
+        svg: svg(320, 186, 'Падающее тело: потенциальная энергия переходит в кинетическую',
+          L(20, 172, 300, 172) +
+          [[30, 1], [100, .5], [160, 0]].map(([y, ep]) =>
+            dot(70, y, 7) + L(82, y, 128, y, 'dash muted') +
+            (ep ? `<rect x="140" y="${y - 10}" width="${ep * 90}" height="8" class="barp"/>` : '') +
+            (1 - ep ? `<rect x="140" y="${y + 2}" width="${(1 - ep) * 90}" height="8" class="bark"/>` : '') +
+            T(240, y - 3, 'Eп', 'sm acct', 'start') + T(240, y + 9, 'Eк', 'sm', 'start')).join('') +
+          A(40, 40, 40, 150))
+      },
+      kpd: {
+        cap: 'Затраченная работа делится на полезную работу и потери.',
+        svg: svg(320, 130, 'Затраченная работа делится на полезную и потери',
+          `<rect x="20" y="40" width="100" height="60" class="softf"/><polygon points="120,40 190,40 190,76 120,76" class="softf"/><polygon points="120,76 190,88 190,100 120,100" class="lossf"/>` +
+          `<rect x="190" y="40" width="110" height="36" class="accf"/><rect x="190" y="88" width="60" height="12" class="lossf"/>` +
+          T(70, 75, S('A', 'затр'), 'm') + T(245, 63, S('A', 'пол'), 'm') + T(258, 98, 'потери', 'sm', 'start'))
+      },
+      cosine: {
+        cap: 'Смещение меняется по закону косинуса. $A$ – амплитуда, $T$ – период.',
+        svg: svg(340, 170, 'График гармонических колебаний x(t)',
+          A(30, 85, 330, 85) + T(330, 102, 't', 'm', 'end') + A(30, 160, 30, 8) + T(40, 16, 'x', 'm', 'start') +
+          L(30, 30, 270, 30, 'dash muted') + L(30, 140, 300, 140, 'dash muted') + T(24, 34, 'A', 'm', 'end') + T(24, 144, '−A', 'm', 'end') +
+          `<polyline points="${Array.from({ length: 121 }, (_, i) => { const x = 30 + i * 2.4; return `${r1(x)},${r1(85 - 55 * Math.cos(2 * Math.PI * (x - 30) / 120))}`; }).join(' ')}" class="wave"/>` +
+          L(150, 30, 150, 14, 'muted') + L(270, 30, 270, 14, 'muted') + A(210, 18, 152, 18) + A(210, 18, 268, 18) + T(210, 12, 'T', 'm'))
+      },
+      pendulum: {
+        cap: 'Груз на нити качается около положения равновесия. При малых отклонениях период не зависит от амплитуды.',
+        svg: svg(300, 190, 'Математический маятник: нить длиной l и груз',
+          L(110, 20, 190, 20, 'thick') + `<path d="M86.6,155.9 A150,150 0 0 0 213.4,155.9" class="orbit"/>` +
+          L(150, 20, 86.6, 155.9, 'dash muted') + L(150, 20, 213.4, 155.9, 'dash muted') +
+          `<circle cx="86.6" cy="155.9" r="9" class="ghost"/><circle cx="213.4" cy="155.9" r="9" class="ghost"/>` +
+          L(150, 20, 150, 170) + dot(150, 170, 9) + T(158, 100, 'l', 'm', 'start') +
+          A(262, 60, 262, 112, 'acc') + T(272, 92, 'g', 'm acct', 'start'))
+      },
+      springosc: {
+        cap: 'Скорость груза максимальна, когда он проходит положение равновесия.',
+        svg: svg(320, 130, 'Пружинный маятник: крайние точки и положение равновесия',
+          L(20, 20, 20, 110, 'thick') + L(20, 110, 300, 110) +
+          `<polyline points="${[[20, 85], [30, 85], ...Array.from({ length: 11 }, (_, i) => [30 + (i + 1) * 10, i % 2 ? 95 : 75]), [140, 85], [150, 85]].map(p => p.join(',')).join(' ')}" class="spring"/>` +
+          `<rect x="150" y="60" width="50" height="50" class="block"/>` + T(85, 66, 'k', 'm') + T(186, 92, 'm', 'm') +
+          L(125, 40, 125, 110, 'dash muted') + L(175, 40, 175, 60, 'dash') + L(225, 40, 225, 110, 'dash muted') +
+          T(125, 34, '−A', 'm') + T(175, 34, '0', 'm') + T(225, 34, 'A', 'm') +
+          A(206, 50, 256, 50, 'acc thick') + T(262, 55, S('v', 'max'), 'm acct', 'start'))
+      },
+      wave: {
+        cap: 'Длина волны – расстояние между соседними гребнями. Это расстояние волна проходит за один период.',
+        svg: svg(340, 150, 'Волна, длина волны между соседними гребнями',
+          L(20, 85, 320, 85, 'dash muted') +
+          `<polyline points="${Array.from({ length: 151 }, (_, i) => { const x = 20 + i * 2; return `${x},${r1(85 - 35 * Math.sin(2 * Math.PI * (x - 20) / 120))}`; }).join(' ')}" class="wave"/>` +
+          L(50, 50, 50, 26, 'muted') + L(170, 50, 170, 26, 'muted') + A(110, 30, 52, 30) + A(110, 30, 168, 30) + T(110, 22, 'λ', 'm') +
+          A(250, 136, 310, 136, 'acc') + T(280, 130, 'v', 'm acct'))
+      }
+    };
+  })();
+
+  const EXPL = {};
+  (function parseExpl() {
+    let cur = null;
+    for (const raw of document.getElementById('expl').textContent.split('\n')) {
+      const line = raw.trim();
+      if (line.startsWith('@ ')) { cur = EXPL[line.slice(2).trim()] = []; }
+      else if (line.startsWith('p: ')) cur.push({ p: line.slice(3) });
+      else if (line.startsWith('fig: ')) { const [fg, ...cp] = line.slice(5).split(' | '); cur.push({ fig: fg.trim(), cap: cp.join(' | ').trim() || null }); }
+    }
+  })();
+  const inline = s => s.split('$').map((part, i) => i % 2 ? tex(part) : esc(part)).join('');
+
+  let ov = null;
+  function closeExpl() {
+    if (!ov) return;
+    ov.remove(); ov = null; document.body.style.overflow = '';
+    const b = $app.querySelector('[data-expl]'); if (b) b.focus({ preventScroll: true });
+  }
+  function openExpl(f) {
+    if (ov) return; const ex = EXPL[f.id] || [];
+    ov = document.createElement('div');
+    ov.className = 'ov';
+    ov.innerHTML = `
+      <div class="ov-card" role="dialog" aria-modal="true" aria-label="${ex.length ? 'Откуда берётся формула' : 'Пояснение к формуле'}">
+        <div class="ov-head">
+          <div><span class="eyebrow">${ex.length ? 'Откуда берётся' : 'Пояснение'}</span><h2>${esc(f.n)}</h2></div>
+          <button class="icon-btn" data-ov-close aria-label="Закрыть">${ICON.close}</button>
+        </div>
+        <div class="ov-formula">${tex(f.f)}</div>
+        ${legend(f).replace('class="legend"', 'class="legend ov-legend"')}
+        ${ex.map(b => b.fig && FIG[b.fig]
+          ? `<figure class="fig">${FIG[b.fig].svg}<figcaption>${inline(b.cap || FIG[b.fig].cap)}</figcaption></figure>`
+          : `<p>${inline(b.p || '')}</p>`).join('')}
+        <button class="btn btn-primary" data-ov-close>Понятно</button>
+      </div>`;
+    document.body.appendChild(ov);
+    document.body.style.overflow = 'hidden';
+    typeset(ov);
+    ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('[data-ov-close]')) closeExpl(); });
+    ov.querySelector('.icon-btn').focus({ preventScroll: true });
+  }
+  const demoCells = n => `<span class="cells ${n >= 4 ? 'l5' : ''}">${Array.from({ length: MAX }, (_, i) => `<i class="${i < n ? 'on' : ''}"></i>`).join('')}</span>`;
+  function openHelp() {
+    if (ov) return;
+    ov = document.createElement('div');
+    ov.className = 'ov';
+    ov.innerHTML = `
+      <div class="ov-card" role="dialog" aria-modal="true" aria-label="Как работают прогресс и повторение">
+        <div class="ov-head">
+          <div><span class="eyebrow">Помощь</span><h2>Прогресс и повторение</h2></div>
+          <button class="icon-btn" data-ov-close aria-label="Закрыть">${ICON.close}</button>
+        </div>
+        <p>У каждой формулы есть 5 клеток. Сколько клеток закрашено, так хорошо ты её знаешь.</p>
+        <ul class="help-list">
+          <li>${demoCells(0)}<span>не начато: формула ещё не попадалась</span></li>
+          <li>${demoCells(2)}<span>начато: уже отвечал, но пока путаешь</span></li>
+          <li>${demoCells(4)}<span>выучено: 4 клетки и больше</span></li>
+        </ul>
+        <p>Правильный ответ закрашивает клетку, ошибка стирает две. Но закрасить все клетки за один вечер нельзя: память проверяется временем.</p>
+        <ol class="steps">
+          <li><b>1–2 клетки</b><span>сразу, в любой тренировке</span></li>
+          <li><b>3-я клетка</b><span>на следующий день</span></li>
+          <li><b>4-я клетка</b><span>ещё через 3 дня — формула выучена</span></li>
+          <li><b>5-я клетка</b><span>ещё через 7 дней</span></li>
+          <li><b>Дальше</b><span>проверка через 14 дней, потом раз в месяц</span></li>
+        </ol>
+        <p>Когда подходит срок, формула попадает в блок «Повторение» на главной. Если ответить на неё раньше срока, ответ засчитается как тренировка, но клетка не добавится.</p>
+        <p>После ошибки формула сразу возвращается на повторение.</p>
+        <p>Если формула ждёт повторения, а ты не заходишь, каждые 3 дня она теряет одну клетку. Совсем в ноль она не упадёт, одна клетка останется.</p>
+        <p>Зачем так: формула, которую ты вспомнил через неделю, запомнилась надолго. А пять правильных ответов подряд за вечер через неделю забываются.</p>
+        <p>Процент освоения показывает, сколько клеток закрашено из всех возможных.</p>
+        <button class="btn btn-primary" data-ov-close>Понятно</button>
+      </div>`;
+    document.body.appendChild(ov);
+    document.body.style.overflow = 'hidden';
+    ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('[data-ov-close]')) closeExpl(); });
+    ov.querySelector('.icon-btn').focus({ preventScroll: true });
+  }
+  const afterActions = f => {
+    const label = S.i + 1 < S.items.length ? 'Дальше' : 'Результат';
+    return `<div class="actions"><button class="btn btn-ghost" data-expl>Пояснение</button><button class="btn btn-primary" data-next>${label}</button></div>`;
+  };
+
+  /* ---------- «Напиши формулу»: разбор, отображение, проверка ---------- */
+  function tokenize(str) {
+    const out = [];
+    for (const m of str.matchAll(/\[([^\]]+)\]|sqrt\(|cos\(|sin\(|\^2|pi|\d+|[()+\-*\/]/g)) {
+      const s = m[0];
+      if (m[1] !== undefined) out.push({ t: 'atom', tex: m[1] });
+      else if (s.endsWith('(') && s.length > 1) out.push({ t: 'fn', name: s.slice(0, -1) });
+      else if (s === '^2') out.push({ t: 'sq' });
+      else if (s === 'pi') out.push({ t: 'pi' });
+      else if (/^\d+$/.test(s)) out.push({ t: 'num', v: +s });
+      else if (s === '(') out.push({ t: 'lp' });
+      else if (s === ')') out.push({ t: 'rp' });
+      else out.push({ t: 'op', v: s });
+    }
+    return out;
+  }
+  function parseExpr(tokens) {
+    let i = 0, hole = false;
+    const peek = () => tokens[i];
+    const isOp = (t, ...v) => t && t.t === 'op' && v.includes(t.v);
+    const starts = t => t && ['atom', 'num', 'pi', 'lp', 'fn'].includes(t.t);
+    const expr = () => { let n = term(); while (isOp(peek(), '+', '-')) { const op = tokens[i++].v; n = { k: 'bin', op, a: n, b: term() }; } return n; };
+    const term = () => { let n = prod(); while (isOp(peek(), '*', '/')) { const op = tokens[i++].v; n = { k: 'bin', op, a: n, b: prod() }; } return n; };
+    const prod = () => { let n = unary(); while (starts(peek())) n = { k: 'bin', op: 'imp', a: n, b: unary() }; return n; };
+    const unary = () => { if (isOp(peek(), '-')) { i++; return { k: 'neg', a: unary() }; } return power(); };
+    const power = () => { let n = primary(); while (peek() && peek().t === 'sq') { i++; n = { k: 'sq', a: n }; } return n; };
+    const primary = () => {
+      const t = peek();
+      if (!t) { hole = true; return { k: 'hole' }; }
+      if (t.t === 'atom') { i++; return { k: 'atom', tex: t.tex }; }
+      if (t.t === 'num') { i++; return { k: 'num', v: t.v }; }
+      if (t.t === 'pi') { i++; return { k: 'pi' }; }
+      if (t.t === 'lp' || t.t === 'fn') {
+        i++;
+        let inner;
+        if (!peek() || peek().t === 'rp') { hole = true; inner = { k: 'hole' }; } else inner = expr();
+        if (peek() && peek().t === 'rp') i++;
+        return t.t === 'lp' ? { k: 'grp', a: inner } : { k: 'fn', name: t.name, a: inner };
+      }
+      hole = true; return { k: 'hole' };
+    };
+    const tree = expr();
+    return { tree, hole: hole || i < tokens.length };
+  }
+  const unGrp = n => n.k === 'grp' ? n.a : n;
+  function toTex(n) {
+    switch (n.k) {
+      case 'atom': return `{${n.tex}}`;
+      case 'num': return String(n.v);
+      case 'pi': return '\\pi';
+      case 'hole': return '\\boxed{\\phantom{0}}';
+      case 'neg': return '-' + toTex(n.a);
+      case 'grp': return `\\left(${toTex(n.a)}\\right)`;
+      case 'sq': return n.a.k === 'atom' ? `${n.a.tex}^{2}` : (['num', 'pi', 'grp', 'hole'].includes(n.a.k) ? toTex(n.a) : `\\left(${toTex(n.a)}\\right)`) + '^{2}';
+      case 'fn': return n.name === 'sqrt' ? `\\sqrt{${toTex(unGrp(n.a))}}` : `\\${n.name}\\left(${toTex(n.a)}\\right)`;
+      case 'bin':
+        if (n.op === '/') return `\\dfrac{${toTex(unGrp(n.a))}}{${toTex(unGrp(n.b))}}`;
+        if (n.op === '*') return `${toTex(n.a)} \\cdot ${toTex(n.b)}`;
+        if (n.op === 'imp') return `${toTex(n.a)}${n.a.k === 'num' && n.b.k === 'num' ? ' \\cdot ' : '\\,'}${toTex(n.b)}`;
+        return `${toTex(n.a)} ${n.op} ${toTex(n.b)}`;
+    }
+    return '';
+  }
+  function evalExpr(n, env) {
+    switch (n.k) {
+      case 'atom': return env(n.tex);
+      case 'num': return n.v;
+      case 'pi': return Math.PI;
+      case 'neg': return -evalExpr(n.a, env);
+      case 'grp': return evalExpr(n.a, env);
+      case 'sq': { const v = evalExpr(n.a, env); return v * v; }
+      case 'fn': { const v = evalExpr(n.a, env); return n.name === 'sqrt' ? Math.sqrt(v) : n.name === 'cos' ? Math.cos(v) : Math.sin(v); }
+      case 'bin': { const a = evalExpr(n.a, env), b = evalExpr(n.b, env); return n.op === '+' ? a + b : n.op === '-' ? a - b : n.op === '/' ? a / b : a * b; }
+    }
+    return NaN;
+  }
+  function sameExpr(a, b) {
+    let ok = 0;
+    for (let k = 0; k < 8; k++) {
+      const vals = {};
+      const env = tex => (vals[tex] ??= 0.6 + Math.random() * 2);
+      const x = evalExpr(a, env), y = evalExpr(b, env);
+      if (!isFinite(y)) continue;
+      if (!isFinite(x) || Math.abs(x - y) > 1e-7 * Math.max(1, Math.abs(x), Math.abs(y))) return false;
+      ok++;
+    }
+    return ok >= 3;
+  }
+  const atomsOf = f => f.e ? [...new Set(f.e.tokens.filter(t => t.t === 'atom').map(t => t.tex))] : [];
+
+  function qWrite(f) {
+    const answer = parseExpr(f.e.tokens).tree;
+    const mine = atomsOf(f);
+    const pool = [...new Set(f.topic.items.filter(x => x !== f).flatMap(atomsOf))].filter(a => !mine.includes(a));
+    const atoms = shuffle([...mine, ...shuffle(pool).slice(0, 3)]);
+    const fns = [...new Set(f.e.tokens.filter(t => t.t === 'fn' && t.name !== 'sqrt').map(t => t.name))];
+    if (fns.includes('cos')) fns.push('sin');
+    const KEYS = [
+      ...atoms.map(a => ({ tok: { t: 'atom', tex: a }, label: tex(a), cls: 'var' })),
+      { tok: { t: 'op', v: '+' }, label: '+' }, { tok: { t: 'op', v: '-' }, label: '−' }, { tok: { t: 'op', v: '*' }, label: tex('\\cdot') },
+      { tok: { t: 'op', v: '/' }, label: tex('\\frac{a}{b}') }, { tok: { t: 'sq' }, label: tex('\\square^2') },
+      { tok: { t: 'lp' }, label: '(' }, { tok: { t: 'rp' }, label: ')', id: 'rp' }, { tok: { t: 'fn', name: 'sqrt' }, label: tex('\\sqrt{\\square}') },
+      { tok: { t: 'num', v: 1 }, label: '1' }, { tok: { t: 'num', v: 2 }, label: '2' }, { tok: { t: 'pi' }, label: tex('\\pi') },
+      ...fns.map(n => ({ tok: { t: 'fn', name: n }, label: tex(`\\${n}`) }))
+    ];
+    let toks = [], verdict = null;
+    const open = () => toks.reduce((d, t) => d + (t.t === 'lp' || t.t === 'fn' ? 1 : t.t === 'rp' ? -1 : 0), 0);
+    const render = () => {
+      const p = parseExpr(toks), done = verdict !== null, ok = verdict === true;
+      paint(`${top()}
+        <article class="qcard" style="min-height:0">
+          <span class="eyebrow">${esc(f.topic.title)} · напиши формулу</span>
+          <div class="ask">${esc(f.n)}</div>
+          <div class="formula write-line">${tex(`${f.e.lhs} = ${toks.length ? toTex(p.tree) : '\\boxed{\\phantom{00}}'}`)}</div>
+          ${!done && open() > 0 ? '<p class="hint">Скобку и корень закрывает кнопка «)»</p>' : ''}
+        </article>
+        ${done ? `
+          <div class="verdict-line"><span class="verdict ${ok ? 'ok' : 'bad'}">${ok ? 'Верно' : 'Ошибка. Правильно так:'}</span>${ok ? earlyNote() : `<span class="tex-inline">${tex(f.f)}</span>`}</div>
+          ${afterActions(f)}` : `
+          <div class="kb">
+            ${KEYS.map((k, i) => `<button class="key ${k.cls || ''}" data-k="${i}" ${k.id === 'rp' && !open() ? 'disabled' : ''}>${k.label}</button>`).join('')}
+            <button class="key del" data-del aria-label="Стереть">⌫</button>
+          </div>
+          <div class="actions">
+            <button class="btn btn-ghost" data-giveup>Не помню</button>
+            <button class="btn btn-primary" data-check ${toks.length && !p.hole ? '' : 'disabled'}>Проверить</button>
+          </div>`}
+      `, e => {
+        if (done) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); next(); } }
+        else if (e.key === 'Backspace') { e.preventDefault(); del(); }
+        else if (e.key === 'Enter') check();
+        if (e.key === 'Escape') S.results.length ? result() : S.back();
+      });
+      wireTop();
+      $app.querySelectorAll('[data-k]').forEach(b => b.onclick = () => { haptic('tap'); toks.push(KEYS[+b.dataset.k].tok); render(); });
+      const d = $app.querySelector('[data-del]'); if (d) d.onclick = del;
+      const c = $app.querySelector('[data-check]'); if (c) c.onclick = check;
+      const g = $app.querySelector('[data-giveup]'); if (g) g.onclick = () => finish(false);
+      const n = $app.querySelector('[data-next]'); if (n) { n.onclick = next; n.focus({ preventScroll: true }); }
+      const xb = $app.querySelector('[data-expl]'); if (xb) xb.onclick = () => openExpl(f);
+    };
+    const del = () => { if (toks.length) { toks.pop(); render(); } };
+    const finish = ok => { if (verdict !== null) return; verdict = ok; record(f, ok); render(); };
+    const check = () => { const p = parseExpr(toks); if (!toks.length || p.hole) return; finish(sameExpr(p.tree, answer)); };
+    render();
+  }
+
+  /* ---------- результат ---------- */
+  function result() {
+    const r = S.results, ok = r.filter(x => x.ok).length, miss = r.filter(x => !x.ok);
+    const note = !r.length ? '' : ok === r.length ? 'Чисто! Эти формулы будут попадаться реже.' : ok / r.length >= .7 ? 'Хорошо. Ошибки ниже — повтори их ещё раз.' : 'Нормально для начала. Ошибки будут попадаться чаще, пока не запомнишь.';
+    paint(`
+      <div class="bar"><span class="title">${esc(S.label)}</span></div>
+      <section class="result">
+        <span class="eyebrow">Результат</span>
+        <div class="score num">${ok}<small> / ${r.length}</small></div>
+        <p class="muted" style="margin:0; max-width:34ch">${note}</p>
+        ${(() => { const d = dueList().length; if (d) return `<p class="muted" style="margin:0">На повторение ещё ${plural(d, 'ждёт', 'ждут', 'ждут')} ${d} ${plural(d, 'формула', 'формулы', 'формул')}.</p>`; const tm = ALL.filter(f => lvl(f.id) >= 1 && whenLabel(dueAt(f.id)) === 'завтра').length; return tm ? `<p class="muted" style="margin:0">Завтра на повторение: ${tm} ${plural(tm, 'формула', 'формулы', 'формул')}.</p>` : ''; })()}
+      </section>
+      ${miss.length ? `
+        <section style="display:flex;flex-direction:column;gap:10px">
+          <div class="section-head"><h2>Где ошибся</h2></div>
+          <div class="missed">${miss.map(({ f }) => `<div class="row"><span class="muted" style="font-size:14px">${esc(f.n)}</span><span class="tex-wrap">${tex(f.f)}</span></div>`).join('')}</div>
+        </section>` : ''}
+      <div class="actions">
+        <button class="btn btn-ghost" data-done>Готово</button>
+        <button class="btn btn-primary" data-again>Ещё раунд</button>
+      </div>
+    `, e => { if (e.key === 'Enter') again(); else if (e.key === 'Escape') S.back(); });
+    const again = () => start(S);
+    $app.querySelector('[data-again]').onclick = again;
+    $app.querySelector('[data-done]').onclick = () => S.back();
+    setBack(() => S.back());
+  }
+
+  /* ---------- приветствие при первом запуске ---------- */
+  let onboarded = false;
+  try { onboarded = localStorage.getItem('formuly.onb.v1') === '1'; } catch (e) {}
+  const WELCOME = [
+    { t: 'Формулы для ЕГЭ', b: `<p>Здесь ты учишь формулы по физике, которые мы проходим на курсе. Одна тренировка — 10 вопросов и 3–5 минут.</p><p>Режимы разные: найти формулу, узнать её, собрать из кусочков или набрать самому. Если ошибся, открой «Пояснение»: там разобрано, откуда формула берётся.</p>` },
+    { t: 'Клетки', b: `<p>У каждой формулы 5 клеток. Правильный ответ закрашивает клетку, ошибка стирает две.</p><ul class="help-list"><li>${'CELLS0'}<span>ещё не встречалась</span></li><li>${'CELLS2'}<span>начата</span></li><li>${'CELLS4'}<span>выучена</span></li></ul>` },
+    { t: 'Заходи каждый день', b: `<p>Выученные формулы возвращаются на повторение: через день, потом через 3, 7 и 14 дней. Так они остаются в голове до экзамена.</p><p>Если формула ждёт повторения, а ты 3 дня не заходишь, она теряет клетку. Хватает 5 минут в день.</p>` }
+  ];
+  function openWelcome() {
+    if (ov) return;
+    let step = 0;
+    ov = document.createElement('div');
+    ov.className = 'ov';
+    const cellsDemo = n => `<span class="cells ${n >= 4 ? 'l5' : ''}">${Array.from({ length: MAX }, (_, i) => `<i class="${i < n ? 'on' : ''}"></i>`).join('')}</span>`;
+    const draw = () => {
+      const w = WELCOME[step], last = step === WELCOME.length - 1;
+      ov.innerHTML = `
+        <div class="ov-card welcome" role="dialog" aria-modal="true" aria-label="${w.t}">
+          <span class="eyebrow">${step + 1} из ${WELCOME.length}</span>
+          <h2>${w.t}</h2>
+          ${w.b.replace('CELLS0', cellsDemo(0)).replace('CELLS2', cellsDemo(2)).replace('CELLS4', cellsDemo(4))}
+          <div class="dots">${WELCOME.map((_, i) => `<i class="${i === step ? 'on' : ''}"></i>`).join('')}</div>
+          <button class="btn btn-primary" data-wnext>${last ? 'Начать' : 'Дальше'}</button>
+        </div>`;
+      ov.querySelector('[data-wnext]').onclick = () => {
+        if (!last) { step++; draw(); return; }
+        onboarded = true;
+        try { localStorage.setItem('formuly.onb.v1', '1'); } catch (e) {}
+        cloudQueue('o', 1);
+        closeExpl();
+      };
+    };
+    draw();
+    document.body.appendChild(ov);
+    document.body.style.overflow = 'hidden';
+  }
+
+  /* ---------- запуск ---------- */
+  function boot() {
+    cloudLoad(['p', 's', 'd', 'o'], data => {
+      const has = o => o && typeof o === 'object' && Object.keys(o).length;
+      if (has(data.p)) { progress = data.p; seen = has(data.s) ? data.s : seen; sched = has(data.d) ? data.d : sched; try { localStorage.setItem(KEY, JSON.stringify(progress)); localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); localStorage.setItem(SCHED_KEY, JSON.stringify(sched)); } catch (e) {} }
+      else if (Object.keys(progress).length) { cloudQueue('p', progress); cloudQueue('s', seen); cloudQueue('d', sched); }
+      if (data.o) onboarded = true;
+      home();
+      syncTheme();
+      if (inTg) { try { tg.onEvent('themeChanged', () => { syncTheme(); }); } catch (e) {} }
+      if (!onboarded) openWelcome();
+    });
+  }
+  boot();
+  const fallback = setTimeout(() => { if (!mathReady) typeset(); }, 6000);
+  window.__onMath = () => { try { document.head.appendChild(MathJax.svgStylesheet()); } catch (e) {} mathReady = true; clearTimeout(fallback); cache.clear(); typeset(); };
+  if (window.__mjReady) window.__onMath();
+  return {};
+})();
+</script>
+
+</body>
+</html>
