@@ -63,6 +63,22 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .streak.on .fire{filter:none; opacity:1}
 .streak b{font-family:var(--display); font-size:18px}
 .streak small{color:var(--ink-2); font-size:13px}
+.ach-btn{display:flex; align-items:center; gap:10px; width:100%; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:10px 16px; font:500 15px var(--body); color:var(--ink); cursor:pointer; text-align:left}
+.ach-btn b{margin-left:auto; font-weight:600; color:var(--ink-2); font-size:14px}
+.ach-list{display:flex; flex-direction:column; gap:8px}
+.ach{display:flex; align-items:center; gap:12px; padding:10px 12px; border:1px solid var(--line); border-radius:14px; background:var(--paper)}
+.ach .ach-icon{font-size:26px; width:34px; text-align:center; filter:grayscale(1); opacity:.4}
+.ach.on .ach-icon{filter:none; opacity:1}
+.ach.on{border-color:var(--accent); background:var(--accent-soft)}
+.ach-body{display:flex; flex-direction:column; gap:2px; flex:1; min-width:0}
+.ach-body small{color:var(--ink-2); font-size:13px}
+.ach-bar{display:block; height:5px; border-radius:3px; background:var(--cell); margin-top:4px; overflow:hidden}
+.ach-bar span{display:block; height:100%; background:var(--accent)}
+.ach-ok{color:var(--accent); font-weight:700; font-size:18px}
+.ach-new{display:flex; flex-wrap:wrap; justify-content:center; gap:6px}
+.ach-new span{background:var(--accent-soft); color:var(--accent); border-radius:999px; padding:5px 12px; font-weight:600; font-size:14px}
+.toast{position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom, 0px)); transform:translate(-50%, 30px); opacity:0; pointer-events:none; z-index:80; background:var(--ink); color:var(--card); padding:10px 16px; border-radius:12px; font:600 14px var(--body); box-shadow:var(--shadow); transition:all .25s; width:max-content; max-width:90vw; text-align:center}
+.toast.on{opacity:1; transform:translate(-50%, 0)}
 .streak-up{margin:0; font-weight:700; color:var(--accent)}
 .summary{display:grid; grid-template-columns:1fr; gap:14px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow:var(--shadow)}
 .summary .big{font-family:var(--display); font-size:26px; font-weight:700; line-height:1}
@@ -196,10 +212,12 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .fig > svg .ln.muted{stroke:var(--ink-3)} .fig > svg .ah.muted{fill:var(--ink-3)}
 .fig > svg .ln.thick{stroke-width:2.5}
 .fig > svg .ln.dash{stroke-dasharray:4 4; stroke-width:1.2}
+.fig > svg polyline.ln{fill:none}
 .fig > svg .dot{fill:var(--accent)}
 .fig > svg .ghost{fill:none; stroke:var(--ink-3); stroke-width:1.5; stroke-dasharray:3 3}
 .fig > svg .softf{fill:var(--accent-soft)}
 .fig > svg .accf{fill:var(--accent); opacity:.3}
+.fig > svg .oil{fill:var(--wood); opacity:.75}
 .fig > svg .ring{fill:none; stroke:currentColor; stroke-width:1.5}
 .fig > svg .arc{fill:none; stroke:var(--accent); stroke-width:3.5}
 .fig > svg .seg{fill:var(--accent-soft); stroke:currentColor; stroke-width:1.2}
@@ -219,6 +237,26 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .fig > svg .bark{fill:var(--ink-3)}
 .fig > svg .lossf{fill:var(--bad); opacity:.35}
 .fig > svg .wave{fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linejoin:round}
+.idx{font-size:14px; color:var(--ink-2); border-top:1px dashed var(--line); padding-top:8px}
+.idx summary{cursor:pointer; color:var(--accent); font-weight:600; list-style:none}
+.idx summary::-webkit-details-marker{display:none}
+.idx summary::before{content:'▸ '} .idx[open] summary::before{content:'▾ '}
+.idx ul{margin:8px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:4px}
+.idx li{display:flex; gap:8px; align-items:baseline; line-height:1.35}
+.idx li .tex{color:var(--ink); flex:none}
+.options.grid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.opt.gopt{position:relative; flex-direction:column; justify-content:center; padding:10px 8px 16px; min-height:0}
+.opt.gopt .k{position:absolute; top:6px; right:6px; width:22px; height:22px}
+.gbox{position:relative; width:100%; max-width:170px; margin:0 auto; color:var(--ink)}
+.gbox.big{max-width:280px; margin:4px auto 18px}
+.gbox svg{display:block; width:100%; height:auto; overflow:visible}
+.gbox .gax{stroke:currentColor; stroke-width:1.4} .gbox .gah{fill:currentColor}
+.gbox .gln{fill:none; stroke:var(--accent); stroke-width:2.6; stroke-linejoin:round; stroke-linecap:round}
+.gbox .g0{fill:var(--ink-3); font:9px var(--body); text-anchor:end}
+.gbox .gy{position:absolute; left:15%; top:-4px; font-size:14px}
+.gbox .gx{position:absolute; right:-2px; bottom:-14px; font-size:14px}
+.gbox.mid .gx{bottom:auto; top:52%}
+.gbox.big .gy,.gbox.big .gx{font-size:17px}
 .kb{display:grid; grid-template-columns:repeat(5, 1fr); gap:6px}
 .key{min-height:50px; padding:4px; border-radius:11px; background:var(--card); border:1px solid var(--line); font-size:19px; font-weight:500; display:flex; align-items:center; justify-content:center; overflow:hidden}
 .key.var{background:var(--accent-soft); border-color:transparent; font-size:20px}
@@ -323,7 +361,7 @@ html.tg [data-back]{display:none}
 
 <script type="text/plain" id="data">
 # 1.1 | Кинематика | kin
-= Координата при равномерном движении
+= Координата при равномерном движении @kin-1
 f: x = x_0 + v_x t
 v: x — координата тела, м; x_0 — начальная координата, м; v_x — проекция скорости, м/с; t — время, с
 w: x = x_0 + \frac{v_x}{t} ;; x = x_0 t + v_x ;; x = x_0 + \frac{v_x t^2}{2}
@@ -331,7 +369,7 @@ b: x = ⟦x_0@a⟧ + ⟦v_x t@a⟧ ;; v_x t^2 ;; \frac{v_x}{t} ;; x_0 t
 e: x :: [x_0] + [v_x] [t]
 x: t :: ( [x] - [x_0] ) / [v_x]
 x: v_x :: ( [x] - [x_0] ) / [t]
-= Ускорение
+= Ускорение @kin-2
 f: \vec a = \frac{\Delta \vec v}{\Delta t}
 v: \vec a — ускорение, м/с²; \Delta \vec v — изменение скорости, м/с; \Delta t — промежуток времени, с
 w: \vec a = \frac{\Delta t}{\Delta \vec v} ;; \vec a = \frac{\Delta \vec r}{\Delta t} ;; \vec a = \Delta \vec v \cdot \Delta t
@@ -340,7 +378,7 @@ e: \vec a :: [\Delta \vec v] / [\Delta t]
 x: \Delta t :: [\Delta v] / [a]
 x: \Delta v :: [a] [\Delta t]
 xg: a = \dfrac{\Delta v}{\Delta t}
-= Скорость при равноускоренном движении
+= Скорость при равноускоренном движении @kin-3
 f: v_x = v_{0x} + a_x t
 v: v_x — проекция скорости в момент t, м/с; v_{0x} — проекция начальной скорости, м/с; a_x — проекция ускорения, м/с²; t — время, с
 w: v_x = v_{0x} + \frac{a_x t^2}{2} ;; v_x = v_{0x} t + a_x ;; v_x = \frac{v_{0x} + a_x}{t}
@@ -348,14 +386,14 @@ b: v_x = ⟦v_{0x}@a⟧ + ⟦a_x t@a⟧ ;; \frac{a_x t^2}{2} ;; a_x ;; v_{0x} t
 e: v_x :: [v_{0x}] + [a_x] [t]
 x: t :: ( [v_x] - [v_{0x}] ) / [a_x]
 x: a_x :: ( [v_x] - [v_{0x}] ) / [t]
-= Координата при равноускоренном движении
+= Координата при равноускоренном движении @kin-4
 f: x = x_0 + v_{0x} t + \frac{a_x t^2}{2}
 v: x_0 — начальная координата, м; v_{0x} — проекция начальной скорости, м/с; a_x — проекция ускорения, м/с²; t — время, с
 w: x = x_0 + v_{0x} t + a_x t^2 ;; x = x_0 + v_{0x} t + \frac{a_x t}{2} ;; x = x_0 t + v_{0x} + \frac{a_x t^2}{2}
 b: x = x_0 + ⟦v_{0x} t@a⟧ + ⟦\frac{a_x t^2}{2}@a⟧ ;; a_x t^2 ;; \frac{a_x t}{2} ;; v_{0x}
 e: x :: [x_0] + [v_{0x}] [t] + [a_x] [t] ^2 / 2
 x: a_x :: 2 ( [x] - [x_0] - [v_{0x}] [t] ) / [t] ^2
-= Перемещение без времени
+= Перемещение без времени @kin-5
 f: s_x = \frac{v_x^2 - v_{0x}^2}{2 a_x}
 v: s_x — проекция перемещения, м; v_x — проекция конечной скорости, м/с; v_{0x} — проекция начальной скорости, м/с; a_x — проекция ускорения, м/с²
 w: s_x = \frac{v_x - v_{0x}}{2 a_x} ;; s_x = \frac{v_x^2 - v_{0x}^2}{a_x} ;; s_x = \frac{2 a_x}{v_x^2 - v_{0x}^2}
@@ -363,7 +401,7 @@ b: s_x = \frac{⟦v_x^2 - v_{0x}^2⟧}{⟦2 a_x⟧} ;; v_x - v_{0x} ;; a_x ;; 2 
 e: s_x :: ( [v_x] ^2 - [v_{0x}] ^2 ) / ( 2 [a_x] )
 x: a_x :: ( [v_x] ^2 - [v_{0x}] ^2 ) / ( 2 [s_x] )
 x: v_x :: sqrt( [v_{0x}] ^2 + 2 [a_x] [s_x] )
-= Перемещение через среднюю скорость
+= Перемещение через среднюю скорость @kin-6
 f: s_x = \frac{v_{0x} + v_x}{2}\, t
 v: s_x — проекция перемещения, м; v_{0x} — проекция начальной скорости, м/с; v_x — проекция конечной скорости, м/с; t — время, с
 w: s_x = (v_{0x} + v_x)\, t ;; s_x = \frac{v_x - v_{0x}}{2}\, t ;; s_x = \frac{v_{0x} + v_x}{2t}
@@ -371,7 +409,7 @@ b: s_x = \frac{⟦v_{0x} + v_x⟧}{⟦2⟧}\,⟦t⟧ ;; v_x - v_{0x} ;; t^2 ;; 2
 e: s_x :: ( [v_{0x}] + [v_x] ) / 2 * [t]
 x: t :: 2 [s_x] / ( [v_{0x}] + [v_x] )
 x: v_x :: 2 [s_x] / [t] - [v_{0x}]
-= Время падения с высоты без начальной скорости
+= Время падения с высоты без начальной скорости @kin-7
 f: t = \sqrt{\frac{2h}{g}}
 v: t — время падения, с; h — высота, м; g — ускорение свободного падения, м/с²
 w: t = \sqrt{\frac{h}{2g}} ;; t = \frac{2h}{g} ;; t = \sqrt{2gh}
@@ -379,7 +417,7 @@ b: t = \sqrt{\frac{⟦2h⟧}{⟦g⟧}} ;; h ;; 2g ;; gh
 e: t :: sqrt( 2 [h] / [g] )
 x: h :: [g] [t] ^2 / 2
 x: g :: 2 [h] / [t] ^2
-= Сложение скоростей
+= Сложение скоростей @kin-8
 f: \vec v = \vec v_{\text{отн}} + \vec v_{\text{пер}}
 v: \vec v — скорость тела относительно неподвижной системы отсчёта; \vec v_{\text{отн}} — скорость тела относительно подвижной системы; \vec v_{\text{пер}} — скорость подвижной системы отсчёта
 w: \vec v = \vec v_{\text{отн}} - \vec v_{\text{пер}} ;; \vec v = \vec v_{\text{отн}} \cdot \vec v_{\text{пер}} ;; \vec v = \frac{\vec v_{\text{отн}} + \vec v_{\text{пер}}}{2}
@@ -388,21 +426,21 @@ e: \vec v :: [\vec v_{\text{отн}}] + [\vec v_{\text{пер}}]
 x: v_{\text{отн}} :: [v] - [v_{\text{пер}}]
 x: v_{\text{пер}} :: [v] - [v_{\text{отн}}]
 xg: v = v_{\text{отн}} + v_{\text{пер}}
-= Период и частота обращения
+= Период и частота обращения @kin-9
 f: T = \frac{1}{\nu}
 v: T — период, с; \nu — частота, Гц
 w: T = 2\pi\nu ;; T = \frac{2\pi}{\nu} ;; T = \nu^2
 b: T = \frac{⟦1⟧}{⟦\nu⟧} ;; 2\pi ;; \nu^2 ;; \omega
 e: T :: 1 / [\nu]
 x: \nu :: 1 / [T]
-= Угловая скорость
+= Угловая скорость @kin-10
 f: \omega = \frac{2\pi}{T}
 v: \omega — угловая скорость, рад/с; T — период обращения, с
 w: \omega = 2\pi T ;; \omega = \frac{T}{2\pi} ;; \omega = \frac{\pi}{T}
 b: \omega = \frac{⟦2\pi⟧}{⟦T⟧} ;; \pi ;; \nu ;; T^2
 e: \omega :: 2 pi / [T]
 x: T :: 2 pi / [\omega]
-= Линейная скорость при движении по окружности
+= Линейная скорость при движении по окружности @kin-11
 f: v = \omega R
 v: v — линейная скорость, м/с; \omega — угловая скорость, рад/с; R — радиус окружности, м
 w: v = \frac{\omega}{R} ;; v = \omega R^2 ;; v = \frac{R}{\omega}
@@ -410,7 +448,7 @@ b: v = ⟦\omega@a⟧\,⟦R@a⟧ ;; R^2 ;; \nu ;; T
 e: v :: [\omega] [R]
 x: R :: [v] / [\omega]
 x: \omega :: [v] / [R]
-= Центростремительное ускорение
+= Центростремительное ускорение @kin-12
 f: a_{\text{ц}} = \frac{v^2}{R}
 v: a_{\text{ц}} — центростремительное ускорение, м/с²; v — линейная скорость, м/с; R — радиус окружности, м
 w: a_{\text{ц}} = \frac{v}{R} ;; a_{\text{ц}} = v^2 R ;; a_{\text{ц}} = \frac{v^2}{2R}
@@ -420,21 +458,21 @@ x: R :: [v] ^2 / [a_{\text{ц}}]
 x: v :: sqrt( [a_{\text{ц}}] [R] )
 
 # 1.2 | Динамика | dyn
-= Второй закон Ньютона
+= Второй закон Ньютона @dyn-1
 f: m\vec a = \vec F_1 + \vec F_2 + \ldots + \vec F_n
-v: m — масса тела, кг; \vec a — ускорение тела, м/с²; \vec F_i — силы, действующие на тело, Н
+v: m — масса тела, кг; \vec a — ускорение тела, м/с²; \vec F_1, \vec F_2, \ldots, \vec F_n — силы, действующие на тело, Н
 w: \vec a = m(\vec F_1 + \vec F_2 + \ldots + \vec F_n) ;; m\vec v = \vec F_1 + \vec F_2 + \ldots + \vec F_n ;; \frac{\vec a}{m} = \vec F_1 + \vec F_2 + \ldots + \vec F_n
 b: ⟦m@a⟧⟦\vec a@a⟧ = \vec F_1 + \vec F_2 + \ldots + \vec F_n ;; \vec v ;; \vec p ;; \frac{1}{2}
 e: \vec a :: [\vec F] / [m]
 x: m :: [F] / [a]
 xg: F = ma
-= Третий закон Ньютона
+= Третий закон Ньютона @dyn-2
 f: \vec F_{12} = -\vec F_{21}
 v: \vec F_{12} — сила, с которой первое тело действует на второе, Н; \vec F_{21} — сила, с которой второе тело действует на первое, Н
 w: \vec F_{12} = \vec F_{21} ;; \vec F_{12} = -2\vec F_{21} ;; \vec F_{12} + \vec F_{21} = m\vec a
 b: \vec F_{12} = ⟦-⟧\,⟦\vec F_{21}⟧ ;; + ;; 2 ;; \vec F_{12}
 e: \vec F_{12} :: - [\vec F_{21}]
-= Закон всемирного тяготения
+= Закон всемирного тяготения @dyn-3
 f: F = G\frac{m_1 m_2}{R^2}
 v: G — гравитационная постоянная, 6,67·10⁻¹¹ Н·м²/кг²; m_1, m_2 — массы тел, кг; R — расстояние между центрами тел, м
 w: F = G\frac{m_1 m_2}{R} ;; F = G\frac{m_1 + m_2}{R^2} ;; F = \frac{m_1 m_2}{G R^2}
@@ -442,7 +480,22 @@ b: F = G\frac{⟦m_1 m_2⟧}{⟦R^2⟧} ;; R ;; m_1 + m_2 ;; G
 e: F :: [G] [m_1] [m_2] / [R] ^2
 x: R :: sqrt( [G] [m_1] [m_2] / [F] )
 x: m_1 :: [F] [R] ^2 / ( [G] [m_2] )
-= Ускорение свободного падения на высоте h
+= Сила тяжести @dyn-9
+f: F_{\text{т}} = mg
+v: F_{\text{т}} — сила тяжести, Н; m — масса тела, кг; g — ускорение свободного падения, м/с²
+w: F_{\text{т}} = \frac{m}{g} ;; F_{\text{т}} = \frac{g}{m} ;; F_{\text{т}} = mg^2
+b: F_{\text{т}} = ⟦m@a⟧\,⟦g@a⟧ ;; \frac{1}{g} ;; g^2 ;; a
+e: F_{\text{т}} :: [m] [g]
+x: m :: [F_{\text{т}}] / [g]
+= Ускорение свободного падения у поверхности планеты @dyn-11
+f: g = G\frac{M}{R^2}
+v: g — ускорение свободного падения, м/с²; G — гравитационная постоянная, 6,67·10⁻¹¹ Н·м²/кг²; M — масса планеты, кг; R — радиус планеты, м
+w: g = G\frac{M}{R} ;; g = G\frac{R^2}{M} ;; g = \frac{M}{GR^2}
+b: g = G\frac{⟦M⟧}{⟦R^2⟧} ;; R ;; M^2 ;; (R + h)^2
+e: g :: [G] [M] / [R] ^2
+x: M :: [g] [R] ^2 / [G]
+x: R :: sqrt( [G] [M] / [g] )
+= Ускорение свободного падения на высоте h @dyn-4
 f: g = G\frac{M}{(R + h)^2}
 v: M — масса планеты, кг; R — радиус планеты, м; h — высота над поверхностью, м
 w: g = G\frac{M}{R^2 + h} ;; g = G\frac{M}{R + h} ;; g = G\frac{M h}{R^2}
@@ -450,7 +503,7 @@ b: g = G\frac{⟦M⟧}{⟦(R + h)^2⟧} ;; R^2 + h ;; R + h ;; M h
 e: g :: [G] [M] / ( [R] + [h] ) ^2
 x: M :: [g] ( [R] + [h] ) ^2 / [G]
 x: h :: sqrt( [G] [M] / [g] ) - [R]
-= Первая космическая скорость
+= Первая космическая скорость @dyn-5
 f: v_1 = \sqrt{\frac{GM}{R}}
 v: v_1 — первая космическая скорость, м/с; M — масса планеты, кг; R — радиус орбиты, м
 w: v_1 = \sqrt{\frac{2GM}{R}} ;; v_1 = \frac{GM}{R} ;; v_1 = \sqrt{\frac{GM}{R^2}}
@@ -458,7 +511,7 @@ b: v_1 = \sqrt{\frac{⟦GM⟧}{⟦R⟧}} ;; 2GM ;; R^2 ;; g
 e: v_1 :: sqrt( [G] [M] / [R] ) || sqrt( [g] [R] )
 x: M :: [v_1] ^2 [R] / [G]
 x: R :: [G] [M] / [v_1] ^2
-= Закон Гука
+= Закон Гука @dyn-6
 f: F_{\text{упр}} = k\,|\Delta l|
 v: F_{\text{упр}} — сила упругости, Н; k — жёсткость, Н/м; \Delta l — удлинение, м
 w: F_{\text{упр}} = \frac{|\Delta l|}{k} ;; F_{\text{упр}} = \frac{k\,\Delta l^2}{2} ;; F_{\text{упр}} = k\,\Delta l^2
@@ -466,7 +519,7 @@ b: F_{\text{упр}} = ⟦k@a⟧\,⟦|\Delta l|@a⟧ ;; \Delta l^2 ;; \frac{1}{2
 e: F_{\text{упр}} :: [k] [\Delta l]
 x: k :: [F_{\text{упр}}] / [\Delta l]
 x: \Delta l :: [F_{\text{упр}}] / [k]
-= Сила трения скольжения
+= Сила трения скольжения @dyn-7
 f: F_{\text{тр}} = \mu N
 v: \mu — коэффициент трения; N — сила нормальной реакции опоры, Н
 w: F_{\text{тр}} = \frac{N}{\mu} ;; F_{\text{тр}} = \frac{\mu}{N} ;; F_{\text{тр}} = \mu N^2
@@ -474,7 +527,7 @@ b: F_{\text{тр}} = ⟦\mu@a⟧\,⟦N@a⟧ ;; N^2 ;; \frac{1}{\mu} ;; g
 e: F_{\text{тр}} :: [\mu] [N]
 x: \mu :: [F_{\text{тр}}] / [N]
 x: N :: [F_{\text{тр}}] / [\mu]
-= Вес тела в лифте, ускорение направлено вверх
+= Вес тела в лифте, ускорение направлено вверх @dyn-8
 f: P = m(g + a)
 v: P — вес тела, Н; m — масса, кг; g — ускорение свободного падения, м/с²; a — ускорение лифта, м/с²
 w: P = m(g - a) ;; P = mg ;; P = m(a - g)
@@ -482,9 +535,17 @@ b: P = ⟦m⟧(⟦g + a⟧) ;; g - a ;; a - g ;; a
 e: P :: [m] ( [g] + [a] )
 x: a :: [P] / [m] - [g]
 x: m :: [P] / ( [g] + [a] )
+= Вес тела в лифте, ускорение направлено вниз @dyn-10
+f: P = m(g - a)
+v: P — вес тела, Н; m — масса, кг; g — ускорение свободного падения, м/с²; a — ускорение лифта, м/с²
+w: P = m(g + a) ;; P = mg ;; P = m(a - g)
+b: P = ⟦m⟧(⟦g - a⟧) ;; g + a ;; a - g ;; a
+e: P :: [m] ( [g] - [a] )
+x: a :: [g] - [P] / [m]
+x: m :: [P] / ( [g] - [a] )
 
 # 1.3 | Статика | stat
-= Момент силы
+= Момент силы @stat-1
 f: M = F l
 v: M — момент силы, Н·м; F — сила, Н; l — плечо силы (расстояние от оси до линии действия силы), м
 w: M = \frac{F}{l} ;; M = F l^2 ;; M = \frac{l}{F}
@@ -492,7 +553,13 @@ b: M = ⟦F@a⟧\,⟦l@a⟧ ;; l^2 ;; \frac{1}{l} ;; m
 e: M :: [F] [l]
 x: l :: [M] / [F]
 x: F :: [M] / [l]
-= Правило рычага
+= Правило моментов @stat-8
+f: M_{\text{по}} = M_{\text{против}}
+v: M_{\text{по}} — сумма моментов сил, вращающих тело по часовой стрелке, Н·м; M_{\text{против}} — сумма моментов сил, вращающих тело против часовой стрелки, Н·м
+w: F_{\text{по}} = F_{\text{против}} ;; l_{\text{по}} = l_{\text{против}} ;; M_{\text{по}} > M_{\text{против}}
+b: ⟦M_{\text{по}}@a⟧ = ⟦M_{\text{против}}@a⟧ ;; F_{\text{по}} ;; l_{\text{против}} ;; 0
+e: M_{\text{по}} :: [M_{\text{против}}]
+= Правило рычага @stat-2
 f: F_1 l_1 = F_2 l_2
 v: F_1, F_2 — силы, приложенные к рычагу, Н; l_1, l_2 — плечи этих сил, м
 w: F_1 l_2 = F_2 l_1 ;; \frac{F_1}{l_1} = \frac{F_2}{l_2} ;; F_1 F_2 = l_1 l_2
@@ -500,7 +567,22 @@ b: F_1 ⟦l_1⟧ = F_2 ⟦l_2⟧ ;; \frac{1}{l_1} ;; l_1^2 ;; F_1
 e: F_1 l_1 :: [F_2] [l_2]
 x: F_1 :: [F_2] [l_2] / [l_1]
 x: l_2 :: [F_1] [l_1] / [F_2]
-= Давление
+= Центр масс двух тел @stat-9
+f: x_{\text{ц}} = \frac{m_1 x_1 + m_2 x_2}{m_1 + m_2}
+v: x_{\text{ц}} — координата центра масс, м; m_1, m_2 — массы тел, кг; x_1, x_2 — координаты тел, м
+w: x_{\text{ц}} = \frac{x_1 + x_2}{2} ;; x_{\text{ц}} = \frac{m_1 x_2 + m_2 x_1}{m_1 + m_2} ;; x_{\text{ц}} = \frac{m_1 x_1 + m_2 x_2}{m_1 m_2}
+b: x_{\text{ц}} = \frac{⟦m_1 x_1 + m_2 x_2⟧}{⟦m_1 + m_2⟧} ;; m_1 x_2 + m_2 x_1 ;; x_1 + x_2 ;; m_1 m_2
+e: x_{\text{ц}} :: ( [m_1] [x_1] + [m_2] [x_2] ) / ( [m_1] + [m_2] )
+x: x_2 :: ( [x_{\text{ц}}] ( [m_1] + [m_2] ) - [m_1] [x_1] ) / [m_2]
+= Масса через плотность @stat-7
+f: m = \rho V
+v: m — масса тела, кг; \rho — плотность вещества, кг/м³; V — объём тела, м³
+w: m = \frac{\rho}{V} ;; m = \frac{V}{\rho} ;; m = \rho V^2
+b: m = ⟦\rho@a⟧\,⟦V@a⟧ ;; \frac{1}{V} ;; g ;; V^2
+e: m :: [\rho] [V]
+x: \rho :: [m] / [V]
+x: V :: [m] / [\rho]
+= Давление @stat-3
 f: p = \frac{F}{S}
 v: p — давление, Па; F — сила давления, Н; S — площадь, м²
 w: p = F S ;; p = \frac{S}{F} ;; p = \frac{F}{S^2}
@@ -508,7 +590,7 @@ b: p = \frac{⟦F⟧}{⟦S⟧} ;; S^2 ;; m ;; V
 e: p :: [F] / [S]
 x: S :: [F] / [p]
 x: F :: [p] [S]
-= Давление столба жидкости
+= Давление столба жидкости @stat-4
 f: p = \rho g h
 v: \rho — плотность жидкости, кг/м³; g — ускорение свободного падения, м/с²; h — глубина, м
 w: p = \frac{\rho g}{h} ;; p = \rho g h^2 ;; p = \frac{\rho h}{g}
@@ -516,15 +598,22 @@ b: p = ⟦\rho@a⟧\,⟦g@a⟧\,⟦h@a⟧ ;; h^2 ;; V ;; m
 e: p :: [\rho] [g] [h]
 x: h :: [p] / ( [\rho] [g] )
 x: \rho :: [p] / ( [g] [h] )
-= Сила Архимеда
-f: F_{\text{А}} = \rho_{\text{ж}}\, g\, V_{\text{погр}}
-v: \rho_{\text{ж}} — плотность жидкости, кг/м³; V_{\text{погр}} — объём погружённой части тела, м³
-w: F_{\text{А}} = \rho_{\text{т}}\, g\, V_{\text{т}} ;; F_{\text{А}} = \frac{\rho_{\text{ж}}\, g}{V_{\text{погр}}} ;; F_{\text{А}} = \rho_{\text{ж}}\, V_{\text{погр}}
-b: F_{\text{А}} = ⟦\rho_{\text{ж}}@a⟧\,⟦g@a⟧\,⟦V_{\text{погр}}@a⟧ ;; \rho_{\text{т}} ;; V_{\text{т}} ;; m
-e: F_{\text{А}} :: [\rho_{\text{ж}}] [g] [V_{\text{погр}}]
-x: V_{\text{погр}} :: [F_{\text{А}}] / ( [\rho_{\text{ж}}] [g] )
-x: \rho_{\text{ж}} :: [F_{\text{А}}] / ( [g] [V_{\text{погр}}] )
-= Гидравлический пресс
+= Давление на глубине с учётом атмосферного @stat-10
+f: p = p_0 + \rho g h
+v: p — давление на глубине, Па; p_0 — атмосферное давление, Па; \rho — плотность жидкости, кг/м³; g — ускорение свободного падения, м/с²; h — глубина, м
+w: p = p_0 - \rho g h ;; p = \rho g h ;; p = p_0\, \rho g h
+b: p = ⟦p_0@a⟧ + ⟦\rho g h@a⟧ ;; \rho g ;; p_0 h ;; \frac{\rho g}{h}
+e: p :: [p_0] + [\rho] [g] [h]
+x: h :: ( [p] - [p_0] ) / ( [\rho] [g] )
+= Сообщающиеся сосуды с разными жидкостями @stat-12
+f: \rho_1 h_1 = \rho_2 h_2
+v: \rho_1, \rho_2 — плотности жидкостей, кг/м³; h_1, h_2 — высоты столбов жидкостей над уровнем их границы, м
+w: \rho_1 h_2 = \rho_2 h_1 ;; \rho_1 + h_1 = \rho_2 + h_2 ;; \frac{\rho_1}{h_1} = \frac{\rho_2}{h_2}
+b: ⟦\rho_1@a⟧\,⟦h_1@a⟧ = ⟦\rho_2@b⟧\,⟦h_2@b⟧ ;; g ;; \frac{1}{h_1} ;; \rho_1 + \rho_2
+e: \rho_1 h_1 :: [\rho_2] [h_2]
+x: h_1 :: [\rho_2] [h_2] / [\rho_1]
+x: \rho_2 :: [\rho_1] [h_1] / [h_2]
+= Гидравлический пресс @stat-6
 f: \frac{F_1}{S_1} = \frac{F_2}{S_2}
 v: F_1, F_2 — силы, действующие на поршни, Н; S_1, S_2 — площади поршней, м²
 w: F_1 S_1 = F_2 S_2 ;; \frac{F_1}{S_2} = \frac{F_2}{S_1} ;; \frac{F_1}{S_1^2} = \frac{F_2}{S_2^2}
@@ -532,9 +621,25 @@ b: \frac{F_1}{⟦S_1⟧} = \frac{F_2}{⟦S_2⟧} ;; F_1 ;; F_2 ;; S_1^2
 e: \dfrac{F_1}{S_1} :: [F_2] / [S_2]
 x: F_2 :: [F_1] [S_2] / [S_1]
 x: S_2 :: [F_2] [S_1] / [F_1]
+= Сила Архимеда @stat-5
+f: F_{\text{А}} = \rho_{\text{ж}}\, g\, V_{\text{погр}}
+v: F_{\text{А}} — сила Архимеда, Н; \rho_{\text{ж}} — плотность жидкости, кг/м³; V_{\text{погр}} — объём погружённой части тела, м³
+w: F_{\text{А}} = \rho_{\text{т}}\, g\, V_{\text{т}} ;; F_{\text{А}} = \frac{\rho_{\text{ж}}\, g}{V_{\text{погр}}} ;; F_{\text{А}} = \rho_{\text{ж}}\, V_{\text{погр}}
+b: F_{\text{А}} = ⟦\rho_{\text{ж}}@a⟧\,⟦g@a⟧\,⟦V_{\text{погр}}@a⟧ ;; \rho_{\text{т}} ;; V_{\text{т}} ;; m
+e: F_{\text{А}} :: [\rho_{\text{ж}}] [g] [V_{\text{погр}}]
+x: V_{\text{погр}} :: [F_{\text{А}}] / ( [\rho_{\text{ж}}] [g] )
+x: \rho_{\text{ж}} :: [F_{\text{А}}] / ( [g] [V_{\text{погр}}] )
+= Условие плавания тела @stat-11
+f: mg = \rho_{\text{ж}}\, g\, V_{\text{погр}}
+v: m — масса тела, кг; g — ускорение свободного падения, м/с²; \rho_{\text{ж}} — плотность жидкости, кг/м³; V_{\text{погр}} — объём погружённой части тела, м³
+w: mg = \rho_{\text{т}}\, g\, V_{\text{погр}} ;; mg = \rho_{\text{ж}}\, g\, V_{\text{т}} ;; m = \rho_{\text{ж}}\, g\, V_{\text{погр}}
+b: mg = ⟦\rho_{\text{ж}}@a⟧\,⟦g@a⟧\,⟦V_{\text{погр}}@a⟧ ;; \rho_{\text{т}} ;; V_{\text{т}} ;; m
+e: mg :: [\rho_{\text{ж}}] [g] [V_{\text{погр}}]
+x: V_{\text{погр}} :: [m] / [\rho_{\text{ж}}]
+x: m :: [\rho_{\text{ж}}] [V_{\text{погр}}]
 
 # 1.4 | Законы сохранения | cons
-= Импульс тела
+= Импульс тела @cons-1
 f: \vec p = m\vec v
 v: \vec p — импульс, кг·м/с; m — масса, кг; \vec v — скорость, м/с
 w: \vec p = \frac{m\vec v^2}{2} ;; \vec p = \frac{\vec v}{m} ;; \vec p = m\vec a
@@ -543,7 +648,7 @@ e: \vec p :: [m] [\vec v]
 x: v :: [p] / [m]
 x: m :: [p] / [v]
 xg: p = mv
-= Изменение импульса
+= Изменение импульса @cons-2
 f: \Delta\vec p = \vec F\,\Delta t
 v: \Delta\vec p — изменение импульса, кг·м/с; \vec F — сила, Н; \Delta t — время действия силы, с
 w: \Delta\vec p = \frac{\vec F}{\Delta t} ;; \Delta\vec p = \vec F\,\Delta s ;; \Delta\vec p = m\,\Delta t
@@ -552,7 +657,7 @@ e: \Delta\vec p :: [\vec F] [\Delta t]
 x: F :: [\Delta p] / [\Delta t]
 x: \Delta t :: [\Delta p] / [F]
 xg: \Delta p = F\Delta t
-= Закон сохранения импульса
+= Закон сохранения импульса @cons-3
 f: m_1\vec v_1 + m_2\vec v_2 = m_1\vec v_1\,' + m_2\vec v_2\,'
 v: m_1, m_2 — массы тел, кг; \vec v_1, \vec v_2 — скорости до взаимодействия, м/с; \vec v_1\,', \vec v_2\,' — скорости после взаимодействия, м/с
 w: m_1\vec v_1 - m_2\vec v_2 = m_1\vec v_1\,' - m_2\vec v_2\,' ;; \frac{\vec v_1}{m_1} + \frac{\vec v_2}{m_2} = \frac{\vec v_1\,'}{m_1} + \frac{\vec v_2\,'}{m_2} ;; m_1\vec v_1 + m_2\vec v_2 = (m_1 - m_2)\,\vec v\,'
@@ -560,7 +665,14 @@ b: m_1\vec v_1 + m_2\vec v_2 = ⟦m_1\vec v_1\,'@a⟧ + ⟦m_2\vec v_2\,'@a⟧ ;
 e: m_1\vec v_1 + m_2\vec v_2 :: [m_1] [\vec v_1\,'] + [m_2] [\vec v_2\,']
 x: v_1' :: ( [m_1] [v_1] + [m_2] [v_2] - [m_2] [v_2'] ) / [m_1]
 xg: m_1 v_1 + m_2 v_2 = m_1 v_1' + m_2 v_2'
-= Работа силы
+= Абсолютно неупругий удар @cons-13
+f: m_1 v_1 + m_2 v_2 = (m_1 + m_2)\,v
+v: m_1, m_2 — массы тел, кг; v_1, v_2 — проекции скоростей до удара, м/с; v — проекция скорости тел после удара, м/с
+w: m_1 v_1 + m_2 v_2 = m_1 m_2 v ;; m_1 v_1 + m_2 v_2 = \frac{m_1 + m_2}{v} ;; m_1 v_1 + m_2 v_2 = \frac{(m_1 + m_2)\,v^2}{2}
+b: m_1 v_1 + m_2 v_2 = (⟦m_1 + m_2⟧)\,⟦v⟧ ;; m_1 m_2 ;; v^2 ;; m_1 - m_2
+e: m_1 v_1 + m_2 v_2 :: ( [m_1] + [m_2] ) [v]
+x: v :: ( [m_1] [v_1] + [m_2] [v_2] ) / ( [m_1] + [m_2] )
+= Работа силы @cons-4
 f: A = F s \cos\alpha
 v: A — работа, Дж; F — сила, Н; s — модуль перемещения, м; \alpha — угол между силой и перемещением
 w: A = F s \sin\alpha ;; A = \frac{F}{s}\cos\alpha ;; A = F s \,\mathrm{tg}\,\alpha
@@ -568,7 +680,15 @@ b: A = ⟦F@a⟧\,⟦s@a⟧\,⟦\cos\alpha@a⟧ ;; \sin\alpha ;; \mathrm{tg}\,\a
 e: A :: [F] [s] cos( [\alpha] )
 x: F :: [A] / ( [s] cos( [\alpha] ) )
 x: s :: [A] / ( [F] cos( [\alpha] ) )
-= Мощность
+= Работа силы трения @cons-15
+f: A_{\text{тр}} = -F_{\text{тр}}\, s
+v: A_{\text{тр}} — работа силы трения, Дж; F_{\text{тр}} — сила трения, Н; s — путь, м
+w: A_{\text{тр}} = F_{\text{тр}}\, s ;; A_{\text{тр}} = -\frac{F_{\text{тр}}}{s} ;; A_{\text{тр}} = -\mu\, s
+b: A_{\text{тр}} = ⟦-⟧\,⟦F_{\text{тр}}@a⟧\,⟦s@a⟧ ;; + ;; \frac{1}{s} ;; \mu
+e: A_{\text{тр}} :: - [F_{\text{тр}}] [s]
+x: s :: - [A_{\text{тр}}] / [F_{\text{тр}}]
+nc: 1
+= Мощность @cons-5
 f: N = \frac{A}{t}
 v: N — мощность, Вт; A — работа, Дж; t — время, с
 w: N = A t ;; N = \frac{t}{A} ;; N = \frac{A}{t^2}
@@ -576,7 +696,7 @@ b: N = \frac{⟦A⟧}{⟦t⟧} ;; t^2 ;; F ;; s
 e: N :: [A] / [t]
 x: A :: [N] [t]
 x: t :: [A] / [N]
-= Мощность через силу и скорость
+= Мощность через силу и скорость @cons-6
 f: N = F v
 v: N — мощность, Вт; F — сила тяги, Н; v — скорость, м/с
 w: N = \frac{F}{v} ;; N = \frac{F v^2}{2} ;; N = F v t
@@ -584,7 +704,7 @@ b: N = ⟦F@a⟧\,⟦v@a⟧ ;; t ;; v^2 ;; \frac{1}{2}
 e: N :: [F] [v]
 x: v :: [N] / [F]
 x: F :: [N] / [v]
-= Кинетическая энергия
+= Кинетическая энергия @cons-7
 f: E_{\text{к}} = \frac{m v^2}{2}
 v: E_{\text{к}} — кинетическая энергия, Дж; m — масса, кг; v — скорость, м/с
 w: E_{\text{к}} = m v^2 ;; E_{\text{к}} = \frac{m v}{2} ;; E_{\text{к}} = \frac{m^2 v}{2}
@@ -592,23 +712,7 @@ b: E_{\text{к}} = \frac{⟦m v^2⟧}{⟦2⟧} ;; m v ;; m^2 v ;; 4
 e: E_{\text{к}} :: [m] [v] ^2 / 2
 x: v :: sqrt( 2 [E_{\text{к}}] / [m] )
 x: m :: 2 [E_{\text{к}}] / [v] ^2
-= Потенциальная энергия тела над землёй
-f: E_{\text{п}} = m g h
-v: E_{\text{п}} — потенциальная энергия, Дж; h — высота над нулевым уровнем, м
-w: E_{\text{п}} = \frac{m g h}{2} ;; E_{\text{п}} = \frac{m g}{h} ;; E_{\text{п}} = m g h^2
-b: E_{\text{п}} = ⟦m@a⟧\,⟦g@a⟧\,⟦h@a⟧ ;; h^2 ;; \frac{1}{2} ;; v
-e: E_{\text{п}} :: [m] [g] [h]
-x: h :: [E_{\text{п}}] / ( [m] [g] )
-x: m :: [E_{\text{п}}] / ( [g] [h] )
-= Энергия деформированной пружины
-f: E_{\text{п}} = \frac{k x^2}{2}
-v: k — жёсткость пружины, Н/м; x — деформация, м
-w: E_{\text{п}} = k x ;; E_{\text{п}} = \frac{k x}{2} ;; E_{\text{п}} = k x^2
-b: E_{\text{п}} = \frac{⟦k x^2⟧}{⟦2⟧} ;; k x ;; m x^2 ;; 4
-e: E_{\text{п}} :: [k] [x] ^2 / 2
-x: x :: sqrt( 2 [E_{\text{п}}] / [k] )
-x: k :: 2 [E_{\text{п}}] / [x] ^2
-= Теорема о кинетической энергии
+= Теорема о кинетической энергии @cons-10
 f: A = E_{\text{к}2} - E_{\text{к}1}
 v: A — работа всех сил, Дж; E_{\text{к}1}, E_{\text{к}2} — начальная и конечная кинетическая энергия, Дж
 w: A = E_{\text{к}1} - E_{\text{к}2} ;; A = E_{\text{к}1} + E_{\text{к}2} ;; A = \frac{E_{\text{к}2}}{E_{\text{к}1}}
@@ -616,7 +720,31 @@ b: A = ⟦E_{\text{к}2}⟧ - ⟦E_{\text{к}1}⟧ ;; E_{\text{п}2} ;; E_{\text
 e: A :: [E_{\text{к}2}] - [E_{\text{к}1}]
 x: E_{\text{к}2} :: [E_{\text{к}1}] + [A]
 x: E_{\text{к}1} :: [E_{\text{к}2}] - [A]
-= Закон сохранения механической энергии
+= Потенциальная энергия тела над землёй @cons-8
+f: E_{\text{п}} = m g h
+v: E_{\text{п}} — потенциальная энергия, Дж; h — высота над нулевым уровнем, м
+w: E_{\text{п}} = \frac{m g h}{2} ;; E_{\text{п}} = \frac{m g}{h} ;; E_{\text{п}} = m g h^2
+b: E_{\text{п}} = ⟦m@a⟧\,⟦g@a⟧\,⟦h@a⟧ ;; h^2 ;; \frac{1}{2} ;; v
+e: E_{\text{п}} :: [m] [g] [h]
+x: h :: [E_{\text{п}}] / ( [m] [g] )
+x: m :: [E_{\text{п}}] / ( [g] [h] )
+= Работа силы тяжести @cons-14
+f: A = mg(h_1 - h_2)
+v: A — работа силы тяжести, Дж; m — масса тела, кг; g — ускорение свободного падения, м/с²; h_1, h_2 — начальная и конечная высота, м
+w: A = mg(h_2 - h_1) ;; A = mg(h_1 + h_2) ;; A = \frac{mg}{h_1 - h_2}
+b: A = ⟦m@a⟧⟦g@a⟧(⟦h_1 - h_2⟧) ;; h_2 - h_1 ;; h_1 + h_2 ;; \frac{1}{h}
+e: A :: [m] [g] ( [h_1] - [h_2] )
+x: h_2 :: [h_1] - [A] / ( [m] [g] )
+x: m :: [A] / ( [g] ( [h_1] - [h_2] ) )
+= Энергия деформированной пружины @cons-9
+f: E_{\text{п}} = \frac{k x^2}{2}
+v: k — жёсткость пружины, Н/м; x — деформация, м
+w: E_{\text{п}} = k x ;; E_{\text{п}} = \frac{k x}{2} ;; E_{\text{п}} = k x^2
+b: E_{\text{п}} = \frac{⟦k x^2⟧}{⟦2⟧} ;; k x ;; m x^2 ;; 4
+e: E_{\text{п}} :: [k] [x] ^2 / 2
+x: x :: sqrt( 2 [E_{\text{п}}] / [k] )
+x: k :: 2 [E_{\text{п}}] / [x] ^2
+= Закон сохранения механической энергии @cons-11
 f: E_{\text{к}} + E_{\text{п}} = \text{const}
 v: E_{\text{к}} — кинетическая энергия, Дж; E_{\text{п}} — потенциальная энергия, Дж
 w: E_{\text{к}} - E_{\text{п}} = \text{const} ;; E_{\text{к}} \cdot E_{\text{п}} = \text{const} ;; \frac{E_{\text{к}}}{E_{\text{п}}} = \text{const}
@@ -624,7 +752,16 @@ b: ⟦E_{\text{к}}@a⟧ + ⟦E_{\text{п}}@a⟧ = \text{const} ;; A ;; p ;; E_{
 e: E_{\text{к}1} + E_{\text{п}1} :: [E_{\text{к}2}] + [E_{\text{п}2}]
 x: E_{\text{к}2} :: [E_{\text{к}1}] + [E_{\text{п}1}] - [E_{\text{п}2}]
 xg: E_{\text{к}1} + E_{\text{п}1} = E_{\text{к}2} + E_{\text{п}2}
-= КПД механизма
+= Изменение механической энергии @cons-16
+f: A_{\text{тр}} = E_2 - E_1
+v: A_{\text{тр}} — работа силы трения или сопротивления, Дж; E_1, E_2 — начальная и конечная полная механическая энергия, Дж
+w: A_{\text{тр}} = E_1 - E_2 ;; A_{\text{тр}} = E_1 + E_2 ;; A_{\text{тр}} = \frac{E_2}{E_1}
+b: A_{\text{тр}} = ⟦E_2⟧ - ⟦E_1⟧ ;; A ;; E_{\text{к}} ;; E_1 + E_2
+e: A_{\text{тр}} :: [E_2] - [E_1]
+x: E_2 :: [E_1] + [A_{\text{тр}}]
+x: E_1 :: [E_2] - [A_{\text{тр}}]
+nc: 1
+= КПД механизма @cons-12
 f: \eta = \frac{A_{\text{пол}}}{A_{\text{затр}}} \cdot 100\%
 v: \eta — КПД, %; A_{\text{пол}} — полезная работа, Дж; A_{\text{затр}} — затраченная работа, Дж
 w: \eta = \frac{A_{\text{затр}}}{A_{\text{пол}}} \cdot 100\% ;; \eta = \frac{A_{\text{затр}} - A_{\text{пол}}}{A_{\text{затр}}} \cdot 100\% ;; \eta = A_{\text{пол}} \cdot A_{\text{затр}} \cdot 100\%
@@ -634,13 +771,13 @@ x: A_{\text{пол}} :: [\eta] [A_{\text{затр}}] / [100\%] || [\eta] [A_{\te
 x: A_{\text{затр}} :: [A_{\text{пол}}] * [100\%] / [\eta] || [A_{\text{пол}}] / [\eta]
 
 # 1.5 | Механические колебания и волны | osc
-= Гармонические колебания
+= Гармонические колебания @osc-1
 f: x = A\cos(\omega t + \varphi_0)
 v: x — смещение, м; A — амплитуда, м; \omega — циклическая частота, рад/с; \varphi_0 — начальная фаза, рад
 w: x = A\cos(\omega + \varphi_0 t) ;; x = \omega\cos(A t + \varphi_0) ;; x = A t\cos(\omega\varphi_0)
 b: x = ⟦A⟧\cos(⟦\omega t@a⟧ + ⟦\varphi_0@a⟧) ;; \omega ;; A t ;; \nu
 e: x :: [A] cos( [\omega] [t] + [\varphi_0] ) || [A] cos( [\omega] [t] ) || [A] sin( [\omega] [t] + [\varphi_0] ) || [A] sin( [\omega] [t] )
-= Частота колебаний
+= Частота колебаний @osc-2
 f: \nu = \frac{N}{t}
 v: \nu — частота, Гц; N — число колебаний; t — время, с
 w: \nu = N t ;; \nu = \frac{t}{N} ;; \nu = \frac{2\pi N}{t}
@@ -648,14 +785,14 @@ b: \nu = \frac{⟦N⟧}{⟦t⟧} ;; 2\pi ;; T ;; t^2
 e: \nu :: [N] / [t]
 x: N :: [\nu] [t]
 x: t :: [N] / [\nu]
-= Циклическая частота
+= Циклическая частота @osc-3
 f: \omega = 2\pi\nu
 v: \omega — циклическая частота, рад/с; \nu — частота, Гц
 w: \omega = \frac{2\pi}{\nu} ;; \omega = \pi\nu ;; \omega = \frac{\nu}{2\pi}
 b: \omega = ⟦2\pi@a⟧\,⟦\nu@a⟧ ;; T ;; \pi ;; \frac{1}{2\pi}
 e: \omega :: 2 pi [\nu]
 x: \nu :: [\omega] / ( 2 pi )
-= Период математического маятника
+= Период математического маятника @osc-4
 f: T = 2\pi\sqrt{\frac{l}{g}}
 v: T — период, с; l — длина нити, м; g — ускорение свободного падения, м/с²
 w: T = 2\pi\sqrt{\frac{g}{l}} ;; T = 2\pi\sqrt{\frac{m}{k}} ;; T = 2\pi\,\frac{l}{g}
@@ -663,7 +800,7 @@ b: T = ⟦2\pi⟧\sqrt{\frac{⟦l⟧}{⟦g⟧}} ;; m ;; k ;; \pi
 e: T :: 2 pi sqrt( [l] / [g] )
 x: l :: [g] [T] ^2 / ( 4 pi ^2 )
 x: g :: 4 pi ^2 [l] / [T] ^2
-= Период пружинного маятника
+= Период пружинного маятника @osc-5
 f: T = 2\pi\sqrt{\frac{m}{k}}
 v: T — период, с; m — масса груза, кг; k — жёсткость пружины, Н/м
 w: T = 2\pi\sqrt{\frac{k}{m}} ;; T = 2\pi\sqrt{\frac{l}{g}} ;; T = \frac{1}{2\pi}\sqrt{\frac{m}{k}}
@@ -671,7 +808,7 @@ b: T = ⟦2\pi⟧\sqrt{\frac{⟦m⟧}{⟦k⟧}} ;; l ;; g ;; \frac{1}{2\pi}
 e: T :: 2 pi sqrt( [m] / [k] )
 x: m :: [k] [T] ^2 / ( 4 pi ^2 )
 x: k :: 4 pi ^2 [m] / [T] ^2
-= Максимальная скорость при колебаниях
+= Максимальная скорость при колебаниях @osc-6
 f: v_{\max} = \omega A
 v: v_{\max} — амплитуда скорости, м/с; \omega — циклическая частота, рад/с; A — амплитуда, м
 w: v_{\max} = \frac{A}{\omega} ;; v_{\max} = \omega^2 A ;; v_{\max} = \omega A^2
@@ -679,7 +816,7 @@ b: v_{\max} = ⟦\omega@a⟧\,⟦A@a⟧ ;; A^2 ;; \omega^2 ;; T
 e: v_{\max} :: [\omega] [A]
 x: A :: [v_{\max}] / [\omega]
 x: \omega :: [v_{\max}] / [A]
-= Энергия пружинного маятника
+= Энергия пружинного маятника @osc-7
 f: \frac{k A^2}{2} = \frac{m v_{\max}^2}{2}
 v: k — жёсткость, Н/м; A — амплитуда, м; m — масса груза, кг; v_{\max} — максимальная скорость, м/с
 w: k A = m v_{\max} ;; \frac{k A}{2} = \frac{m v_{\max}}{2} ;; \frac{k A^2}{2} = m v_{\max}^2
@@ -687,7 +824,7 @@ b: \frac{⟦k A^2⟧}{2} = \frac{⟦m v_{\max}^2⟧}{2} ;; k A ;; m v_{\max} ;; 
 e: \dfrac{kA^2}{2} :: [m] [v_{\max}] ^2 / 2
 x: v_{\max} :: [A] sqrt( [k] / [m] )
 x: A :: [v_{\max}] sqrt( [m] / [k] )
-= Длина волны
+= Длина волны @osc-8
 f: \lambda = v T
 v: \lambda — длина волны, м; v — скорость волны, м/с; T — период, с
 w: \lambda = \frac{v}{T} ;; \lambda = \frac{T}{v} ;; \lambda = v\nu
@@ -695,6 +832,305 @@ b: \lambda = ⟦v@a⟧\,⟦T@a⟧ ;; \nu ;; \frac{1}{T} ;; t
 e: \lambda :: [v] [T]
 x: v :: [\lambda] / [T]
 x: T :: [\lambda] / [v]
+# 2.1 | Основы МКТ | mkt
+= Количество вещества через число молекул @mkt-1
+f: \nu = \frac{N}{N_A}
+v: \nu — количество вещества, моль; N — число молекул; N_A — постоянная Авогадро, 6·10²³ моль⁻¹
+w: \nu = N N_A ;; \nu = \frac{N_A}{N} ;; \nu = \frac{N}{M}
+b: \nu = \frac{⟦N⟧}{⟦N_A⟧} ;; M ;; m ;; N_A^2
+e: \nu :: [N] / [N_A]
+x: N :: [\nu] [N_A]
+nc: 1
+= Количество вещества через массу @mkt-2
+f: \nu = \frac{m}{M}
+v: \nu — количество вещества, моль; m — масса вещества, кг; M — молярная масса, кг/моль
+w: \nu = mM ;; \nu = \frac{M}{m} ;; \nu = \frac{m}{m_0}
+b: \nu = \frac{⟦m⟧}{⟦M⟧} ;; m_0 ;; N_A ;; V
+e: \nu :: [m] / [M]
+x: m :: [\nu] [M]
+x: M :: [m] / [\nu]
+= Молярная масса @mkt-3
+f: M = m_0 N_A
+v: M — молярная масса, кг/моль; m_0 — масса одной молекулы, кг; N_A — постоянная Авогадро, моль⁻¹
+w: M = \frac{m_0}{N_A} ;; M = \frac{N_A}{m_0} ;; M = m_0 N
+b: M = ⟦m_0@a⟧\,⟦N_A@a⟧ ;; N ;; \frac{1}{N_A} ;; \nu
+e: M :: [m_0] [N_A]
+x: m_0 :: [M] / [N_A]
+nc: 1
+= Концентрация молекул @mkt-4
+f: n = \frac{N}{V}
+v: n — концентрация молекул, м⁻³; N — число молекул; V — объём, м³
+w: n = NV ;; n = \frac{V}{N} ;; n = \frac{N}{N_A}
+b: n = \frac{⟦N⟧}{⟦V⟧} ;; N_A ;; m ;; V^2
+e: n :: [N] / [V]
+x: N :: [n] [V]
+nc: 1
+= Абсолютная температура @mkt-5
+f: T = t + 273
+v: T — абсолютная температура, К; t — температура по шкале Цельсия, °C
+w: T = t - 273 ;; T = 273\,t ;; T = \frac{t}{273}
+b: T = ⟦t@a⟧ + ⟦273@a⟧ ;; -273 ;; 100 ;; 2t
+e: T :: [t] + 273
+x: t :: [T] - 273
+= Средняя кинетическая энергия молекулы @mkt-6
+f: E_{\text{к}} = \frac{3}{2}kT
+v: E_{\text{к}} — средняя кинетическая энергия поступательного движения молекулы, Дж; k — постоянная Больцмана, 1,38·10⁻²³ Дж/К; T — абсолютная температура, К
+w: E_{\text{к}} = \frac{2}{3}kT ;; E_{\text{к}} = \frac{3}{2}RT ;; E_{\text{к}} = \frac{3}{2}kT^2
+b: E_{\text{к}} = \frac{⟦3⟧}{⟦2⟧}\,⟦k@a⟧⟦T@a⟧ ;; R ;; 1 ;; T^2
+e: E_{\text{к}} :: 3 / 2 * [k] [T]
+x: T :: 2 [E_{\text{к}}] / ( 3 [k] )
+nc: 1
+= Среднеквадратичная скорость молекул @mkt-7
+f: v = \sqrt{\frac{3kT}{m_0}}
+v: v — среднеквадратичная скорость молекул, м/с; k — постоянная Больцмана, Дж/К; T — абсолютная температура, К; m_0 — масса молекулы, кг
+w: v = \sqrt{\frac{3kT}{2m_0}} ;; v = \frac{3kT}{m_0} ;; v = \sqrt{\frac{2kT}{m_0}}
+b: v = \sqrt{\frac{⟦3kT⟧}{⟦m_0⟧}} ;; 2kT ;; M ;; 3RT
+e: v :: sqrt( 3 [k] [T] / [m_0] ) || sqrt( 3 [R] [T] / [M] )
+x: T :: [m_0] [v] ^2 / ( 3 [k] )
+nc: 1
+= Основное уравнение МКТ @mkt-8
+f: p = \frac{1}{3}m_0 n v^2
+v: p — давление газа, Па; m_0 — масса молекулы, кг; n — концентрация молекул, м⁻³; v — среднеквадратичная скорость молекул, м/с
+w: p = \frac{1}{3}m_0 n v ;; p = \frac{2}{3}m_0 n v^2 ;; p = 3 m_0 n v^2
+b: p = \frac{1}{3}\,⟦m_0@a⟧⟦n@a⟧⟦v^2@a⟧ ;; v ;; \frac{2}{3} ;; N
+e: p :: 1 / 3 * [m_0] [n] [v] ^2
+x: v :: sqrt( 3 [p] / ( [m_0] [n] ) )
+nc: 1
+= Давление через энергию молекул @mkt-9
+f: p = \frac{2}{3}nE_{\text{к}}
+v: p — давление газа, Па; n — концентрация молекул, м⁻³; E_{\text{к}} — средняя кинетическая энергия молекулы, Дж
+w: p = \frac{3}{2}nE_{\text{к}} ;; p = \frac{2}{3}\frac{E_{\text{к}}}{n} ;; p = \frac{1}{3}nE_{\text{к}}
+b: p = \frac{⟦2⟧}{⟦3⟧}\,⟦n@a⟧⟦E_{\text{к}}@a⟧ ;; 1 ;; kT ;; m_0
+e: p :: 2 / 3 * [n] [E_{\text{к}}]
+x: E_{\text{к}} :: 3 [p] / ( 2 [n] )
+nc: 1
+= Давление через концентрацию и температуру @mkt-10
+f: p = nkT
+v: p — давление газа, Па; n — концентрация молекул, м⁻³; k — постоянная Больцмана, Дж/К; T — абсолютная температура, К
+w: p = \frac{nk}{T} ;; p = nRT ;; p = \frac{kT}{n}
+b: p = ⟦n@a⟧⟦k@a⟧⟦T@a⟧ ;; R ;; \frac{1}{T} ;; N
+e: p :: [n] [k] [T]
+x: n :: [p] / ( [k] [T] )
+nc: 1
+= Закон Дальтона @mkt-11
+f: p = p_1 + p_2 + \ldots + p_n
+v: p — давление смеси газов, Па; p_1, p_2, \ldots, p_n — парциальные давления газов смеси, Па
+w: p = p_1 p_2 \ldots p_n ;; p = \frac{p_1 + p_2 + \ldots + p_n}{n} ;; p = p_1 - p_2 - \ldots - p_n
+b: p = ⟦p_1@a⟧ + ⟦p_2@a⟧ + \ldots + p_n ;; p_1 p_2 ;; -p_2 ;; \frac{p_1}{2}
+e: p :: [p_1] + [p_2]
+x: p_2 :: [p] - [p_1]
+xg: p = p_1 + p_2
+
+# 2.2 | Изопроцессы | iso
+= Уравнение Менделеева–Клапейрона @iso-1
+f: pV = \nu RT
+v: p — давление газа, Па; V — объём газа, м³; \nu — количество вещества, моль; R — универсальная газовая постоянная, 8,31 Дж/(моль·К); T — абсолютная температура, К
+w: pV = \frac{\nu R}{T} ;; pV = \nu kT ;; \frac{p}{V} = \nu RT
+b: pV = ⟦\nu@a⟧⟦R@a⟧⟦T@a⟧ ;; k ;; \frac{1}{T} ;; N_A
+e: pV :: [\nu] [R] [T]
+x: T :: [p] [V] / ( [\nu] [R] )
+x: \nu :: [p] [V] / ( [R] [T] )
+nc: 1
+= Уравнение Менделеева–Клапейрона через массу @iso-2
+f: pV = \frac{m}{M}RT
+v: p — давление газа, Па; V — объём газа, м³; m — масса газа, кг; M — молярная масса, кг/моль; R — универсальная газовая постоянная, Дж/(моль·К); T — абсолютная температура, К
+w: pV = \frac{M}{m}RT ;; pV = mMRT ;; pV = \frac{m}{M}kT
+b: pV = \frac{⟦m⟧}{⟦M⟧}\,RT ;; m_0 ;; N_A ;; \nu
+e: pV :: [m] / [M] * [R] [T]
+x: m :: [p] [V] [M] / ( [R] [T] )
+nc: 1
+= Давление через плотность газа @iso-3
+f: p = \frac{\rho RT}{M}
+v: p — давление газа, Па; \rho — плотность газа, кг/м³; R — универсальная газовая постоянная, Дж/(моль·К); T — абсолютная температура, К; M — молярная масса, кг/моль
+w: p = \frac{\rho M}{RT} ;; p = \frac{MRT}{\rho} ;; p = \rho RTM
+b: p = \frac{⟦\rho@a⟧⟦R@a⟧⟦T@a⟧}{⟦M⟧} ;; m ;; V ;; k
+e: p :: [\rho] [R] [T] / [M]
+x: \rho :: [p] [M] / ( [R] [T] )
+nc: 1
+= Изотермический процесс (закон Бойля–Мариотта) @iso-4
+f: p_1 V_1 = p_2 V_2
+v: p_1, p_2 — давление газа в начальном и конечном состояниях, Па; V_1, V_2 — объём газа в начальном и конечном состояниях, м³
+w: p_1 V_2 = p_2 V_1 ;; \frac{p_1}{V_1} = \frac{p_2}{V_2} ;; p_1 + V_1 = p_2 + V_2
+b: ⟦p_1@a⟧\,⟦V_1@a⟧ = ⟦p_2@b⟧\,⟦V_2@b⟧ ;; T_1 ;; \frac{1}{V_1} ;; \nu
+e: p_1 V_1 :: [p_2] [V_2]
+x: p_2 :: [p_1] [V_1] / [V_2]
+x: V_2 :: [p_1] [V_1] / [p_2]
+= Изобарный процесс (закон Гей-Люссака) @iso-5
+f: \frac{V_1}{T_1} = \frac{V_2}{T_2}
+v: V_1, V_2 — объём газа в начальном и конечном состояниях, м³; T_1, T_2 — абсолютная температура газа в этих состояниях, К
+w: V_1 T_1 = V_2 T_2 ;; \frac{V_1}{T_2} = \frac{V_2}{T_1} ;; \frac{V_1}{t_1} = \frac{V_2}{t_2}
+b: \frac{⟦V_1⟧}{⟦T_1⟧} = \frac{⟦V_2⟧}{⟦T_2⟧} ;; p_1 ;; t_1 ;; \nu
+e: \dfrac{V_1}{T_1} :: [V_2] / [T_2]
+x: V_2 :: [V_1] [T_2] / [T_1]
+x: T_2 :: [T_1] [V_2] / [V_1]
+= Изохорный процесс (закон Шарля) @iso-6
+f: \frac{p_1}{T_1} = \frac{p_2}{T_2}
+v: p_1, p_2 — давление газа в начальном и конечном состояниях, Па; T_1, T_2 — абсолютная температура газа в этих состояниях, К
+w: p_1 T_1 = p_2 T_2 ;; \frac{p_1}{T_2} = \frac{p_2}{T_1} ;; \frac{p_1}{t_1} = \frac{p_2}{t_2}
+b: \frac{⟦p_1⟧}{⟦T_1⟧} = \frac{⟦p_2⟧}{⟦T_2⟧} ;; V_1 ;; t_1 ;; \nu
+e: \dfrac{p_1}{T_1} :: [p_2] / [T_2]
+x: p_2 :: [p_1] [T_2] / [T_1]
+x: T_2 :: [T_1] [p_2] / [p_1]
+
+# 2.3 | Влажность | hum
+= Относительная влажность через давление пара @hum-1
+f: \varphi = \frac{p}{p_{\text{н}}}\cdot 100\%
+v: \varphi — относительная влажность, %; p — парциальное давление водяного пара, Па; p_{\text{н}} — давление насыщенного пара при той же температуре, Па
+w: \varphi = \frac{p_{\text{н}}}{p}\cdot 100\% ;; \varphi = \frac{p}{p_0}\cdot 100\% ;; \varphi = (p_{\text{н}} - p)\cdot 100\%
+b: \varphi = \frac{⟦p⟧}{⟦p_{\text{н}}⟧}\cdot 100\% ;; p_0 ;; \rho ;; T
+e: \varphi :: [p] / [p_{\text{н}}] * [100\%] || [p] / [p_{\text{н}}]
+x: p :: [\varphi] [p_{\text{н}}] / [100\%] || [\varphi] [p_{\text{н}}]
+= Относительная влажность через плотность пара @hum-2
+f: \varphi = \frac{\rho}{\rho_{\text{н.п.}}}\cdot 100\%
+v: \varphi — относительная влажность, %; \rho — плотность водяного пара (абсолютная влажность), кг/м³; \rho_{\text{н.п.}} — плотность насыщенного пара при той же температуре, кг/м³
+w: \varphi = \frac{\rho_{\text{н.п.}}}{\rho}\cdot 100\% ;; \varphi = \frac{\rho}{\rho_{\text{в}}}\cdot 100\% ;; \varphi = \rho\,\rho_{\text{н.п.}}\cdot 100\%
+b: \varphi = \frac{⟦\rho⟧}{⟦\rho_{\text{н.п.}}⟧}\cdot 100\% ;; p ;; \rho_{\text{в}} ;; m
+e: \varphi :: [\rho] / [\rho_{\text{н.п.}}] * [100\%] || [\rho] / [\rho_{\text{н.п.}}]
+x: \rho :: [\varphi] [\rho_{\text{н.п.}}] / [100\%] || [\varphi] [\rho_{\text{н.п.}}]
+= Относительная влажность через концентрацию @hum-3
+f: \varphi = \frac{n}{n_{\text{н.п.}}}\cdot 100\%
+v: \varphi — относительная влажность, %; n — концентрация молекул водяного пара, м⁻³; n_{\text{н.п.}} — концентрация молекул насыщенного пара при той же температуре, м⁻³
+w: \varphi = \frac{n_{\text{н.п.}}}{n}\cdot 100\% ;; \varphi = \frac{n}{N_A}\cdot 100\% ;; \varphi = (n_{\text{н.п.}} - n)\cdot 100\%
+b: \varphi = \frac{⟦n⟧}{⟦n_{\text{н.п.}}⟧}\cdot 100\% ;; N ;; N_A ;; V
+e: \varphi :: [n] / [n_{\text{н.п.}}] * [100\%] || [n] / [n_{\text{н.п.}}]
+x: n :: [\varphi] [n_{\text{н.п.}}] / [100\%] || [\varphi] [n_{\text{н.п.}}]
+= Условие кипения @hum-4
+f: p_{\text{н.п.}} = p_0 + \rho g h
+v: p_{\text{н.п.}} — давление насыщенного пара внутри пузырька, Па; p_0 — атмосферное давление над жидкостью, Па; \rho — плотность жидкости, кг/м³; g — ускорение свободного падения, м/с²; h — глубина, на которой находится пузырёк, м
+w: p_{\text{н.п.}} = p_0 - \rho g h ;; p_{\text{н.п.}} = \rho g h ;; p_{\text{н.п.}} = \frac{p_0}{\rho g h}
+b: p_{\text{н.п.}} = ⟦p_0@a⟧ + ⟦\rho g h@a⟧ ;; \rho g ;; p_0 h ;; \frac{\rho g}{h}
+e: p_{\text{н.п.}} :: [p_0] + [\rho] [g] [h]
+x: h :: ( [p_{\text{н.п.}}] - [p_0] ) / ( [\rho] [g] )
+nc: 1
+
+# 3.1 | Тепловой баланс | heat
+= Количество теплоты при нагревании и охлаждении @heat-1
+f: Q = cm\Delta t
+v: Q — количество теплоты, Дж; c — удельная теплоёмкость вещества, Дж/(кг·°C); m — масса тела, кг; \Delta t — изменение температуры, °C
+w: Q = \frac{cm}{\Delta t} ;; Q = cm ;; Q = \frac{c\,\Delta t}{m}
+b: Q = ⟦c@a⟧⟦m@a⟧⟦\Delta t@a⟧ ;; \lambda ;; \frac{1}{\Delta t} ;; t^2
+e: Q :: [c] [m] [\Delta t]
+x: c :: [Q] / ( [m] [\Delta t] )
+x: \Delta t :: [Q] / ( [c] [m] )
+= Плавление и кристаллизация @heat-2
+f: Q = \lambda m
+v: Q — количество теплоты, Дж; \lambda — удельная теплота плавления, Дж/кг; m — масса тела, кг
+w: Q = \frac{\lambda}{m} ;; Q = \lambda m\Delta t ;; Q = \frac{m}{\lambda}
+b: Q = ⟦\lambda@a⟧⟦m@a⟧ ;; \Delta t ;; L ;; \frac{1}{m}
+e: Q :: [\lambda] [m]
+x: m :: [Q] / [\lambda]
+= Парообразование и конденсация @heat-3
+f: Q = Lm
+v: Q — количество теплоты, Дж; L — удельная теплота парообразования, Дж/кг; m — масса вещества, кг
+w: Q = \frac{L}{m} ;; Q = Lm\Delta t ;; Q = \frac{m}{L}
+b: Q = ⟦L@a⟧⟦m@a⟧ ;; \lambda ;; \Delta t ;; \frac{1}{m}
+e: Q :: [L] [m]
+x: m :: [Q] / [L]
+= Сгорание топлива @heat-4
+f: Q = qm
+v: Q — количество теплоты, Дж; q — удельная теплота сгорания топлива, Дж/кг; m — масса топлива, кг
+w: Q = \frac{q}{m} ;; Q = qm\Delta t ;; Q = \frac{m}{q}
+b: Q = ⟦q@a⟧⟦m@a⟧ ;; c ;; \Delta t ;; \frac{1}{m}
+e: Q :: [q] [m]
+x: m :: [Q] / [q]
+= Теплоёмкость тела @heat-5
+f: C = cm
+v: C — теплоёмкость тела, Дж/°C; c — удельная теплоёмкость вещества, Дж/(кг·°C); m — масса тела, кг
+w: C = \frac{c}{m} ;; C = \frac{m}{c} ;; C = c\,\Delta t
+b: C = ⟦c@a⟧⟦m@a⟧ ;; \Delta t ;; \frac{1}{m} ;; Q
+e: C :: [c] [m]
+x: m :: [C] / [c]
+= Уравнение теплового баланса @heat-6
+f: Q_{\text{отд}} = Q_{\text{пол}}
+v: Q_{\text{отд}} — количество теплоты, которое отдали горячие тела, Дж; Q_{\text{пол}} — количество теплоты, которое получили холодные тела, Дж
+w: Q_{\text{отд}} = 2Q_{\text{пол}} ;; Q_{\text{отд}} > Q_{\text{пол}} ;; Q_{\text{отд}}\,Q_{\text{пол}} = 0
+b: ⟦Q_{\text{отд}}@a⟧ = ⟦Q_{\text{пол}}@a⟧ ;; 0 ;; 2 ;; Q
+e: Q_{\text{отд}} :: [Q_{\text{пол}}]
+nc: 1
+
+# 3.2 | Первый закон термодинамики | td
+= Внутренняя энергия одноатомного газа @td-1
+f: U = \frac{3}{2}\nu RT
+v: U — внутренняя энергия газа, Дж; \nu — количество вещества, моль; R — универсальная газовая постоянная, Дж/(моль·К); T — абсолютная температура, К
+w: U = \frac{3}{2}\nu kT ;; U = \frac{2}{3}\nu RT ;; U = \frac{3}{2}\frac{\nu R}{T}
+b: U = \frac{⟦3⟧}{⟦2⟧}\,⟦\nu@a⟧⟦R@a⟧⟦T@a⟧ ;; k ;; 5 ;; p
+e: U :: 3 / 2 * [\nu] [R] [T]
+x: T :: 2 [U] / ( 3 [\nu] [R] )
+nc: 1
+= Внутренняя энергия через давление и объём @td-2
+f: U = \frac{3}{2}pV
+v: U — внутренняя энергия одноатомного газа, Дж; p — давление газа, Па; V — объём газа, м³
+w: U = \frac{2}{3}pV ;; U = \frac{3}{2}\frac{p}{V} ;; U = pV
+b: U = \frac{⟦3⟧}{⟦2⟧}\,⟦p@a⟧⟦V@a⟧ ;; 5 ;; \nu ;; \frac{1}{V}
+e: U :: 3 / 2 * [p] [V]
+x: V :: 2 [U] / ( 3 [p] )
+= Изменение внутренней энергии @td-3
+f: \Delta U = \frac{3}{2}\nu R\Delta T
+v: \Delta U — изменение внутренней энергии газа, Дж; \nu — количество вещества, моль; R — универсальная газовая постоянная, Дж/(моль·К); \Delta T — изменение температуры, К
+w: \Delta U = \frac{3}{2}\nu RT ;; \Delta U = \frac{2}{3}\nu R\Delta T ;; \Delta U = \frac{3}{2}\nu R\Delta T^2
+b: \Delta U = \frac{3}{2}\,⟦\nu@a⟧⟦R@a⟧⟦\Delta T@a⟧ ;; T ;; k ;; \Delta T^2
+e: \Delta U :: 3 / 2 * [\nu] [R] [\Delta T]
+x: \Delta T :: 2 [\Delta U] / ( 3 [\nu] [R] )
+nc: 1
+= Работа газа при постоянном давлении @td-4
+f: A = p\Delta V
+v: A — работа газа, Дж; p — давление газа, Па; \Delta V — изменение объёма газа, м³
+w: A = \frac{p}{\Delta V} ;; A = pV ;; A = -p\Delta V
+b: A = ⟦p@a⟧⟦\Delta V@a⟧ ;; V ;; \frac{1}{\Delta V} ;; T
+e: A :: [p] [\Delta V]
+x: \Delta V :: [A] / [p]
+= Работа внешних сил над газом @td-5
+f: A_{\text{в.с}} = -A
+v: A_{\text{в.с}} — работа внешних сил над газом, Дж; A — работа самого газа, Дж
+w: A_{\text{в.с}} = A ;; A_{\text{в.с}} = 2A ;; A_{\text{в.с}} = \frac{1}{A}
+b: A_{\text{в.с}} = ⟦-⟧\,⟦A⟧ ;; + ;; 2 ;; Q
+e: A_{\text{в.с}} :: - [A]
+nc: 1
+= Первый закон термодинамики @td-6
+f: Q = A + \Delta U
+v: Q — количество теплоты, переданное газу, Дж; A — работа газа, Дж; \Delta U — изменение внутренней энергии газа, Дж
+w: Q = A - \Delta U ;; Q = \Delta U - A ;; Q = A\,\Delta U
+b: Q = ⟦A@a⟧ + ⟦\Delta U@a⟧ ;; -\Delta U ;; U ;; -A
+e: Q :: [A] + [\Delta U]
+x: \Delta U :: [Q] - [A]
+x: A :: [Q] - [\Delta U]
+= Адиабатный процесс @td-7
+f: A = -\Delta U
+v: A — работа газа, Дж; \Delta U — изменение внутренней энергии газа, Дж
+w: A = \Delta U ;; A = Q + \Delta U ;; A = 0
+b: A = ⟦-⟧\,⟦\Delta U⟧ ;; + ;; Q ;; 2
+e: A :: - [\Delta U]
+nc: 1
+
+# 3.3 | Тепловые машины | eng
+= Работа теплового двигателя за цикл @eng-1
+f: A = Q_{\text{н}} - Q_{\text{х}}
+v: A — полезная работа за цикл, Дж; Q_{\text{н}} — количество теплоты, полученное от нагревателя, Дж; Q_{\text{х}} — количество теплоты, отданное холодильнику, Дж
+w: A = Q_{\text{н}} + Q_{\text{х}} ;; A = Q_{\text{х}} - Q_{\text{н}} ;; A = \frac{Q_{\text{н}}}{Q_{\text{х}}}
+b: A = ⟦Q_{\text{н}}⟧ - ⟦Q_{\text{х}}⟧ ;; Q ;; \eta ;; T_{\text{н}}
+e: A :: [Q_{\text{н}}] - [Q_{\text{х}}]
+x: Q_{\text{х}} :: [Q_{\text{н}}] - [A]
+= КПД теплового двигателя @eng-2
+f: \eta = \frac{A}{Q_{\text{н}}}\cdot 100\%
+v: \eta — КПД, %; A — полезная работа за цикл, Дж; Q_{\text{н}} — количество теплоты, полученное от нагревателя, Дж
+w: \eta = \frac{Q_{\text{н}}}{A}\cdot 100\% ;; \eta = \frac{A}{Q_{\text{х}}}\cdot 100\% ;; \eta = A\,Q_{\text{н}}\cdot 100\%
+b: \eta = \frac{⟦A⟧}{⟦Q_{\text{н}}⟧}\cdot 100\% ;; Q_{\text{х}} ;; T_{\text{н}} ;; Q
+e: \eta :: [A] / [Q_{\text{н}}] * [100\%] || [A] / [Q_{\text{н}}]
+x: A :: [\eta] [Q_{\text{н}}] / [100\%] || [\eta] [Q_{\text{н}}]
+= КПД через количество теплоты @eng-3
+f: \eta = \frac{Q_{\text{н}} - Q_{\text{х}}}{Q_{\text{н}}}\cdot 100\%
+v: \eta — КПД, %; Q_{\text{н}} — количество теплоты, полученное от нагревателя, Дж; Q_{\text{х}} — количество теплоты, отданное холодильнику, Дж
+w: \eta = \frac{Q_{\text{н}} - Q_{\text{х}}}{Q_{\text{х}}}\cdot 100\% ;; \eta = \frac{Q_{\text{н}} + Q_{\text{х}}}{Q_{\text{н}}}\cdot 100\% ;; \eta = \frac{Q_{\text{х}}}{Q_{\text{н}}}\cdot 100\%
+b: \eta = \frac{⟦Q_{\text{н}} - Q_{\text{х}}⟧}{⟦Q_{\text{н}}⟧}\cdot 100\% ;; Q_{\text{н}} + Q_{\text{х}} ;; Q_{\text{х}} ;; A_{\text{в.с}}
+e: \eta :: ( [Q_{\text{н}}] - [Q_{\text{х}}] ) / [Q_{\text{н}}] * [100\%] || ( [Q_{\text{н}}] - [Q_{\text{х}}] ) / [Q_{\text{н}}] || ( 1 - [Q_{\text{х}}] / [Q_{\text{н}}] ) * [100\%] || 1 - [Q_{\text{х}}] / [Q_{\text{н}}]
+x: Q_{\text{х}} :: [Q_{\text{н}}] ( 1 - [\eta] / [100\%] ) || [Q_{\text{н}}] ( 1 - [\eta] )
+= КПД цикла Карно @eng-4
+f: \eta = \frac{T_{\text{н}} - T_{\text{х}}}{T_{\text{н}}}\cdot 100\%
+v: \eta — максимально возможный КПД, %; T_{\text{н}} — температура нагревателя, К; T_{\text{х}} — температура холодильника, К
+w: \eta = \frac{T_{\text{н}} - T_{\text{х}}}{T_{\text{х}}}\cdot 100\% ;; \eta = \frac{T_{\text{х}}}{T_{\text{н}}}\cdot 100\% ;; \eta = \frac{T_{\text{н}} + T_{\text{х}}}{T_{\text{н}}}\cdot 100\%
+b: \eta = \frac{⟦T_{\text{н}} - T_{\text{х}}⟧}{⟦T_{\text{н}}⟧}\cdot 100\% ;; T_{\text{х}} ;; T_{\text{н}} + T_{\text{х}} ;; Q_{\text{н}}
+e: \eta :: ( [T_{\text{н}}] - [T_{\text{х}}] ) / [T_{\text{н}}] * [100\%] || ( [T_{\text{н}}] - [T_{\text{х}}] ) / [T_{\text{н}}] || ( 1 - [T_{\text{х}}] / [T_{\text{н}}] ) * [100\%] || 1 - [T_{\text{х}}] / [T_{\text{н}}]
+x: T_{\text{х}} :: [T_{\text{н}}] ( 1 - [\eta] / [100\%] ) || [T_{\text{н}}] ( 1 - [\eta] )
 </script>
 
 <script type="text/plain" id="expl">
@@ -846,10 +1282,9 @@ p: Обратите внимание: в формуле стоит $N$, а не 
 
 @ dyn-8
 p: Вес тела – сила, с которой тело действует на опору или подвес. По третьему закону Ньютона вес по модулю равен силе реакции опоры: $P = N$.
-fig: lift
 p: Пусть тело стоит на полу лифта, ускорение которого направлено вверх. Направим ось OY вверх и запишем второй закон Ньютона: $ma = N - mg$.
+fig: liftUpAnim
 p: Отсюда $N = m(g + a)$, значит и $P = m(g + a)$. Вес больше силы тяжести, поэтому в таком лифте человека прижимает к полу.
-p: Если ускорение направлено вниз, получится $P = m(g - a)$, и вес станет меньше силы тяжести. При $a = g$ вес равен нулю, это невесомость.
 
 @ stat-1
 p: Одна и та же сила может повернуть тело сильнее или слабее, смотря где и как её приложить. Поэтому для вращения вводят момент силы: $M = Fl$, размерность Н·м.
@@ -877,7 +1312,6 @@ p: Рассмотрим столб жидкости высотой $h$ с пло
 fig: column
 p: Разделим силу на площадь: $p = \dfrac{\rho S h g}{S} = \rho g h$.
 p: Давление жидкости зависит только от глубины и плотности, но не от формы сосуда. На одной глубине давление одинаковое во всех направлениях.
-p: Если нужно полное давление на глубине, к нему прибавляют атмосферное: $p = p_0 + \rho g h$.
 
 @ stat-5
 p: На тело, погружённое в жидкость, действует выталкивающая сила. Она возникает, потому что снизу, на большей глубине, давление больше, чем сверху.
@@ -885,6 +1319,7 @@ fig: archimedes
 p: Сила Архимеда равна весу жидкости в объёме погружённой части тела: $F_{\text{А}} = \rho_{\text{ж}}\, g\, V_{\text{погр}}$.
 p: В формулу входит плотность жидкости, а не тела. Плотность тела нужна, только чтобы найти его массу и сравнить силу тяжести с силой Архимеда.
 p: Если $F_{\text{А}} > mg$, тело всплывает, если меньше, то тонет. Если $F_{\text{А}} = mg$, тело плавает.
+fig: archCases
 p: Когда плотность тела равна плотности жидкости, силы равны уже при полном погружении. Такое тело плавает внутри жидкости на любой глубине: где его отпустишь, там оно и останется.
 p: Когда плотность тела меньше плотности жидкости, оно всплывает и плавает на поверхности, погрузившись ровно настолько, чтобы $F_{\text{А}} = mg$. В силу Архимеда тогда входит объём только погружённой части: $\rho_{\text{ж}}\, g\, V_{\text{погр}} = mg$, а $m$ – масса всего тела.
 
@@ -1040,6 +1475,329 @@ fig: waveanim
 p: Волна движется с постоянной скоростью $v$, поэтому за время $T$ она проходит расстояние $\lambda = vT$.
 p: Так как $T = \dfrac{1}{\nu}$, можно записать и так: $\lambda = \dfrac{v}{\nu}$, или $v = \lambda\nu$.
 p: На рисунке длину волны удобно искать как расстояние между соседними гребнями. При переходе волны в другую среду частота не меняется, а скорость и длина волны меняются.
+
+@ dyn-9
+p: Сила тяжести – сила, с которой Земля притягивает тело. Она приложена к самому телу и направлена вертикально вниз: $F_{\text{т}} = mg$.
+fig: weight
+p: Вес – это другая сила: с ней тело давит на опору или растягивает подвес. Вес приложен не к телу, а к опоре.
+p: Если тело покоится на горизонтальной опоре, по третьему закону Ньютона $P = N$, а из равновесия $N = mg$. Поэтому в этом случае вес численно равен силе тяжести.
+p: Вблизи поверхности Земли $g \approx 10$ м/с², это значение и берут в задачах ЕГЭ.
+
+@ dyn-10
+p: Пусть лифт движется с ускорением, направленным вниз: разгоняется вниз или тормозит, поднимаясь вверх. На тело действуют сила тяжести $mg$ и сила реакции опоры $N$.
+fig: liftDownAnim
+p: Направим ось вниз и запишем второй закон Ньютона: $mg - N = ma$, откуда $N = m(g - a)$. По третьему закону Ньютона вес равен силе реакции опоры: $P = m(g - a)$.
+p: Вес становится меньше силы тяжести. Если $a = g$, например лифт свободно падает, вес равен нулю – это невесомость.
+p: Важно направление ускорения, а не скорости: лифт, который едет вверх и тормозит, тоже уменьшает вес.
+
+@ dyn-11
+p: На тело массой $m$ на поверхности планеты действует сила тяготения $G\dfrac{mM}{R^2}$. Эта же сила сообщает телу ускорение свободного падения: $mg = G\dfrac{mM}{R^2}$.
+fig: gsurf
+p: Сократим массу тела и получим $g = G\dfrac{M}{R^2}$. Ускорение свободного падения не зависит от массы тела, только от массы и радиуса планеты.
+p: На высоте $h$ над поверхностью в знаменателе стоит $(R + h)^2$, поэтому с высотой $g$ уменьшается. Это легко запомнить: далеко в космосе, на большом расстоянии от Земли, её притяжение почти не чувствуется.
+p: Во второй части эту формулу лучше выводить из закона всемирного тяготения, как показано выше, а не просто записывать.
+
+@ stat-7
+p: Плотность показывает, какая масса вещества приходится на единицу объёма: $\rho = \dfrac{m}{V}$. Отсюда масса тела $m = \rho V$.
+p: Плотность воды – 1000 кг/м³, то есть кубометр воды имеет массу 1 т. Плотность зависит от вещества, а не от размеров тела.
+p: В задачах объём часто дан в литрах или см³: 1 л = 10⁻³ м³, 1 см³ = 10⁻⁶ м³. Переводить нужно до подстановки.
+p: Формула нужна почти в каждой задаче на гидростатику: масса вытесненной жидкости $\rho_{\text{ж}}V_{\text{погр}}$, масса тела $\rho_{\text{т}}V_{\text{т}}$.
+
+@ stat-8
+p: Тело с осью вращения находится в равновесии, если сумма моментов сил, вращающих его по часовой стрелке, равна сумме моментов, вращающих против часовой: $M_{\text{по}} = M_{\text{против}}$.
+fig: moments
+p: Направление вращения всегда смотрим относительно оси – на рисунке это точка O, вокруг которой рычаг может поворачиваться. Каждый момент считаем как $Fl$, где $l$ – плечо силы, расстояние от O до линии действия силы. Если линия действия силы проходит через ось, её момент равен нулю.
+p: Для полного равновесия тела нужно ещё, чтобы сумма всех сил была равна нулю. Во второй части обычно записывают оба условия.
+
+@ stat-9
+p: Центр масс – точка, которая движется так, будто в ней сосредоточена вся масса системы. Для двух тел на одной прямой его координата $x_{\text{ц}} = \dfrac{m_1x_1 + m_2x_2}{m_1 + m_2}$.
+fig: cmAnim
+p: Это «взвешенное среднее» координат: центр масс ближе к более тяжёлому телу. Если массы равны, он ровно посередине: $x_{\text{ц}} = \dfrac{x_1 + x_2}{2}$.
+p: Если тел больше, в числитель и знаменатель добавляются слагаемые $m_3x_3$, $m_3$ и так далее. У однородного тела правильной формы центр масс совпадает с геометрическим центром.
+p: Если тело подпереть или подвесить в центре масс, сила тяжести не создаёт момента, и тело находится в равновесии.
+
+@ stat-10
+p: На поверхность жидкости давит атмосфера с давлением $p_0 \approx 10^5$ Па. По закону Паскаля это давление передаётся в каждую точку жидкости.
+fig: patm
+p: Поэтому полное давление на глубине $h$ складывается из атмосферного и давления столба жидкости: $p = p_0 + \rho g h$.
+p: Столб воды высотой 10 м создаёт давление $1000 \cdot 10 \cdot 10 = 10^5$ Па, примерно одну атмосферу. Значит, на глубине 10 м давление уже вдвое больше, чем у поверхности.
+p: Если над жидкостью вакуум или в задаче нужно только давление самой жидкости, $p_0$ не добавляют. Внимательно читайте условие.
+
+@ stat-11
+p: Тело плавает, если сила тяжести уравновешена силой Архимеда: $mg = \rho_{\text{ж}}\, g\, V_{\text{погр}}$.
+fig: floatAnim
+p: Сократим $g$ и получим удобную форму: $m = \rho_{\text{ж}}V_{\text{погр}}$. Масса плавающего тела равна массе вытесненной им жидкости.
+p: Так как $m = \rho_{\text{т}}V_{\text{т}}$, доля погружённого объёма равна отношению плотностей: $\dfrac{V_{\text{погр}}}{V_{\text{т}}} = \dfrac{\rho_{\text{т}}}{\rho_{\text{ж}}}$. Например, лёд с плотностью 900 кг/м³ погружён в воду на 90%.
+p: Если перенести плавающее тело в другую жидкость, сила Архимеда останется равной $mg$. Изменится только глубина погружения: в более плотной жидкости тело погрузится меньше.
+fig: floatTwo
+
+@ stat-12
+p: В сообщающиеся сосуды налили две несмешивающиеся жидкости, например масло и воду. Проведём горизонталь через границу между ними.
+fig: utubeAnim
+p: На этой горизонтали давление в обоих коленах одинаковое, иначе жидкость перетекала бы. Над ней слева столб одной жидкости, справа – другой: $\rho_1 g h_1 = \rho_2 g h_2$. Сократим $g$: $\rho_1 h_1 = \rho_2 h_2$.
+p: Высоты обратно пропорциональны плотностям: столб более лёгкой жидкости выше. Поэтому масло стоит выше воды.
+p: Если жидкость одна и та же, $\rho_1 = \rho_2$, то и $h_1 = h_2$: уровень жидкости во всех коленах одинаковый, какой бы формы они ни были.
+fig: vessels
+
+@ cons-13
+p: Абсолютно неупругий удар – удар, после которого тела слипаются и движутся вместе с общей скоростью $v$. Например, пуля застревает в бруске или вагон сцепляется с другим вагоном.
+fig: inelasticAnim
+p: Импульс системы сохраняется, а после удара это одно тело массой $m_1 + m_2$: $m_1v_1 + m_2v_2 = (m_1 + m_2)v$.
+p: Скорости записываем в проекциях: если тела двигались навстречу, одна из проекций отрицательная.
+p: Механическая энергия при таком ударе не сохраняется: часть кинетической энергии переходит во внутреннюю. Закон сохранения энергии здесь использовать нельзя, только закон сохранения импульса.
+
+@ cons-14
+p: Когда тело опускается с высоты $h_1$ на высоту $h_2$, сила тяжести совершает работу $A = mg(h_1 - h_2)$.
+fig: workg
+p: Работа не зависит от формы траектории: по прямой, по дуге или ступеньками – важны только начальная и конечная высоты. Такие силы называют потенциальными.
+p: При спуске работа положительная, при подъёме отрицательная. По замкнутой траектории работа силы тяжести равна нулю.
+p: Через потенциальную энергию: $A = E_{\text{п}1} - E_{\text{п}2}$. Работа силы тяжести равна убыли потенциальной энергии.
+
+@ cons-15
+p: Сила трения скольжения направлена против движения, угол между ней и перемещением $180^\circ$, а $\cos 180^\circ = -1$. Поэтому её работа отрицательная: $A_{\text{тр}} = -F_{\text{тр}}s$.
+fig: workfr
+p: Здесь $s$ – путь, а не перемещение. Если тело проехало туда и обратно, трение совершало отрицательную работу на всём пути, и в ноль она не обращается.
+p: Если тело скользит по горизонтали, $F_{\text{тр}} = \mu mg$, и $A_{\text{тр}} = -\mu mgs$.
+p: Работа трения уменьшает механическую энергию тела: эта энергия переходит во внутреннюю, и тела нагреваются.
+
+@ cons-16
+p: Если на тело действует трение или сопротивление воздуха, механическая энергия не сохраняется. Её изменение равно работе этих сил: $A_{\text{тр}} = E_2 - E_1$, где $E = E_{\text{к}} + E_{\text{п}}$.
+fig: hillAnim
+p: Работа трения отрицательная, поэтому $E_2 < E_1$: механическая энергия уменьшается, а разница уходит в тепло.
+p: В задачах удобно записывать так: $E_{\text{к}1} + E_{\text{п}1} + A_{\text{тр}} = E_{\text{к}2} + E_{\text{п}2}$, помня, что $A_{\text{тр}} < 0$. Или через модуль: $E_1 = E_2 + |A_{\text{тр}}|$.
+p: Если трения нет, $A_{\text{тр}} = 0$, и получается закон сохранения механической энергии: $E_1 = E_2$.
+
+@ mkt-1
+p: Молекул в любом теле огромное количество, поэтому их считают не штуками, а молями. Один моль содержит столько частиц, сколько атомов в 12 г углерода: $N_A = 6\cdot 10^{23}$ моль⁻¹. Это число называют постоянной Авогадро.
+p: Количество вещества показывает, сколько молей в теле: делим число молекул на число молекул в одном моле, $\nu = \dfrac{N}{N_A}$.
+p: Например, $12\cdot 10^{23}$ молекул – это $\nu = \dfrac{12\cdot 10^{23}}{6\cdot 10^{23}} = 2$ моль.
+p: Отсюда же находят число молекул: $N = \nu N_A$.
+
+@ mkt-2
+p: Молярная масса $M$ – масса одного моля вещества. Если масса тела $m$, то молей в нём $\nu = \dfrac{m}{M}$.
+p: Молярную массу берут из таблицы Менделеева: число под элементом – это масса одного моля в граммах. Для кислорода $\text{O}_2$ это $2\cdot 16 = 32$ г/моль.
+p: Главная ловушка – единицы. В формулы СИ подставляют кг/моль: 32 г/моль = 0,032 кг/моль.
+p: Масса тоже в килограммах. Если $m$ в граммах, а $M$ в г/моль, отношение получится верным, но в других формулах такая смесь единиц приведёт к ошибке.
+
+@ mkt-3
+p: Моль содержит $N_A$ молекул, каждая массой $m_0$. Значит, масса моля равна $M = m_0 N_A$.
+p: Отсюда масса одной молекулы: $m_0 = \dfrac{M}{N_A}$. Для воды $M = 0{,}018$ кг/моль, и $m_0 = \dfrac{0{,}018}{6\cdot 10^{23}} = 3\cdot 10^{-26}$ кг.
+p: Похожая связь есть и для всего тела: $m = N m_0$. Разделив одно на другое, снова получим $\nu = \dfrac{m}{M} = \dfrac{N}{N_A}$.
+
+@ mkt-4
+p: Концентрация показывает, сколько молекул приходится на единицу объёма: $n = \dfrac{N}{V}$. Размерность – м⁻³.
+fig: gasAnim | Молекулы газа хаотично движутся и ударяются о стенки. Чем больше молекул в единице объёма, тем чаще удары – и тем больше давление.
+p: Концентрация не зависит от размера сосуда сама по себе: если в два раза больший сосуд вместит в два раза больше молекул, $n$ останется прежней.
+p: Именно концентрация, а не просто число молекул, входит в формулы давления: $p = nkT$ и $p = \dfrac{1}{3}m_0nv^2$.
+
+@ mkt-5
+p: В физике температуру измеряют по абсолютной шкале, в кельвинах. Ноль этой шкалы – абсолютный ноль, при котором прекратилось бы тепловое движение молекул. Он равен примерно $-273\ {}^\circ\text{C}$.
+fig: kelvin
+p: Один кельвин равен одному градусу Цельсия, поэтому шкалы просто сдвинуты: $T = t + 273$. Например, $27\ {}^\circ\text{C} = 300$ К.
+p: Изменения температуры в обеих шкалах одинаковые: $\Delta T = \Delta t$. Поэтому в $Q = cm\Delta t$ можно брать градусы Цельсия.
+p: Во все формулы МКТ и газовых законов подставляют только кельвины. Если подставить градусы Цельсия, ответ будет неверным.
+
+@ mkt-6
+p: Температура – это мера средней кинетической энергии хаотичного движения молекул. Чем горячее газ, тем быстрее движутся его молекулы.
+p: Для одноатомного идеального газа эта связь точная: $E_{\text{к}} = \dfrac{3}{2}kT$, где $k = 1{,}38\cdot 10^{-23}$ Дж/К – постоянная Больцмана.
+p: Энергия прямо пропорциональна абсолютной температуре: если $T$ увеличить в 2 раза, средняя энергия молекулы тоже вырастет в 2 раза.
+p: Формула не зависит от сорта газа: при одной температуре у молекул водорода и кислорода средняя кинетическая энергия одинаковая, хотя скорости разные.
+
+@ mkt-7
+p: Приравняем кинетическую энергию молекулы $\dfrac{m_0v^2}{2}$ к её средней энергии $\dfrac{3}{2}kT$ и выразим скорость: $v = \sqrt{\dfrac{3kT}{m_0}}$.
+p: Это среднеквадратичная скорость – корень из среднего квадрата скоростей всех молекул.
+p: Умножив числитель и знаменатель на $N_A$, получим удобную форму: $v = \sqrt{\dfrac{3RT}{M}}$. Здесь $R = kN_A$, а $M = m_0N_A$.
+p: Скорость растёт как корень из температуры: чтобы скорость выросла вдвое, температуру нужно увеличить в 4 раза. Лёгкие молекулы при той же температуре движутся быстрее тяжёлых.
+
+@ mkt-8
+p: Давление газа создают удары молекул о стенки сосуда. Каждая молекула при ударе передаёт стенке импульс, а вместе они давят с постоянной средней силой.
+fig: gasAnim | Молекулы летят с разными скоростями и ударяются о стенки. Давление – результат этих ударов.
+p: Расчёт даёт основное уравнение МКТ: $p = \dfrac{1}{3}m_0nv^2$. Давление тем больше, чем тяжелее молекулы, чем их больше в единице объёма и чем быстрее они движутся.
+p: Коэффициент $\dfrac{1}{3}$ появляется потому, что молекулы летят во всех трёх направлениях, и на каждую стенку в среднем приходится треть движения.
+
+@ mkt-9
+p: В основном уравнении МКТ есть кинетическая энергия молекулы: $m_0v^2 = 2E_{\text{к}}$.
+p: Подставим: $p = \dfrac{1}{3}n\cdot 2E_{\text{к}} = \dfrac{2}{3}nE_{\text{к}}$.
+p: Давление газа пропорционально концентрации молекул и их средней кинетической энергии.
+p: Частая ошибка – перепутать дробь: здесь $\dfrac{2}{3}$, а в формуле энергии $\dfrac{3}{2}kT$. Проверка: подставив одну в другую, должны получить $p = nkT$.
+
+@ mkt-10
+p: Подставим в $p = \dfrac{2}{3}nE_{\text{к}}$ среднюю энергию $E_{\text{к}} = \dfrac{3}{2}kT$. Дроби сокращаются, и получается простая формула: $p = nkT$.
+fig: gasHot
+p: При одинаковой температуре и одинаковой концентрации любые газы создают одинаковое давление. Сорт газа здесь неважен.
+p: Если нагреть газ в закрытом сосуде, $n$ не меняется, а $T$ растёт, поэтому давление растёт пропорционально абсолютной температуре.
+
+@ mkt-11
+p: Если в сосуде смесь газов, каждый газ ведёт себя так, будто других нет, и создаёт своё парциальное давление.
+fig: dalton
+p: Полное давление смеси равно сумме парциальных давлений: $p = p_1 + p_2 + \ldots + p_n$. Это закон Дальтона.
+p: Например, воздух – смесь азота, кислорода и других газов, а его давление складывается из их давлений. Водяной пар в воздухе тоже создаёт своё парциальное давление – это понадобится в теме «Влажность».
+
+@ iso-1
+p: Возьмём $p = nkT$ и распишем концентрацию: $n = \dfrac{N}{V} = \dfrac{\nu N_A}{V}$. Получим $pV = \nu N_AkT$.
+p: Произведение $kN_A$ – универсальная газовая постоянная $R = 8{,}31$ Дж/(моль·К). Отсюда уравнение состояния идеального газа: $pV = \nu RT$.
+p: Уравнение связывает все параметры газа: давление, объём, температуру и количество вещества. Зная три из них, найдём четвёртую.
+p: Все величины – в СИ: давление в паскалях, объём в м³ (1 л = $10^{-3}$ м³), температура в кельвинах.
+
+@ iso-2
+p: Подставим в уравнение Менделеева–Клапейрона количество вещества $\nu = \dfrac{m}{M}$: $pV = \dfrac{m}{M}RT$.
+p: Эта форма удобна, когда в задаче дана масса газа, а не количество вещества.
+p: Не забывайте переводить молярную массу в кг/моль: для азота $\text{N}_2$ это 0,028 кг/моль, для гелия 0,004 кг/моль.
+
+@ iso-3
+p: Разделим обе части $pV = \dfrac{m}{M}RT$ на объём. Отношение $\dfrac{m}{V}$ – это плотность газа $\rho$: $p = \dfrac{\rho RT}{M}$.
+p: Эта форма нужна, когда в задаче спрашивают плотность газа или она дана, а объём и масса неизвестны.
+p: Из формулы видно: при одинаковых давлении и температуре плотность газа пропорциональна его молярной массе. Поэтому гелий легче воздуха, а углекислый газ тяжелее.
+
+@ iso-4
+p: Изопроцесс – процесс, в котором количество газа не меняется, и не меняется ещё один параметр. Изотермический процесс идёт при постоянной температуре: $T = \text{const}$.
+fig: isoT
+p: Из $pV = \nu RT$ при постоянных $\nu$ и $T$ произведение $pV$ не меняется: $p_1V_1 = p_2V_2$. Это закон Бойля–Мариотта.
+p: Давление обратно пропорционально объёму: сожмём газ вдвое – давление вырастет вдвое. График $p(V)$ – гипербола, её называют изотермой.
+p: Чем выше изотерма на графике $p(V)$, тем больше температура. На графиках $p(T)$ и $V(T)$ изотерма – вертикальная прямая.
+
+@ iso-5
+p: Изобарный процесс идёт при постоянном давлении: $p = \text{const}$. Например, газ под свободно движущимся поршнем.
+fig: isoP
+p: Из $pV = \nu RT$ при постоянных $p$ и $\nu$ отношение $\dfrac{V}{T}$ не меняется: $\dfrac{V_1}{T_1} = \dfrac{V_2}{T_2}$. Это закон Гей-Люссака.
+p: Объём прямо пропорционален абсолютной температуре. График $V(T)$ – прямая, продолжение которой проходит через начало координат (у самого начала её рисуют пунктиром: к абсолютному нулю газ не охладить).
+p: Чем круче изобара на графике $V(T)$, тем меньше давление. На графиках $p(V)$ и $p(T)$ изобара – горизонтальная прямая.
+
+@ iso-6
+p: Изохорный процесс идёт при постоянном объёме: $V = \text{const}$. Например, газ в закрытом жёстком баллоне.
+fig: isoV
+p: Из $pV = \nu RT$ при постоянных $V$ и $\nu$ отношение $\dfrac{p}{T}$ не меняется: $\dfrac{p_1}{T_1} = \dfrac{p_2}{T_2}$. Это закон Шарля.
+p: Давление прямо пропорционально абсолютной температуре. Поэтому баллоны с газом нельзя нагревать: давление в них растёт.
+p: Чем круче изохора на графике $p(T)$, тем меньше объём. На графиках $p(V)$ и $V(T)$ изохора – вертикальная и горизонтальная прямые.
+
+@ hum-1
+p: Над водой всегда есть водяной пар. Если пар находится в равновесии с жидкостью – сколько молекул вылетает, столько и возвращается, – его называют насыщенным. Его давление $p_{\text{н}}$ – максимально возможное при данной температуре.
+fig: humid
+p: Относительная влажность показывает, насколько пар в воздухе близок к насыщению: $\varphi = \dfrac{p}{p_{\text{н}}}\cdot 100\%$, где $p$ – парциальное давление пара в воздухе.
+p: Давление насыщенного пара сильно растёт с температурой и берётся из таблицы при температуре воздуха.
+p: При нагревании воздуха $p$ почти не меняется, а $p_{\text{н}}$ растёт, поэтому влажность падает. При охлаждении влажность растёт, а когда дойдёт до 100%, выпадает роса.
+
+@ hum-2
+p: Давление пара пропорционально его плотности при той же температуре: $p = \dfrac{\rho RT}{M}$. Поэтому влажность можно считать и через плотности: $\varphi = \dfrac{\rho}{\rho_{\text{н.п.}}}\cdot 100\%$.
+p: Плотность водяного пара $\rho$ называют абсолютной влажностью – это масса пара в 1 м³ воздуха.
+p: Влажность не может быть больше 100%. Если по расчёту выходит больше, значит, лишний пар сконденсировался, и в ответе $\varphi = 100\%$.
+p: Если сжать воздух с паром при постоянной температуре, плотность пара растёт, а $\rho_{\text{н.п.}}$ не меняется – влажность растёт.
+
+@ hum-3
+p: Давление пара $p = nkT$ пропорционально концентрации его молекул. При одной и той же температуре отношение давлений равно отношению концентраций: $\varphi = \dfrac{n}{n_{\text{н.п.}}}\cdot 100\%$.
+p: Все три формулы влажности – через давление, плотность и концентрацию – выражают одно и то же. Выбирают ту, в которой даны величины из условия.
+p: Во всех трёх в знаменателе стоит значение для насыщенного пара при той же температуре, что и у воздуха.
+
+@ hum-4
+p: Жидкость кипит, когда пузырьки пара внутри неё начинают расти и всплывать. Пузырёк может расти, если давление насыщенного пара внутри него не меньше давления снаружи.
+fig: bubble
+p: Снаружи на пузырёк на глубине $h$ давит атмосфера и столб жидкости: $p_{\text{н.п.}} = p_0 + \rho g h$. У поверхности вклад $\rho g h$ мал, и условие кипения – $p_{\text{н.п.}} = p_0$.
+p: При нормальном давлении $10^5$ Па давление насыщенного пара воды достигает этого значения при 100 °C – поэтому вода кипит при 100 °C. В горах давление ниже, и вода кипит при меньшей температуре.
+p: Во время кипения температура жидкости не меняется: вся подводимая теплота идёт на парообразование.
+
+@ heat-1
+p: Чтобы нагреть тело, ему нужно передать количество теплоты $Q = cm\Delta t$. Здесь $c$ – удельная теплоёмкость: сколько джоулей нужно, чтобы нагреть 1 кг вещества на 1 °C.
+p: У воды удельная теплоёмкость большая – 4200 Дж/(кг·°C), поэтому вода долго нагревается и долго остывает. У металлов она в несколько раз меньше.
+p: При охлаждении тело отдаёт такое же количество теплоты по той же формуле. Если считать $\Delta t = t_{\text{кон}} - t_{\text{нач}}$, то при охлаждении $Q$ получится отрицательным – тело отдаёт тепло.
+p: Изменение температуры можно брать в градусах Цельсия: $\Delta t = \Delta T$.
+
+@ heat-2
+p: При плавлении кристаллического тела температура не меняется, пока всё тело не расплавится. Теплота идёт на разрушение кристаллической решётки: растёт потенциальная энергия молекул, а кинетическая не меняется.
+fig: heatAnim
+p: Количество теплоты для плавления тела массой $m$ при температуре плавления: $Q = \lambda m$, где $\lambda$ – удельная теплота плавления. Для льда $\lambda = 3{,}3\cdot 10^5$ Дж/кг.
+p: При кристаллизации тело отдаёт ровно столько же теплоты, сколько получило при плавлении.
+p: Если тело сначала надо нагреть до температуры плавления, теплоты складываются: $Q = cm\Delta t + \lambda m$. На графике это наклонный участок, а затем горизонтальная площадка.
+
+@ heat-3
+p: Чтобы превратить жидкость в пар при температуре кипения, нужно количество теплоты $Q = Lm$, где $L$ – удельная теплота парообразования.
+fig: heatAnim | На графике нагревания две горизонтальные площадки: плавление при 0 °C и кипение при 100 °C. На площадках температура не меняется.
+p: Для воды $L = 2{,}3\cdot 10^6$ Дж/кг – почти в 7 раз больше, чем теплота плавления льда. Поэтому выкипает вода гораздо дольше, чем тает лёд той же массы.
+p: При конденсации пар отдаёт такую же теплоту. Поэтому ожог паром опаснее, чем кипятком: пар сначала конденсируется и отдаёт $Lm$, а потом ещё остывает.
+
+@ heat-4
+p: При сгорании топлива выделяется количество теплоты $Q = qm$, где $q$ – удельная теплота сгорания: сколько джоулей выделяется при сгорании 1 кг топлива.
+p: Удельная теплота сгорания бензина около $4{,}6\cdot 10^7$ Дж/кг, дров – около $10^7$ Дж/кг.
+p: В задачах топливом обычно что-то нагревают. Если часть теплоты теряется, используют КПД: полезная теплота $Q_{\text{пол}} = \eta\, qm$.
+
+@ heat-5
+p: Теплоёмкость тела $C$ показывает, сколько теплоты нужно, чтобы нагреть всё тело на 1 °C. Она зависит и от вещества, и от массы: $C = cm$.
+p: Через теплоёмкость количество теплоты записывается короче: $Q = C\Delta t$. Так часто задают калориметр или сосуд, масса и материал которого неизвестны.
+p: Не путайте: удельная теплоёмкость $c$ – свойство вещества, Дж/(кг·°C). Теплоёмкость $C$ – свойство конкретного тела, Дж/°C.
+
+@ heat-6
+p: Если горячее и холодное тело привести в контакт и не давать теплу уходить наружу, горячее отдаёт теплоту, холодное получает, пока их температуры не сравняются.
+fig: balanceAnim
+p: Энергия не теряется, поэтому сколько теплоты отдали горячие тела, столько получили холодные: $Q_{\text{отд}} = Q_{\text{пол}}$.
+p: Обе теплоты при такой записи берут положительными: для горячего тела $cm(t_{\text{нач}} - \theta)$, для холодного $cm(\theta - t_{\text{нач}})$, где $\theta$ – общая конечная температура.
+p: Другая запись: $Q_1 + Q_2 + \ldots = 0$, где у отдающих тел теплота со знаком минус. Если по ходу тело плавится или кипит, в уравнение добавляют $\lambda m$ или $Lm$.
+
+@ td-1
+p: Внутренняя энергия газа – это суммарная энергия движения и взаимодействия всех его молекул. В идеальном газе молекулы не взаимодействуют, поэтому остаётся только кинетическая энергия.
+p: У $N$ молекул средняя энергия каждой $\dfrac{3}{2}kT$, значит $U = N\cdot\dfrac{3}{2}kT = \dfrac{3}{2}\nu N_AkT = \dfrac{3}{2}\nu RT$.
+p: Внутренняя энергия идеального газа зависит только от температуры и количества вещества. Нет изменения температуры – нет изменения внутренней энергии.
+p: Формула верна для одноатомного газа (гелий, неон, аргон). Для двухатомного газа коэффициент другой: $\dfrac{5}{2}$.
+
+@ td-2
+p: По уравнению Менделеева–Клапейрона $\nu RT = pV$. Подставим в $U = \dfrac{3}{2}\nu RT$ и получим $U = \dfrac{3}{2}pV$.
+p: Эта форма удобна для задач с графиками $p(V)$: внутреннюю энергию в любой точке можно найти сразу по координатам точки.
+p: Например, если в процессе произведение $pV$ выросло, значит, выросла и температура, и внутренняя энергия.
+
+@ td-3
+p: Внутренняя энергия идеального газа зависит только от температуры, поэтому её изменение: $\Delta U = \dfrac{3}{2}\nu R\Delta T$.
+p: Знак $\Delta U$ совпадает со знаком изменения температуры: газ нагрелся – внутренняя энергия выросла, остыл – уменьшилась.
+p: $\Delta U$ не зависит от того, каким путём газ перешёл из одного состояния в другое, – важны только начальная и конечная температуры.
+p: В изотермическом процессе $\Delta T = 0$, поэтому $\Delta U = 0$.
+
+@ td-4
+p: Газ, расширяясь, толкает поршень и совершает работу. При постоянном давлении сила давления на поршень $F = pS$ постоянна, а поршень сдвигается на $l$: $A = Fl = pSl = p\Delta V$.
+fig: workAnim
+p: На графике $p(V)$ работа газа равна площади под графиком процесса. При постоянном давлении это прямоугольник.
+p: Если газ расширяется, $\Delta V > 0$ и работа газа положительная. При сжатии работа газа отрицательная. При постоянном объёме газ работу не совершает.
+p: Если давление меняется, формулой $p\Delta V$ пользоваться нельзя – работу находят как площадь под графиком, например трапеции.
+
+@ td-5
+p: Когда газ расширяется, он совершает работу $A$ над внешними телами. Когда его сжимают, работу совершают внешние силы.
+p: По третьему закону Ньютона газ и поршень действуют друг на друга с равными и противоположными силами, а перемещения у них одинаковые. Поэтому работы равны по модулю и противоположны по знаку: $A_{\text{в.с}} = -A$.
+p: В первом законе термодинамики в форме $Q = A + \Delta U$ стоит работа газа. Если в задаче дана работа внешних сил, её сначала переводят в работу газа со знаком минус.
+
+@ td-6
+p: Теплоту, переданную газу, можно потратить на две вещи: на увеличение внутренней энергии и на работу газа. Это закон сохранения энергии для тепловых процессов: $Q = A + \Delta U$.
+fig: firstLaw
+p: Знаки: $Q > 0$ – газ получает теплоту, $Q < 0$ – отдаёт. $A > 0$, если газ расширяется. $\Delta U > 0$, если газ нагревается.
+p: В частных случаях закон упрощается. Изохорный процесс: $A = 0$, и $Q = \Delta U$. Изотермический: $\Delta U = 0$, и $Q = A$.
+p: В изобарном процессе работают оба слагаемых: газ и нагревается, и совершает работу, поэтому теплоты нужно больше, чем при изохорном нагревании на те же градусы.
+
+@ td-7
+p: Адиабатный процесс – процесс без теплообмена с окружающей средой: $Q = 0$. Так бывает при очень быстром сжатии или расширении или в теплоизолированном сосуде.
+fig: adiabat
+p: Из первого закона: $0 = A + \Delta U$, то есть $A = -\Delta U$. Газ совершает работу за счёт своей внутренней энергии.
+p: При адиабатном расширении газ совершает работу и охлаждается. При адиабатном сжатии над газом совершают работу, и он нагревается – так воспламеняется топливо в дизельном двигателе.
+p: На графике $p(V)$ адиабата идёт круче изотермы: при расширении давление падает и из-за роста объёма, и из-за охлаждения.
+
+@ eng-1
+p: Тепловой двигатель превращает теплоту в механическую работу. У любого двигателя есть нагреватель, рабочее тело (обычно газ) и холодильник.
+fig: engine
+p: За цикл рабочее тело получает от нагревателя теплоту $Q_{\text{н}}$, часть её отдаёт холодильнику – $Q_{\text{х}}$, а разница превращается в работу: $A = Q_{\text{н}} - Q_{\text{х}}$.
+p: За полный цикл газ возвращается в исходное состояние, поэтому $\Delta U = 0$, и по первому закону вся полученная за цикл теплота равна работе.
+p: Отдать часть теплоты холодильнику – обязательное условие работы любого теплового двигателя: без этого цикл не замкнуть.
+
+@ eng-2
+p: КПД показывает, какая часть теплоты от нагревателя превратилась в полезную работу: $\eta = \dfrac{A}{Q_{\text{н}}}\cdot 100\%$.
+p: В знаменателе стоит именно теплота от нагревателя, а не от холодильника: это затраты, а работа – результат.
+p: КПД теплового двигателя всегда меньше 100%, потому что часть теплоты неизбежно уходит холодильнику. У автомобильных двигателей КПД около 25–40%.
+p: На графике $p(V)$ работа за цикл равна площади внутри цикла.
+
+@ eng-3
+p: Подставим в $\eta = \dfrac{A}{Q_{\text{н}}}$ работу $A = Q_{\text{н}} - Q_{\text{х}}$: $\eta = \dfrac{Q_{\text{н}} - Q_{\text{х}}}{Q_{\text{н}}}\cdot 100\%$.
+p: То же самое можно записать как $\eta = \left(1 - \dfrac{Q_{\text{х}}}{Q_{\text{н}}}\right)\cdot 100\%$.
+p: Эти формулы верны для любого цикла. Чем меньшую часть теплоты двигатель отдаёт холодильнику, тем выше КПД.
+
+@ eng-4
+p: Цикл Карно – идеальный цикл из двух изотерм и двух адиабат. При данных температурах нагревателя и холодильника у него самый большой возможный КПД.
+fig: carnotAnim
+p: КПД цикла Карно зависит только от температур: $\eta = \dfrac{T_{\text{н}} - T_{\text{х}}}{T_{\text{н}}}\cdot 100\%$. Температуры обязательно в кельвинах.
+p: Никакой реальный двигатель с теми же нагревателем и холодильником не может иметь КПД больше, чем у цикла Карно. Поэтому формулу используют как предел.
+p: КПД равнялся бы 100% только при $T_{\text{х}} = 0$ К, а абсолютный ноль недостижим. Поэтому КПД любого теплового двигателя меньше 100%.
 </script>
 
 
@@ -1138,12 +1896,14 @@ const App = (() => {
         const [code, title, id] = line.slice(2).split('|').map(s => s.trim());
         t = { code, title, id, items: [] }; TOPICS.push(t);
       } else if (line.startsWith('= ')) {
-        f = { id: t.id + '-' + (t.items.length + 1), topic: t, n: line.slice(2), f: '', v: [], w: [] };
+        const [nm, fid] = line.slice(2).split(' @');   // @id – постоянный номер формулы: прогресс не зависит от порядка в теме
+        f = { id: fid ? fid.trim() : t.id + '-' + (t.items.length + 1), topic: t, n: nm.trim(), f: '', v: [], w: [] };
         t.items.push(f);
       } else if (line.startsWith('f: ')) f.f = line.slice(3);
       else if (line.startsWith('v: ')) f.v = line.slice(3).split(';').map(s => s.split(' — ').map(x => x.trim()));
       else if (line.startsWith('w: ')) f.w = line.slice(3).split(';;').map(s => s.trim());
       else if (line.startsWith('xg: ')) f.xg = line.slice(4).trim();
+      else if (line.startsWith('nc: ')) f.noCalc = true;
       else if (line.startsWith('x: ')) { const [tg, ans] = line.slice(3).split(' :: '); (f.x ||= []).push({ target: tg.trim(), alts: ans.split(' || ').map(x => tokenize(x)) }); }
       else if (line.startsWith('e: ')) { const [lhs, ans] = line.slice(3).split(' :: '); const alts = ans.split(' || ').map(x => tokenize(x)); f.e = { lhs: lhs.trim(), tokens: alts[0], alts }; }
       else if (line.startsWith('b: ')) {
@@ -1155,7 +1915,7 @@ const App = (() => {
   })();
   const ALL = TOPICS.flatMap(t => t.items);
   const byId = Object.fromEntries(ALL.map(f => [f.id, f]));
-  const SECTION_TITLES = { '1': 'Механика', '2': 'Молекулярная физика и термодинамика', '3': 'Электродинамика', '4': 'Квантовая физика' };
+  const SECTION_TITLES = { '1': 'Механика', '2': 'МКТ', '3': 'Термодинамика', '4': 'Электричество', '5': 'Магнетизм', '6': 'Оптика', '7': 'СТО', '8': 'Ядерная физика', '9': 'Квантовая физика' };
   const SECTIONS = [...new Set(TOPICS.map(t => t.code.split('.')[0]))].map(code => {
     const topics = TOPICS.filter(t => t.code.split('.')[0] === code);
     return { code, title: SECTION_TITLES[code] || `Раздел ${code}`, topics, items: topics.flatMap(t => t.items) };
@@ -1236,6 +1996,75 @@ const App = (() => {
     const tail = doneToday() ? 'сегодня засчитан' : n ? `реши ещё ${left} ${plural(left, 'задание', 'задания', 'заданий')} сегодня, чтобы не прервать` : `реши ${left} ${plural(left, 'задание', 'задания', 'заданий')}, чтобы начать серию`;
     return `<div class="streak ${n ? 'on' : ''}"><span class="fire" aria-hidden="true">🔥</span><span><b class="num">${n}</b> ${daysWord(n)} подряд<br><small>${tail}</small></span></div>`;
   }
+  /* ---------- достижения (хранятся на телефоне и в облаке Telegram) ---------- */
+  const ACH_KEY = 'formuly.ach.v1';
+  let ach = { got: {}, n: 0, calc: 0, modes: {}, expl: {}, solo: {}, row: 0, best: 0 };
+  try { ach = { ...ach, ...(JSON.parse(localStorage.getItem(ACH_KEY) || '{}') || {}) }; } catch (e) {}
+  const saveAch = () => { try { localStorage.setItem(ACH_KEY, JSON.stringify(ach)); } catch (e) {} cloudQueue('a', ach); };
+  const ALL_MODES = ['pick', 'name', 'gap', 'build', 'write', 'expr', 'graph', 'calc'];
+  const bestStreak = () => Math.max(streak.best || 0, streakNow());
+  const ACHS = [
+    { id: 'first', icon: '👣', t: 'Первый шаг', d: 'Реши первое задание', p: () => [Math.min(ach.n, 1), 1] },
+    { id: 's3', icon: '🔥', t: '3 дня подряд', d: 'Занимайся три дня подряд', p: () => [Math.min(bestStreak(), 3), 3] },
+    { id: 's7', icon: '🔥', t: 'Неделя подряд', d: 'Занимайся семь дней подряд', p: () => [Math.min(bestStreak(), 7), 7] },
+    { id: 's14', icon: '🔥', t: 'Две недели подряд', d: 'Занимайся 14 дней подряд', p: () => [Math.min(bestStreak(), 14), 14] },
+    { id: 's30', icon: '🌋', t: 'Месяц подряд', d: 'Занимайся 30 дней подряд', p: () => [Math.min(bestStreak(), 30), 30] },
+    { id: 'n100', icon: '🌱', t: 'Новичок', d: 'Реши 100 заданий', p: () => [Math.min(ach.n, 100), 100] },
+    { id: 'n500', icon: '📘', t: 'Уже что-то знаем', d: 'Реши 500 заданий', p: () => [Math.min(ach.n, 500), 500] },
+    { id: 'n2000', icon: '🧠', t: 'Знаток', d: 'Реши 2000 заданий', p: () => [Math.min(ach.n, 2000), 2000] },
+    { id: 'n5000', icon: '👑', t: 'Решала', d: 'Реши 5000 заданий', p: () => [Math.min(ach.n, 5000), 5000] },
+    { id: 'clean', icon: '✨', t: 'Чистая работа', d: 'Реши 10 заданий подряд без ошибок в «Тренировке». Отдельные режимы не считаются', p: () => [Math.min(ach.best, 10), 10] },
+    { id: 'clean30', icon: '🎯', t: 'Снайпер', d: 'Реши 30 заданий подряд без ошибок в «Тренировке». Отдельные режимы не считаются', p: () => [Math.min(ach.best, 30), 30] },
+    { id: 'clean70', icon: '💎', t: 'Безупречно', d: 'Реши 70 заданий подряд без ошибок в «Тренировке». Отдельные режимы не считаются', p: () => [Math.min(ach.best, 70), 70] },
+    { id: 'solo', icon: '🧭', t: 'Попробовал всё', d: 'Реши задание в каждом режиме, запуская их по отдельности. Тренировка вперемешку не считается', p: () => [ALL_MODES.filter(m => ach.solo[m]).length, ALL_MODES.length] },
+    { id: 'why', icon: '🔍', t: 'Докопался до сути', d: 'Открой 10 пояснений «Откуда берётся формула»', p: () => [Math.min(Object.keys(ach.expl).length, 10), 10] },
+    { id: 'why30', icon: '🔬', t: 'Исследователь', d: 'Открой 30 пояснений «Откуда берётся формула»', p: () => [Math.min(Object.keys(ach.expl).length, 30), 30] },
+    { id: 'why70', icon: '📚', t: 'Профессор', d: 'Открой 70 пояснений «Откуда берётся формула»', p: () => [Math.min(Object.keys(ach.expl).length, 70), 70] },
+    { id: 'calc100', icon: '🧮', t: 'Счетовод', d: 'Верно реши 100 задач в режиме «Посчитай»', p: () => [Math.min(ach.calc, 100), 100] },
+    // раздел покорён: все формулы раздела выучены (4 клетки и больше)
+    ...SECTIONS.map(sec => ({ id: 'sec' + sec.code, icon: '🎓', t: `Покорена тема: ${sec.title}`, d: `Выучи все формулы раздела «${sec.title}»`, p: () => [sec.items.filter(f => lvl(f.id) >= 4).length, sec.items.length] }))
+  ];
+  let achNew = [];                                    // открытые в этом раунде, для экрана результата
+  function checkAch(quiet) {
+    const fresh = [];
+    for (const a of ACHS) { if (ach.got[a.id]) continue; const [c, g] = a.p(); if (c >= g) { ach.got[a.id] = Date.now(); fresh.push(a); } }
+    if (fresh.length) { saveAch(); achNew.push(...fresh); if (!quiet) fresh.forEach(a => toast(`${a.icon} Новое достижение: ${a.t}`)); }
+    return fresh;
+  }
+  let toastT = null;
+  function toast(text) {
+    let el = document.querySelector('.toast');
+    if (!el) { el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+    el.textContent = text; el.classList.add('on');
+    clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2800);
+  }
+  function openAch() {
+    if (ov) return;
+    const got = ACHS.filter(a => ach.got[a.id]).length;
+    ov = document.createElement('div');
+    ov.className = 'ov';
+    ov.innerHTML = `
+      <div class="ov-card" role="dialog" aria-modal="true" aria-label="Достижения">
+        <div class="ov-head">
+          <div><span class="eyebrow">Твой прогресс</span><h2>Достижения · ${got} из ${ACHS.length}</h2></div>
+          <button class="icon-btn" data-ov-close aria-label="Закрыть">${ICON.close}</button>
+        </div>
+        <div class="ach-list">
+          ${ACHS.map(a => { const [c, g] = a.p(), on = !!ach.got[a.id]; return `
+            <div class="ach ${on ? 'on' : ''}">
+              <span class="ach-icon" aria-hidden="true">${a.icon}</span>
+              <span class="ach-body"><b>${esc(a.t)}</b><small>${esc(a.d)}</small>
+                ${on ? '' : g > 1 ? `<span class="ach-bar"><span style="width:${Math.round(c / g * 100)}%"></span></span><small class="num">${c + ' из ' + g}</small>` : ''}
+              </span>
+              ${on ? '<span class="ach-ok" aria-label="получено">✓</span>' : ''}
+            </div>`; }).join('')}
+        </div>
+        <button class="btn btn-primary" data-ov-close>Понятно</button>
+      </div>`;
+    document.body.appendChild(ov);
+    document.body.style.overflow = 'hidden';
+    ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('[data-ov-close]')) closeExpl(); });
+  }
   /* просрочка: каждые 3 дня без повторения — минус клетка (но не ниже 1) */
   const DECAY = 3;
   let decayNotice = 0;
@@ -1309,6 +2138,7 @@ const App = (() => {
 
   function paint(html, onKey = null) {
     $app.innerHTML = html; keyHandler = onKey; typeset();
+    $app.querySelectorAll('details.idx').forEach(d => d.addEventListener('toggle', () => { idxOpen = d.open; }));
     window.scrollTo(0, 0);
   }
 
@@ -1342,6 +2172,7 @@ const App = (() => {
   function home() {
     setBack(null);
     applyDecay();
+    checkAch(true);
     const total = ALL.length, done = learned(ALL);
     const weak = ALL.filter(f => lvl(f.id) < MAX).length;
     paint(`
@@ -1350,6 +2181,7 @@ const App = (() => {
         <h1>Формулы <i>для ЕГЭ</i></h1>
       </header>
       ${streakLine()}
+      <button class="ach-btn" data-ach><span aria-hidden="true">🏆</span><span>Достижения</span><b class="num">${ACHS.filter(a => ach.got[a.id]).length} из ${ACHS.length}</b></button>
       <section class="summary">
         <div>
           <span class="eyebrow">Весь курс</span>
@@ -1383,7 +2215,8 @@ const App = (() => {
     `);
     $app.querySelectorAll('[data-section]').forEach(b => b.onclick = () => section(b.dataset.section));
     const wl = $app.querySelector('[data-welcome]'); if (wl) wl.onclick = () => openWelcome();
-    const rv = $app.querySelector('[data-review]'); if (rv) rv.onclick = () => start({ pool: dueList(), mode: 'mix', label: 'Повторение', back: home, count: 20 });
+    const ab = $app.querySelector('[data-ach]'); if (ab) ab.onclick = openAch;
+    const rv = $app.querySelector('[data-review]'); if (rv) rv.onclick = () => start({ pool: dueList(), mode: 'mix', label: 'Повторение', back: home, count: 20, review: true });
     wireLen(home);
     $app.querySelectorAll('[data-help]').forEach(b => b.onclick = openHelp);
     $app.querySelector('[data-go="mix-all"]').onclick = () => start({ pool: ALL, mode: 'mix', label: 'Тренировка', back: home, count: lenOf(ALL) });
@@ -1398,6 +2231,7 @@ const App = (() => {
     build: ['Собери формулу', 'Расставь кусочки формулы по пустым клеткам'],
     write: ['Напиши формулу', 'Набери формулу целиком на клавиатуре, без подсказок'],
     expr:  ['Вырази величину', 'Выведи из формулы нужную величину, как в начале решения задачи'],
+    graph: ['Узнай график', 'По графику найди формулу или по формуле выбери график, как в задачах ЕГЭ'],
     calc:  ['Посчитай', 'Реши короткую задачу с числами. Не влияет на клетки и серию'],
     mix:   ['Тренировка', 'Всё вперемешку, слабые чаще']
   };
@@ -1443,7 +2277,7 @@ const App = (() => {
   let modesOpen = false;                             // раскрыт ли список режимов (на время сессии)
   function topic(id) {
     const t = TOPICS.find(x => x.id === id);
-    const modeList = ['pick', 'name', 'gap', 'build', 'write', 'expr', 'calc'].filter(m => m === 'expr' ? t.items.some(f => f.x) : m === 'calc' ? t.items.some(canCalc) : true);
+    const modeList = ['pick', 'name', 'gap', 'build', 'write', 'expr', 'graph', 'calc'].filter(m => m === 'expr' ? t.items.some(f => f.x) : m === 'graph' ? t.items.some(hasGraph) : m === 'calc' ? t.items.some(canCalc) : true);
     const back = () => topic(id);
     paint(`
       <div class="bar"><button class="icon-btn" data-back aria-label="Назад">${ICON.back}</button></div>
@@ -1480,7 +2314,7 @@ const App = (() => {
     $app.querySelectorAll('[data-help]').forEach(b => b.onclick = openHelp);
     $app.querySelectorAll('[data-why]').forEach(b => b.onclick = () => openExpl(byId[b.dataset.why]));
     const mm = $app.querySelector('.more-modes'); if (mm) mm.addEventListener('toggle', () => { modesOpen = mm.open; });
-    $app.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { const m = b.dataset.mode, pool = m === 'expr' ? t.items.filter(f => f.x) : m === 'calc' ? t.items.filter(canCalc) : t.items; start({ pool, mode: m, label: t.title, back, count: pool.length }); });
+    $app.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { const m = b.dataset.mode, pool = m === 'expr' ? t.items.filter(f => f.x) : m === 'graph' ? t.items.filter(hasGraph) : m === 'calc' ? t.items.filter(canCalc) : t.items; start({ pool, mode: m, label: t.title, back, count: pool.length }); });
   }
 
   /* ---------- сессия ---------- */
@@ -1492,14 +2326,14 @@ const App = (() => {
   const lenOf = pool => lenPref ? Math.min(lenPref, pool.length) : pool.length;
   const lenChips = pool => `<div class="len" role="group" aria-label="Сколько заданий"><span>Заданий:</span>${LENS.filter(n => !n || n < pool.length).map(n => `<button class="${n === lenPref || (!n && lenPref >= pool.length) ? 'on' : ''}" data-len="${n}">${n || 'все ' + pool.length}</button>`).join('')}</div>`;
   const wireLen = redraw => $app.querySelectorAll('[data-len]').forEach(b => b.onclick = () => { lenPref = +b.dataset.len; try { localStorage.setItem('formuly.len.v1', String(lenPref)); } catch (e) {} redraw(); });
-  function start({ pool, mode, label, back, count }) {
+  function start({ pool, mode, label, back, count, review }) {
     const rank = f => { const l = lvl(f.id); if (l >= 1 && isDue(f.id)) return 0; if (l >= 1 && l < 2) return 1; if (!seen[f.id] && l === 0) return 1.5; if (l === 0) return 1; return 2.5 + l / 2; };
     const ordered = pool.map(f => ({ f, k: rank(f) + Math.random() * 1.2 })).sort((a, b) => a.k - b.k).map(x => x.f);
     const n = Math.min(count || pool.length, pool.length);
     const items = shuffle(ordered.slice(0, n));
-    const modes = items.map(f => { if (mode !== 'mix') return mode; const m = ['pick', 'name', 'gap', 'build', 'write', ...(f.x ? ['expr'] : [])]; return m[Math.random() * m.length | 0]; });
-    S = { pool, mode, label, back, count, items, modes, i: 0, results: [] };
-    streakUp = false;
+    const modes = items.map(f => { if (mode !== 'mix') return mode; const m = ['pick', 'name', 'gap', 'build', 'write', ...(f.x ? ['expr'] : []), ...(hasGraph(f) ? ['graph'] : [])]; return m[Math.random() * m.length | 0]; });
+    S = { pool, mode, label, back, count, review, items, modes, i: 0, results: [] };
+    streakUp = false; achNew = [];
     question();
   }
 
@@ -1519,6 +2353,11 @@ const App = (() => {
     const info = calc ? { counted: true, calc: true } : bump(f.id, ok);
     if (!calc) streakTick();
     S.results.push({ f, ok, ...info });
+    if (S.mode !== 'mix') ach.solo[S.modes[S.i]] = 1;   // «Попробовал всё»: только режим, запущенный отдельно
+    // серия без ошибок: считается только в «Тренировке» (всё вперемешку); отдельные режимы и повторение её не меняют
+    if (S.mode === 'mix' && !S.review) { ach.row = ok ? ach.row + 1 : 0; ach.best = Math.max(ach.best, ach.row); }
+    if (calc) { if (ok) ach.calc++; } else ach.n++;
+    saveAch(); checkAch();
   }
   const earlyNote = () => { const r = S.results[S.results.length - 1]; return r && r.ok && !r.counted && !r.calc ? `<span class="note">Следующая клетка — ${whenLabel(r.due)}, при повторении</span>` : ''; };
   function next() { S.i++; S.i < S.items.length ? question() : result(); }
@@ -1531,10 +2370,142 @@ const App = (() => {
     if (mode === 'write') return qWrite(f);
     if (mode === 'expr') return qExpr(f);
     if (mode === 'calc') return qCalc(f);
+    if (mode === 'graph') return qGraph(f);
     return qName(f);
   }
 
-  function choice(f, { eyebrow, ask, askTex, askHtml, sub, options, correct, isTex, row, note, solution }) {
+  /* ---------- «Узнай график»: график ↔ формула ---------- */
+  // s – форма графика: lin0 – прямая из нуля, lin – прямая со сдвигом, dec – убывающая прямая, const – горизонталь,
+  // vert – вертикаль, par – парабола, sqrt – корень, hyp – гипербола, cos/sin – колебания (ось времени посередине)
+  const TX = '\\text{const}';
+  const GRAPHS = [
+    { f: 'kin-1', x: 't', y: 'x', s: 'lin', tex: 'x = x_0 + v_x t', w: [['x = v_x t', 'lin0'], ['x = \\frac{a t^2}{2}', 'par'], ['x = x_0', 'const']] },
+    { f: 'kin-3', x: 't', y: 'v_x', s: 'lin', tex: 'v_x = v_{0x} + a_x t', w: [['v_x = a_x t', 'lin0'], ['v_x = v_{0x}', 'const'], ['v_x = \\frac{a_x t^2}{2}', 'par']] },
+    { f: 'kin-4', x: 't', y: 'x', s: 'par', c: 'x_0 = 0,\\ v_{0x} = 0', tex: 'x = \\frac{a_x t^2}{2}', w: [['x = a_x t', 'lin0'], ['x = \\sqrt{a_x t}', 'sqrt'], ['x = \\frac{a_x}{t}', 'hyp']] },
+    { f: 'kin-12', x: 'v', y: 'a_{\\text{ц}}', s: 'par', c: 'R = ' + TX, tex: 'a_{\\text{ц}} = \\frac{v^2}{R}', w: [['a_{\\text{ц}} = vR', 'lin0'], ['a_{\\text{ц}} = \\frac{R}{v}', 'hyp'], ['a_{\\text{ц}} = \\sqrt{vR}', 'sqrt']] },
+    { f: 'kin-12', x: 'R', y: 'a_{\\text{ц}}', s: 'hyp', c: 'v = ' + TX, tex: 'a_{\\text{ц}} = \\frac{v^2}{R}', w: [['a_{\\text{ц}} = v^2 R', 'lin0'], ['a_{\\text{ц}} = v^2', 'const'], ['a_{\\text{ц}} = vR^2', 'par']] },
+    { f: 'dyn-6', x: '\\Delta l', y: 'F_{\\text{упр}}', s: 'lin0', tex: 'F_{\\text{упр}} = k\\,\\Delta l', w: [['F_{\\text{упр}} = \\frac{k\\,\\Delta l^2}{2}', 'par'], ['F_{\\text{упр}} = \\frac{k}{\\Delta l}', 'hyp'], ['F_{\\text{упр}} = \\sqrt{k\\,\\Delta l}', 'sqrt']] },
+    { f: 'dyn-8', x: 'a', y: 'P', s: 'lin', c: '\\vec a\\ \\text{вверх}', tex: 'P = m(g + a)', w: [['P = ma', 'lin0'], ['P = m(g - a)', 'dec'], ['P = mg', 'const']] },
+    { f: 'dyn-10', x: 'a', y: 'P', s: 'dec', c: '\\vec a\\ \\text{вниз}', tex: 'P = m(g - a)', w: [['P = m(g + a)', 'lin'], ['P = ma', 'lin0'], ['P = mg', 'const']] },
+    { f: 'stat-3', x: 'S', y: 'p', s: 'hyp', c: 'F = ' + TX, tex: 'p = \\frac{F}{S}', w: [['p = FS', 'lin0'], ['p = F', 'const'], ['p = FS^2', 'par']] },
+    { f: 'stat-4', x: 'h', y: 'p', s: 'lin0', tex: 'p = \\rho g h', w: [['p = p_0 + \\rho g h', 'lin'], ['p = \\frac{\\rho g}{h}', 'hyp'], ['p = \\rho g h^2', 'par']] },
+    { f: 'stat-10', x: 'h', y: 'p', s: 'lin', tex: 'p = p_0 + \\rho g h', w: [['p = \\rho g h', 'lin0'], ['p = p_0 - \\rho g h', 'dec'], ['p = p_0', 'const']] },
+    { f: 'stat-5', x: 'V_{\\text{погр}}', y: 'F_{\\text{А}}', s: 'lin0', tex: 'F_{\\text{А}} = \\rho_{\\text{ж}} g V_{\\text{погр}}', w: [['F_{\\text{А}} = \\frac{\\rho_{\\text{ж}} g}{V_{\\text{погр}}}', 'hyp'], ['F_{\\text{А}} = \\rho_{\\text{ж}} g V_{\\text{погр}}^2', 'par'], ['F_{\\text{А}} = \\rho_{\\text{ж}} g', 'const']] },
+    { f: 'cons-1', x: 'v', y: 'p', s: 'lin0', tex: 'p = mv', w: [['p = \\frac{mv^2}{2}', 'par'], ['p = \\frac{m}{v}', 'hyp'], ['p = m', 'const']] },
+    { f: 'cons-5', x: 't', y: 'N', s: 'hyp', c: 'A = ' + TX, tex: 'N = \\frac{A}{t}', w: [['N = At', 'lin0'], ['N = At^2', 'par'], ['N = A', 'const']] },
+    { f: 'cons-7', x: 'v', y: 'E_{\\text{к}}', s: 'par', tex: 'E_{\\text{к}} = \\frac{mv^2}{2}', w: [['E_{\\text{к}} = \\frac{mv}{2}', 'lin0'], ['E_{\\text{к}} = \\frac{m}{2v}', 'hyp'], ['E_{\\text{к}} = \\sqrt{\\frac{mv}{2}}', 'sqrt']] },
+    { f: 'cons-8', x: 'h', y: 'E_{\\text{п}}', s: 'lin0', tex: 'E_{\\text{п}} = mgh', w: [['E_{\\text{п}} = \\frac{mgh^2}{2}', 'par'], ['E_{\\text{п}} = \\frac{mg}{h}', 'hyp'], ['E_{\\text{п}} = mg', 'const']] },
+    { f: 'cons-9', x: 'x', y: 'E_{\\text{п}}', s: 'par', tex: 'E_{\\text{п}} = \\frac{kx^2}{2}', w: [['E_{\\text{п}} = kx', 'lin0'], ['E_{\\text{п}} = \\frac{k}{x}', 'hyp'], ['E_{\\text{п}} = \\sqrt{kx}', 'sqrt']] },
+    { f: 'osc-1', x: 't', y: 'x', s: 'cos', mid: true, tex: 'x = A\\cos\\omega t', w: [['x = A\\sin\\omega t', 'sin'], ['x = At', 'lin0'], ['x = A', 'const']] },
+    { f: 'osc-4', x: 'l', y: 'T', s: 'sqrt', tex: 'T = 2\\pi\\sqrt{\\frac{l}{g}}', w: [['T = 2\\pi\\frac{l}{g}', 'lin0'], ['T = 2\\pi\\frac{l^2}{g}', 'par'], ['T = 2\\pi\\frac{g}{l}', 'hyp']] },
+    { f: 'osc-5', x: 'm', y: 'T', s: 'sqrt', tex: 'T = 2\\pi\\sqrt{\\frac{m}{k}}', w: [['T = 2\\pi\\frac{m}{k}', 'lin0'], ['T = 2\\pi\\frac{m^2}{k}', 'par'], ['T = 2\\pi\\frac{k}{m}', 'hyp']] },
+    { f: 'osc-8', x: 'T', y: '\\lambda', s: 'lin0', c: 'v = ' + TX, tex: '\\lambda = vT', w: [['\\lambda = \\frac{v}{T}', 'hyp'], ['\\lambda = vT^2', 'par'], ['\\lambda = v', 'const']] },
+    { f: 'mkt-5', x: 't', y: 'T', s: 'lin', tex: 'T = t + 273', w: [['T = t', 'lin0'], ['T = 273 - t', 'dec'], ['T = 273', 'const']] },
+    { f: 'mkt-6', x: 'T', y: 'E_{\\text{к}}', s: 'lin0', tex: 'E_{\\text{к}} = \\frac{3}{2}kT', w: [['E_{\\text{к}} = \\frac{3k}{2T}', 'hyp'], ['E_{\\text{к}} = \\frac{3}{2}kT^2', 'par'], ['E_{\\text{к}} = \\sqrt{\\frac{3}{2}kT}', 'sqrt']] },
+    { f: 'mkt-7', x: 'T', y: 'v', s: 'sqrt', tex: 'v = \\sqrt{\\frac{3kT}{m_0}}', w: [['v = \\frac{3kT}{m_0}', 'lin0'], ['v = \\frac{m_0}{3kT}', 'hyp'], ['v = \\left(\\frac{3kT}{m_0}\\right)^2', 'par']] },
+    { f: 'mkt-10', x: 'T', y: 'p', s: 'lin0', c: 'n = ' + TX, tex: 'p = nkT', w: [['p = \\frac{nk}{T}', 'hyp'], ['p = nkT^2', 'par'], ['p = nk', 'const']] },
+    { f: 'iso-5', x: 't', y: 'V', s: 'lin', c: 'p = ' + TX + ',\\ t\\ \\text{в}\\ {}^\\circ\\text{C}', tex: 'V = ' + TX + '\\cdot(t + 273)', w: [['V = ' + TX + '\\cdot t', 'lin0'], ['V = \\frac{' + TX + '}{t}', 'hyp'], ['V = ' + TX, 'const']] },
+    { f: 'heat-1', x: '\\Delta t', y: 'Q', s: 'lin0', tex: 'Q = cm\\Delta t', w: [['Q = \\frac{cm}{\\Delta t}', 'hyp'], ['Q = cm\\Delta t^2', 'par'], ['Q = cm', 'const']] },
+    { f: 'heat-1', x: 'Q', y: 't', s: 'lin', c: '\\text{нагревание}', tex: 't = t_0 + \\frac{Q}{cm}', w: [['t = \\frac{Q}{cm}', 'lin0'], ['t = t_0 - \\frac{Q}{cm}', 'dec'], ['t = t_0', 'const']] },
+    { f: 'td-1', x: 'T', y: 'U', s: 'lin0', tex: 'U = \\frac{3}{2}\\nu RT', w: [['U = \\frac{3\\nu R}{2T}', 'hyp'], ['U = \\frac{3}{2}\\nu RT^2', 'par'], ['U = \\frac{3}{2}\\nu R', 'const']] }
+  ];
+  // изопроцессы в трёх парах осей: какой процесс изображён / какой график у процесса
+  const PROC = { T: ['iso-4', 'изотермический'], P: ['iso-5', 'изобарный'], V: ['iso-6', 'изохорный'] };
+  const PROC_AX = [['V', 'p', { T: 'hyp', P: 'const', V: 'vert' }], ['T', 'V', { T: 'vert', P: 'lin0', V: 'const' }], ['T', 'p', { T: 'vert', P: 'const', V: 'lin0' }]];
+  for (const [k, [f, name]] of Object.entries(PROC)) for (const [x, y, sh] of PROC_AX) GRAPHS.push({ f, x, y, s: sh[k], proc: k, name, alt: Object.keys(PROC).filter(q => q !== k).map(q => [PROC[q][1], sh[q]]) });
+  const GRAPH_BY = {};
+  for (const g of GRAPHS) (GRAPH_BY[g.f] ||= []).push(g);
+  const hasGraph = f => !!GRAPH_BY[f.id];
+  const gpts = (s, mid) => {
+    const n = 40, U = Array.from({ length: n + 1 }, (_, i) => i / n);
+    const fn = {
+      lin0: u => mid ? 0.5 + 0.4 * u : 0.85 * u, lin: u => 0.3 + 0.6 * u, dec: u => 0.85 - 0.65 * u, const: () => mid ? 0.88 : 0.55,
+      par: u => 0.9 * u * u, sqrt: u => 0.9 * Math.sqrt(u), hyp: u => 0.1 / u,
+      cos: u => 0.5 + 0.38 * Math.cos(2 * Math.PI * 1.5 * u), sin: u => 0.5 + 0.38 * Math.sin(2 * Math.PI * 1.5 * u)
+    }[s];
+    if (s === 'vert') return [[0.5, 0.12], [0.5, 0.88]];
+    if (s === 'hyp') return U.map(u => 0.11 + 0.89 * u).map(u => [u, fn(u)]);
+    if (s === 'const' && !mid) return [[0.08, 0.55], [0.92, 0.55]];
+    return U.map(u => [u, fn(u)]);
+  };
+  function graphBox(s, g, big = false) {
+    const X = u => r1(16 + 116 * u), Y = v => r1(88 - 76 * v), ay = g.mid ? 50 : 88;
+    const pl = gpts(s, g.mid).map(([u, v]) => `${X(u)},${Y(v)}`).join(' ');
+    const svg = `<svg viewBox="0 0 140 100" aria-hidden="true">` +
+      `<line x1="16" y1="${ay}" x2="134" y2="${ay}" class="gax"/><polygon points="136,${ay} 129,${ay - 3} 129,${ay + 3}" class="gah"/>` +
+      `<line x1="16" y1="94" x2="16" y2="6" class="gax"/><polygon points="16,3 13,10 19,10" class="gah"/>` +
+      `<text x="11" y="${ay + 4}" class="g0">0</text><polyline points="${pl}" class="gln"/></svg>`;
+    return `<div class="gbox ${big ? 'big' : ''} ${g.mid ? 'mid' : ''}">${svg}<span class="gy">${tex(g.y)}</span><span class="gx">${tex(g.x)}</span></div>`;
+  }
+  const r1 = n => Math.round(n * 10) / 10;
+  function qGraph(f) {
+    const g = GRAPH_BY[f.id][Math.random() * GRAPH_BY[f.id].length | 0], toGraph = Math.random() < 0.5;
+    const cond = g.c ? `<div class="sub">${tex(g.c)}</div>` : '';
+    const eyebrow = `${esc(f.topic.title)} · узнай график`;
+    if (g.proc) {
+      const axes = `${g.y}\\text{–}${g.x}`;
+      if (!toGraph) return choice(f, { eyebrow, ask: 'Какой процесс изображён на графике?', askHtml: graphBox(g.s, g, true), options: shuffle([g.name, ...g.alt.map(a => a[0])]), correct: g.name, isTex: false });
+      const opts = shuffle([g.s, ...g.alt.map(a => a[1]), ...(['hyp', 'lin0', 'const', 'vert'].filter(s => s !== g.s && !g.alt.some(a => a[1] === s)).slice(0, 1))]);
+      return choice(f, { eyebrow, ask: `Какой график у процесса?`, askHtml: `<div class="sub">${esc(g.name[0].toUpperCase() + g.name.slice(1))} процесс в осях ${tex(axes)}</div>`, options: opts, correct: g.s, optHtml: s => graphBox(s, g), grid: true });
+    }
+    if (!toGraph) return choice(f, { eyebrow, ask: 'Какая формула описывает этот график?', askHtml: graphBox(g.s, g, true) + cond, options: shuffle([g.tex, ...g.w.map(w => w[0])].map(t => t.replace(/\\frac/g, '\\dfrac'))), correct: g.tex.replace(/\\frac/g, '\\dfrac'), isTex: true });
+    const pool = g.mid ? ['cos', 'sin', 'lin0', 'const'] : ['lin0', 'lin', 'dec', 'const', 'par', 'sqrt', 'hyp'];
+    const shapes = [...new Set([g.s, ...g.w.map(w => w[1])])];
+    for (const s of shuffle(pool)) if (shapes.length < 4 && !shapes.includes(s)) shapes.push(s);
+    return choice(f, { eyebrow, ask: 'Какой график соответствует формуле?', askTex: g.tex, sub: g.c ? tex(g.c) : '', options: shuffle(shapes), correct: g.s, optHtml: s => graphBox(s, g), grid: true });
+  }
+
+  /* ---------- что значат индексы: расшифровка обозначений с индексами в задании ---------- */
+  let idxOpen = false;
+  const SUBRE = /(\\[a-zA-Z]+|[A-Za-z])\s*_(\{(?:[^{}]|\{[^{}]*\})*\}|[A-Za-z0-9])(?:\\,)?('?)/g;
+  const normSym = s => stripVec(s).replace(/\\,/g, '').replace(/\s+/g, '').replace(/_\{([A-Za-z0-9])\}/, '_$1');
+  const symsIn = t => [...String(t).matchAll(SUBRE)].map(m => normSym(`${m[1]}_${m[2]}${m[3]}`));
+  // обозначения, которые встречаются только в неверных вариантах
+  const SYM_EXTRA = {
+    'F_{\\text{по}}': ['F_{\\text{по}}', 'сила, которая вращает тело по часовой стрелке'],
+    'F_{\\text{против}}': ['F_{\\text{против}}', 'сила, которая вращает тело против часовой стрелки'],
+    'l_{\\text{по}}': ['l_{\\text{по}}', 'плечо силы, которая вращает по часовой стрелке'],
+    'l_{\\text{против}}': ['l_{\\text{против}}', 'плечо силы, которая вращает против часовой стрелки'],
+    '\\rho_{\\text{т}}': ['\\rho_{\\text{т}}', 'плотность тела'],
+    'V_{\\text{т}}': ['V_{\\text{т}}', 'объём всего тела'],
+    'E_{\\text{п}1}': ['E_{\\text{п}1}, E_{\\text{п}2}', 'начальная и конечная потенциальная энергия'],
+    'E_{\\text{п}2}': ['E_{\\text{п}1}, E_{\\text{п}2}', 'начальная и конечная потенциальная энергия'],
+    't_1': ['t_1, t_2', 'температура газа по шкале Цельсия в начальном и конечном состояниях'],
+    't_2': ['t_1, t_2', 'температура газа по шкале Цельсия в начальном и конечном состояниях'],
+    '\\rho_{\\text{в}}': ['\\rho_{\\text{в}}', 'плотность воздуха']
+  };
+  const defsOf = v => {
+    const out = {};
+    for (const [sym, desc] of v || []) {
+      if (!desc) continue;
+      const k = desc.lastIndexOf(', '), unit = k >= 0 ? desc.slice(k + 2).trim() : '', mean = k >= 0 && UNIT_OK(unit) ? desc.slice(0, k) : desc;
+      const shown = stripVec(sym);
+      for (const one of sym.split(', ')) { const key = normSym(one); if (key.includes('_') && !out[key]) out[key] = { syms: shown, mean }; }
+    }
+    return out;
+  };
+  let GDEFS = null;
+  const globalDefs = () => {
+    if (GDEFS) return GDEFS;
+    GDEFS = {};
+    for (const f of ALL) for (const [k, d] of Object.entries(defsOf(f.v))) if (!GDEFS[k]) GDEFS[k] = d;
+    for (const [k, [syms, mean]] of Object.entries(SYM_EXTRA)) if (!GDEFS[k]) GDEFS[k] = { syms, mean };
+    return GDEFS;
+  };
+  const TDEFS = {};
+  const topicDefs = t => TDEFS[t.id] ||= t.items.reduce((m, x) => { for (const [k, d] of Object.entries(defsOf(x.v))) if (!m[k]) m[k] = d; return m; }, {});
+  function idxHint(f, list) {
+    const own = defsOf(f.v), top = topicDefs(f.topic), glob = globalDefs(), keys = [], groups = [];
+    for (const t of list) for (const k of symsIn(t)) if (!keys.includes(k)) keys.push(k);
+    for (const k of keys) {
+      const d = own[k] || top[k] || glob[k]; if (!d) continue;
+      if (!groups.some(x => x.syms === d.syms && x.mean === d.mean)) groups.push(d);
+    }
+    if (!groups.length) return '';
+    return `<details class="idx" ${idxOpen ? 'open' : ''}><summary>Что значат индексы</summary><ul>${groups.map(d => `<li>${tex(d.syms)}<span>– ${esc(d.mean)}</span></li>`).join('')}</ul></details>`;
+  }
+
+  function choice(f, { eyebrow, ask, askTex, askHtml, sub, options, correct, isTex, row, note, solution, idx, optHtml, grid }) {
     let picked = null;
     const render = () => {
       const done = picked !== null;
@@ -1545,12 +2516,13 @@ const App = (() => {
           ${askHtml || ''}
           ${askTex ? `<div class="formula">${tex(askTex)}</div>` : ''}
           ${sub ? `<div class="sub">${sub}</div>` : ''}
+          ${idx || ''}
         </article>
-        <div class="options ${row ? 'row' : ''}" role="group">
+        <div class="options ${row ? 'row' : ''} ${grid ? 'grid' : ''}" role="group">
           ${options.map((o, i) => {
             let cls = '';
             if (done) cls = o === correct ? 'right' : (o === picked ? 'wrong' : 'dim');
-            return `<button class="opt ${isTex ? '' : 'text'} ${cls}" data-i="${i}" ${done ? 'disabled' : ''}><span class="k">${i + 1}</span>${isTex ? tex(o) : `<span>${unit(o)}</span>`}</button>`;
+            return `<button class="opt ${optHtml ? 'gopt' : isTex ? '' : 'text'} ${cls}" data-i="${i}" ${done ? 'disabled' : ''}><span class="k">${i + 1}</span>${optHtml ? optHtml(o) : isTex ? tex(o) : `<span>${unit(o)}</span>`}</button>`;
           }).join('')}
         </div>
         ${done ? `
@@ -1572,7 +2544,8 @@ const App = (() => {
   }
 
   function qPick(f) {
-    choice(f, { eyebrow: `${esc(f.topic.title)} · найди верную формулу`, ask: f.n, options: shuffle([f.f, ...f.w.slice(0, 3)]), correct: f.f, isTex: true });
+    const options = shuffle([f.f, ...f.w.slice(0, 3)]);
+    choice(f, { eyebrow: `${esc(f.topic.title)} · найди верную формулу`, ask: f.n, options, correct: f.f, isTex: true, idx: idxHint(f, options) });
   }
   function qName(f) {
     const same = f.topic.items.filter(x => x !== f);
@@ -1597,7 +2570,8 @@ const App = (() => {
     const sl = f.b.slots, k = Math.random() * sl.length | 0, correct = sl[k].c;
     const fill = sl.map((x, i) => i === k ? null : x.c);
     const pool = [...new Set([...f.b.extra, ...sl.map(x => x.c)])].filter(x => x !== correct);
-    choice(f, { eyebrow: `${esc(f.topic.title)} · заполни пропуск`, ask: f.n, askTex: tpl(f, fill, { cur: k, plain: true }), options: shuffle([correct, ...shuffle(pool).slice(0, 3)]), correct, isTex: true });
+    const options = shuffle([correct, ...shuffle(pool).slice(0, 3)]);
+    choice(f, { eyebrow: `${esc(f.topic.title)} · заполни пропуск`, ask: f.n, askTex: tpl(f, fill, { cur: k, plain: true }), options, correct, isTex: true, idx: idxHint(f, [f.b.tpl, ...options]) });
   }
   function checkBuild(f, fill) {
     const sl = f.b.slots, left = {};
@@ -1613,6 +2587,7 @@ const App = (() => {
     const sl = f.b.slots;
     const tiles = shuffle([...sl.map(x => x.c), ...f.b.extra]).map(t => ({ t, used: false }));
     let placed = [], marks = null;
+    const idx = idxHint(f, [f.b.tpl, ...tiles.map(x => x.t)]);
     const render = () => {
       const fill = sl.map((_, i) => placed[i] != null ? tiles[placed[i]].t : null);
       const full = placed.length === sl.length, done = marks !== null, ok = done && marks.every(Boolean);
@@ -1621,6 +2596,7 @@ const App = (() => {
           <span class="eyebrow">${esc(f.topic.title)} · собери формулу</span>
           <div class="ask">${esc(f.n)}</div>
           <div class="formula">${tex(tpl(f, fill, { cur: placed.length, marks }))}</div>
+          ${done ? '' : idx}
         </article>
         ${done ? '' : `
           <div class="tiles">${tiles.map((x, i) => `<button class="tile" data-t="${i}" ${x.used ? 'disabled' : ''}>${tex(x.t)}</button>`).join('')}</div>
@@ -1665,7 +2641,7 @@ const App = (() => {
       return L(x1, y1, r1(bx), r1(by), c) + `<polygon points="${x2},${y2} ${r1(bx + px)},${r1(by + py)} ${r1(bx - px)},${r1(by - py)}" class="ah ${c}"/>`;
     };
     const T = (x, y, t, c = '', a = 'middle') => `<text x="${x}" y="${y}" text-anchor="${a}" class="${c}">${t}</text>`;
-    const S = (b, s, rest = '') => `${b}<tspan class="sb" dy="4">${s}</tspan>${rest ? `<tspan dy="-4">${rest}</tspan>` : ''}`;
+    const S = (b, s, rest = '') => `${b}<tspan class="sb" dy="4"${/[а-яё]/i.test(s) ? ' style="font-style:normal"' : ''}>${s}</tspan>${rest ? `<tspan dy="-4">${rest}</tspan>` : ''}`;
     const dot = (x, y, r = 4) => `<circle cx="${x}" cy="${y}" r="${r}" class="dot"/>`;
     const axes = (w, h, top = 12, tl = true) => A(40, h, w, h) + (tl ? T(w, h + 17, 't', 'm', 'end') : '') + A(40, h, 40, top) + T(52, top + 8, 'v', 'm', 'start');
     const svg = (w, h, label, body) => `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${body}</svg>`;
@@ -1708,6 +2684,58 @@ const App = (() => {
         }
       };
     };
+    // отражение от стенок: координата точки, летящей со скоростью v между lo и hi
+    const refl = (x0, v, t, lo, hi) => { const L0 = hi - lo; let u = ((x0 - lo) + v * t) % (2 * L0); if (u < 0) u += 2 * L0; return lo + (u < L0 ? u : 2 * L0 - u); };
+    // изопроцессы: цилиндр с поршнем слева, график справа; kind: T – изотерма p(V), P – изобара V(T), V – изохора p(T), W – работа при p = const
+    const isoFig = (kind, cap) => {
+      const ax = { T: ['V', 'p'], P: ['T', 'V'], V: ['T', 'p'], W: ['V', 'p'] }[kind];
+      const st = { T: 'T = const', P: 'p = const', V: 'V = const', W: 'p = const' }[kind];
+      const note = { T: 'V растёт, p падает', P: 'T растёт, V растёт', V: 'T растёт, p растёт', W: '' }[kind];
+      const X = u => 160 + 50 * u, Y = kind === 'T' ? u => 180 - 45 * 3 / u : kind === 'W' ? () => 90 : u => 180 - 45 * u;
+      const guide = kind === 'T' ? Array.from({ length: 30 }, (_, i) => { const u = 0.95 + 2.4 * i / 29; return [X(u), Y(u)]; })
+        : kind === 'W' ? [[X(0.6), 90], [X(3.3), 90]] : [[160, 180], [X(3.3), Y(3.3)]];
+      const heat = kind !== 'T';
+      return {
+        cap, dur: 4,
+        svg: svg(340, 214, 'Анимация: изопроцесс, поршень в цилиндре и график',
+          L(30, 28, 30, 180) + L(100, 28, 100, 180) + L(30, 180, 100, 180) + T(65, 16, st, 'sm acct') +
+          (heat ? `<polygon points="44,206 56,186 68,206" class="lossf"/><polygon points="62,206 74,188 86,206" class="lossf"/>` : '') +
+          A(160, 180, 334, 180) + T(334, 198, ax[0], 'm', 'end') + A(160, 180, 160, 16) + T(170, 24, ax[1], 'm', 'start') +
+          `<polyline points="${pts(guide)}" class="ln dash" style="stroke:var(--ink-3)"/>` + (note ? T(248, 208, note, 'sm') : '') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const f = Math.min(1, Math.max(0, (r - 0.3) / 3.3)), u = 1 + 2 * (1 - (1 - f) ** 2), h = kind === 'V' ? 60 : 30 * u, top = 180 - h;
+            const tr = Array.from({ length: 24 }, (_, i) => { const w = 1 + (u - 1) * i / 23; return [X(w), Y(w)]; });
+            g.innerHTML = `<rect x="31" y="${r1(top)}" width="68" height="${r1(h)}" class="water"/><rect x="30" y="${r1(top - 8)}" width="70" height="8" class="piston"/>` +
+              (kind === 'W' ? `<rect x="${X(1)}" y="90" width="${r1(X(u) - X(1))}" height="90" class="accf"/>` + L(X(1), 90, X(1), 180, 'dash muted') + L(r1(X(u)), 90, r1(X(u)), 180, 'dash muted') : '') +
+              `<polyline points="${pts(tr)}" class="wave"/>` + dot(X(1), r1(Y(1)), 4) + T(X(1) - 6, r1(Y(1) - 8), '1', 'm', 'end') + dot(r1(X(u)), r1(Y(u)), 5) +
+              (f >= 1 ? T(r1(X(u) + 6), r1(Y(u) - 8), '2', 'm', 'start') : '') +
+              (kind === 'W' && f >= 1 ? T(r1((X(1) + X(u)) / 2), 140, 'A = pΔV', 'm acct') : '');
+          };
+        }
+      };
+    };
+    // лифт разгоняется с постоянным ускорением вверх (up) или вниз; ось y направлена по ускорению
+    const liftFig = (up, cap) => ({
+      cap, dur: 4.2,
+      svg: svg(300, 248, up ? 'Анимация: лифт разгоняется вверх, тело прижимается к полу' : 'Анимация: лифт разгоняется вниз, тело чуть вытягивается',
+        (up ? A(56, 222, 56, 30) + T(66, 40, 'y', 'm', 'start') : A(56, 30, 56, 222) + T(66, 218, 'y', 'm', 'start')) + `<g data-a="g"></g>`),
+      anim: el => {
+        const g = el.querySelector('[data-a="g"]'), k = up ? 1 : -1;
+        return r => {
+          const u = Math.max(0, r - 0.6), s = Math.min(1, u / 0.5), d = 30 * Math.min(1, (u / 3.2) ** 2);
+          const top = up ? 50 - d : 20 + d, fl = top + 150;
+          const w = 50 * (1 + 0.08 * k * s), h = 60 * (1 - 0.1 * k * s), cy = fl - h / 2, nl = 44 * (1 + 0.45 * k * s);
+          g.innerHTML = L(170, 0, 170, r1(top)) + `<rect x="110" y="${r1(top)}" width="120" height="150" class="cab"/>` +
+            `<rect x="${r1(170 - w / 2)}" y="${r1(fl - h)}" width="${r1(w)}" height="${r1(h)}" class="solid"/>` +
+            A(170, r1(cy), 170, r1(cy - nl)) + T(r1(176 + w / 2), r1(cy - nl + 8), 'N', 'm', 'start') +
+            A(170, r1(cy), 170, r1(cy + 44)) + T(r1(176 + w / 2), r1(fl + 16), 'mg', 'm', 'start') +
+            (s > 0.05 ? (up ? A(262, 150, 262, r1(150 - 60 * s), 'acc thick') : A(262, 90, 262, r1(90 + 60 * s), 'acc thick')) + T(272, 124, 'a', 'm acct', 'start') : '') +
+            T(170, 244, s < 0.05 ? 'лифт стоит: N = mg' : up ? 'разгон вверх: N > mg' : 'разгон вниз: N < mg', s < 0.05 ? 'sm' : 'sm acct');
+        };
+      }
+    });
     // груз на горизонтальной пружине: x = A cos ωt, центр груза 180 ± 75, период 3 с; extra – что дорисовать в кадре
     const W3 = 2 * Math.PI / 3;
     // в крайних точках и в положении равновесия кадр задерживается на 0,5 с: реальное время → время колебаний
@@ -1824,8 +2852,8 @@ const App = (() => {
         cap: 'Модуль скорости не меняется, а направление меняется постоянно. Центростремительное ускорение направлено к центру окружности.',
         svg: svg(280, 190, 'Движение по окружности: скорость по касательной, ускорение к центру',
           `<circle cx="120" cy="100" r="70" class="ring"/>` + dot(120, 100, 3) +
-          dot(120, 30, 5) + A(120, 30, 66, 30) + A(120, 30, 120, 68, 'acc') + T(62, 34, 'v', 'm', 'end') + T(128, 60, 'a', 'm acct', 'start') +
-          dot(190, 100, 5) + A(190, 100, 190, 46) + A(190, 100, 152, 100, 'acc') + T(198, 56, 'v', 'm', 'start') + T(168, 93, 'a', 'm acct') +
+          dot(120, 30, 5) + A(120, 30, 66, 30) + A(120, 30, 120, 68, 'acc') + T(62, 34, 'v', 'm', 'end') + T(128, 60, S('a', 'ц'), 'm acct', 'start') +
+          dot(190, 100, 5) + A(190, 100, 190, 46) + A(190, 100, 152, 100, 'acc') + T(198, 56, 'v', 'm', 'start') + T(166, 93, S('a', 'ц'), 'm acct') +
           dot(70.5, 149.5, 5) + A(70.5, 149.5, 97, 176) + A(70.5, 149.5, 97.4, 122.6, 'acc'))
       },
       newton2: {
@@ -1889,14 +2917,6 @@ const App = (() => {
           L(40, 70, 160, 70, 'dash') + L(160, 150, 160, 70, 'dash') + T(34, 74, 'μN', 'm', 'end') +
           L(40, 150, 160, 70, 'acc thick') + L(160, 70, 285, 70, 'acc thick') +
           T(152, 138, 'трение покоя', 'sm', 'end') + T(222, 60, 'трение скольжения', 'sm') + T(160, 168, 'брусок поехал', 'sm'))
-      },
-      lift: {
-        cap: 'Лифт движется с ускорением вверх. Сила реакции опоры больше силы тяжести, поэтому вес тела увеличивается.',
-        svg: svg(300, 212, 'Тело в лифте, ускорение вверх',
-          L(150, 0, 150, 20) + `<rect x="90" y="20" width="120" height="170" class="cab"/><rect x="125" y="125" width="50" height="65" class="block"/>` +
-          A(150, 158, 150, 88) + T(160, 98, 'N', 'm', 'start') +
-          A(150, 158, 150, 208) + T(160, 206, 'mg', 'm', 'start') +
-          A(245, 140, 245, 70, 'acc thick') + T(255, 110, 'a', 'm acct', 'start'))
       },
       arm: {
         cap: 'Плечо $l$ – перпендикуляр от оси O до линии действия силы, а не расстояние OA до точки A, где приложена сила.',
@@ -2167,7 +3187,7 @@ const App = (() => {
             const x = 120 + 70 * c, y = 100 - 70 * sn, vx = x - 52 * sn, vy = y - 52 * c, ax = x - 38 * c, ay = y + 38 * sn;
             const m = 15, rt = [[x - m * sn, y - m * c], [x - m * sn - m * c, y - m * c + m * sn], [x - m * c, y + m * sn]];
             g.innerHTML = `<polyline points="${pts(rt)}" class="rt"/>` + A(r1(x), r1(y), r1(vx), r1(vy)) + A(r1(x), r1(y), r1(ax), r1(ay), 'acc') + dot(r1(x), r1(y), 6) +
-              T(r1(vx - 12 * sn), r1(vy - 12 * c + 5), 'v', 'm') + T(r1(ax - 12 * sn + 0), r1(ay - 12 * c + 5), 'a', 'm acct');
+              T(r1(vx - 12 * sn), r1(vy - 12 * c + 5), 'v', 'm') + T(r1(ax - 12 * sn + 0), r1(ay - 12 * c + 5), S('a', 'ц'), 'm acct');
           };
         }
       },
@@ -2423,6 +3443,425 @@ const App = (() => {
           };
         }
       },
+      weight: {
+        cap: 'Сила тяжести $mg$ и сила реакции опоры $N$ приложены к телу. Вес $P$ приложен к опоре: с этой силой тело давит на стол.',
+        svg: svg(320, 190, 'Брусок на столе: сила тяжести, сила реакции опоры и вес',
+          L(20, 130, 300, 130, 'thick') + `<rect x="120" y="80" width="80" height="50" class="solid"/>` +
+          A(160, 105, 160, 176, 'acc thick') + T(152, 172, 'mg', 'm acct', 'end') +
+          A(135, 130, 135, 50, 'thick') + T(127, 60, 'N', 'm', 'end') +
+          A(190, 130, 190, 176) + T(198, 172, 'P', 'm', 'start'))
+      },
+      gsurf: {
+        cap: 'Тело на поверхности планеты массой $M$ и радиусом $R$ притягивается к её центру.',
+        svg: svg(300, 200, 'Тело на поверхности планеты',
+          `<circle cx="150" cy="130" r="62" class="planet"/>` + T(130, 150, 'M', 'm') + dot(150, 130, 3) +
+          L(150, 130, 212, 130, 'dash') + T(182, 122, 'R', 'm') +
+          `<circle cx="150" cy="60" r="7" class="solid"/>` + A(150, 67, 150, 104, 'acc thick') + T(160, 92, 'mg', 'm acct', 'start'))
+      },
+      cm: {
+        cap: 'Масса второго тела в 3 раза больше, поэтому центр масс в 3 раза ближе к нему.',
+        svg: svg(320, 150, 'Центр масс двух тел на стержне',
+          A(20, 112, 305, 112) + T(305, 132, 'x', 'm', 'end') + L(60, 80, 260, 80) +
+          L(60, 80, 60, 112, 'dash muted') + L(260, 80, 260, 112, 'dash muted') + L(210, 86, 210, 112, 'dash') +
+          `<circle cx="60" cy="80" r="10" class="solid"/><circle cx="260" cy="80" r="18" class="solid"/>` +
+          T(60, 62, S('m', '1'), 'm') + T(260, 52, S('m', '2'), 'm') + dot(210, 80, 6) +
+          L(60, 107, 60, 117) + L(260, 107, 260, 117) + L(210, 107, 210, 117, 'acc') +
+          T(60, 132, S('x', '1'), 'm') + T(260, 132, S('x', '2'), 'm') + T(210, 132, S('x', 'ц'), 'm acct'))
+      },
+      patm: {
+        cap: 'На поверхность давит атмосфера с давлением $p_0$, и это давление передаётся вглубь. На глубине $h$ к нему добавляется давление столба жидкости $\\rho g h$.',
+        svg: svg(300, 190, 'Сосуд с жидкостью, атмосферное давление на поверхности, точка на глубине h',
+          `<rect x="61" y="60" width="138" height="109" class="water"/><polyline points="60,20 60,170 200,170 200,20" class="cab"/>` +
+          L(60, 60, 200, 60, 'acc') + [90, 130, 170].map(x => A(x, 24, x, 56)).join('') + T(208, 34, S('p', '0'), 'm', 'start') +
+          dot(130, 140, 4) + T(120, 145, 'p', 'm', 'end') +
+          L(200, 60, 240, 60, 'dash') + L(134, 140, 240, 140, 'dash') + A(236, 100, 236, 62) + A(236, 100, 236, 138) + T(244, 104, 'h', 'm', 'start') +
+          T(84, 160, 'ρ', 'm'))
+      },
+      float: {
+        cap: 'Сила тяжести плавающего тела уравновешена силой Архимеда. Сила Архимеда зависит от объёма погружённой части $V_{\\text{погр}}$ (выделена).',
+        svg: svg(300, 200, 'Плавающее тело: сила тяжести и сила Архимеда',
+          `<rect x="41" y="80" width="178" height="109" class="water"/><polyline points="40,20 40,190 220,190 220,20" class="cab"/>` +
+          `<rect x="100" y="50" width="60" height="60" class="solid"/><rect x="100" y="80" width="60" height="30" class="accf"/>` + L(40, 80, 220, 80, 'acc') +
+          A(118, 95, 118, 26, 'acc thick') + T(110, 34, S('F', 'А'), 'm acct', 'end') +
+          A(142, 80, 142, 160, 'thick') + T(150, 158, 'mg', 'm', 'start') +
+          T(166, 101, S('V', 'погр'), 'm acct', 'start'))
+      },
+      utube: {
+        cap: 'Слева масло ($\\rho_1$), справа вода ($\\rho_2$). На уровне границы жидкостей (пунктир) давления в коленах равны, поэтому $\\rho_1 h_1 = \\rho_2 h_2$.',
+        svg: svg(300, 210, 'Сообщающиеся сосуды с маслом и водой',
+          `<rect x="201" y="90" width="28" height="104" class="water"/><rect x="71" y="170" width="158" height="24" class="water"/><rect x="71" y="130" width="28" height="41" class="water"/>` +
+          `<rect x="71" y="80" width="28" height="50" class="oil"/>` +
+          `<polyline points="70,30 70,195 230,195 230,30" class="cab"/><polyline points="100,30 100,170 200,170 200,30" class="cab"/>` +
+          L(40, 130, 262, 130, 'dash muted') + L(40, 80, 70, 80, 'dash') + L(230, 90, 262, 90, 'dash') +
+          A(46, 105, 46, 82) + A(46, 105, 46, 128) + T(38, 110, S('h', '1'), 'm', 'end') +
+          A(256, 110, 256, 92) + A(256, 110, 256, 128) + T(264, 114, S('h', '2'), 'm', 'start') +
+          T(85, 70, S('ρ', '1'), 'm') + T(215, 80, S('ρ', '2'), 'm'))
+      },
+      inelastic: {
+        cap: 'После абсолютно неупругого удара тела слипаются и движутся вместе с общей скоростью $v$.',
+        svg: svg(320, 160, 'Абсолютно неупругий удар: до и после',
+          T(14, 54, 'до', 'sm', 'start') + `<circle cx="70" cy="50" r="15" class="solid"/><circle cx="215" cy="50" r="20" class="solid"/>` +
+          T(70, 55, S('m', '1'), 'm') + T(215, 55, S('m', '2'), 'm') +
+          A(85, 50, 145, 50) + T(115, 40, S('v', '1'), 'm') + A(235, 50, 265, 50) + T(252, 40, S('v', '2'), 'm') +
+          L(10, 88, 310, 88, 'dash muted') +
+          T(14, 130, 'после', 'sm', 'start') + `<circle cx="150" cy="126" r="15" class="solid"/><circle cx="185" cy="126" r="20" class="solid"/>` +
+          T(150, 131, S('m', '1'), 'm') + T(185, 131, S('m', '2'), 'm') + A(205, 126, 260, 126, 'acc') + T(232, 116, 'v', 'm acct'))
+      },
+      workg: {
+        cap: 'По какой бы траектории тело ни спустилось из точки 1 в точку 2, работа силы тяжести одна и та же: $mg(h_1 - h_2)$.',
+        svg: svg(320, 190, 'Две траектории спуска между точками 1 и 2',
+          L(20, 170, 300, 170) + L(60, 40, 250, 120, 'dash muted') + `<path d="M60,40 C 90,170 200,10 250,120" class="wave"/>` +
+          `<circle cx="60" cy="40" r="7" class="solid"/><circle cx="250" cy="120" r="7" class="solid"/>` +
+          T(72, 34, '1', 'm', 'start') + T(262, 112, '2', 'm', 'start') +
+          L(30, 40, 52, 40, 'dash') + A(30, 105, 30, 42) + A(30, 105, 30, 168) + T(38, 110, S('h', '1'), 'm', 'start') +
+          L(258, 120, 292, 120, 'dash') + A(288, 145, 288, 122) + A(288, 145, 288, 168) + T(280, 150, S('h', '2'), 'm', 'end'))
+      },
+      workfr: {
+        cap: 'Сила трения направлена против движения, поэтому её работа отрицательная: $A_{\\text{тр}} = -F_{\\text{тр}}s$.',
+        svg: svg(320, 140, 'Брусок скользит, сила трения против движения',
+          L(10, 100, 310, 100) + `<rect x="40" y="70" width="40" height="30" class="ghostb"/><rect x="220" y="70" width="40" height="30" class="solid"/>` +
+          A(226, 55, 286, 55, 'acc') + T(292, 60, 'v', 'm acct', 'start') +
+          A(220, 92, 176, 92, 'thick') + T(170, 88, S('F', 'тр'), 'm', 'end') +
+          A(60, 120, 240, 120) + T(150, 115, 's', 'm'))
+      },
+      hill: {
+        cap: 'На пути из точки 1 в точку 2 трение совершает отрицательную работу, поэтому $E_2 < E_1$.',
+        svg: svg(320, 190, 'Тело съезжает с горки с трением',
+          `<path d="M20,50 C 130,50 170,170 300,170" class="cab"/>` +
+          `<circle cx="42" cy="42" r="8" class="solid"/><circle cx="262" cy="161" r="8" class="solid"/>` +
+          T(42, 26, '1', 'm') + T(262, 145, '2', 'm') + T(60, 40, S('E', '1'), 'm', 'start') +
+          A(252, 164, 212, 164, 'acc') + T(206, 160, S('F', 'тр'), 'm acct', 'end') +
+          A(270, 128, 306, 128) + T(300, 120, 'v', 'm', 'end') + T(280, 184, S('E', '2'), 'm'))
+      },
+      hillAnim: {
+        cap: 'Тело съезжает с горки с трением. Потенциальная энергия уменьшается, кинетическая растёт, но часть энергии уходит в тепло $Q$. Механическая энергия $E_{\\text{п}} + E_{\\text{к}}$ уменьшается, а вместе с теплом сумма остаётся прежней.',
+        dur: 3.8,
+        svg: svg(320, 200, 'Анимация: тело съезжает с горки, энергия частично уходит в тепло',
+          `<path d="M20,50 C 130,50 170,170 300,170" class="cab"/>` +
+          [[196, 'п', 'acct'], [234, 'к', ''], [272, '', '']].map(([x, sb, c]) => `<rect x="${x}" y="20" width="24" height="80" class="ghostb"/>` +
+            T(x + 12, 116, sb ? S('E', sb) : 'Q', 'm ' + c)).join('') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const B = (t, a, b, c, d) => (1 - t) ** 3 * a + 3 * (1 - t) ** 2 * t * b + 3 * (1 - t) * t * t * c + t ** 3 * d;
+          const dB = (t, a, b, c, d) => 3 * (1 - t) ** 2 * (b - a) + 6 * (1 - t) * t * (c - b) + 3 * t * t * (d - c);
+          return r => {
+            const u = Math.min(1, Math.max(0, (r - 0.5) / 2.8)), t = 0.04 + 0.84 * u * u;
+            const x = B(t, 20, 130, 170, 300), y = B(t, 50, 50, 170, 170), tx = dB(t, 20, 130, 170, 300), ty = dB(t, 50, 50, 170, 170), n = Math.hypot(tx, ty);
+            const ux = tx / n, uy = ty / n, h = Math.max(0, (166 - y) / 116), q = 0.35 * (1 - h), ek = Math.max(0, 1 - h - q);
+            const col = (x0, v, cls) => `<rect x="${x0}" y="${r1(100 - 80 * v)}" width="24" height="${r1(80 * v)}" class="${cls}"/>`;
+            const bx = x + 9 * uy, by = y - 9 * ux, vl = 34 * Math.sqrt(ek);
+            g.innerHTML = col(196, h, 'barp') + col(234, ek, 'bark') + col(272, q, 'lossf') +
+              `<circle cx="${r1(bx)}" cy="${r1(by)}" r="8" class="solid"/>` +
+              (vl > 6 ? A(r1(bx), r1(by), r1(bx + ux * (vl + 10)), r1(by + uy * (vl + 10))) : '') +
+              (u > 0.05 ? A(r1(bx - ux * 8), r1(by - uy * 8), r1(bx - ux * 30), r1(by - uy * 30), 'acc') : '');
+          };
+        }
+      },
+      utubeAnim: {
+        cap: 'В левое колено доливают масло. Граница опускается, вода справа поднимается, и всё время $\\rho_1 h_1 = \\rho_2 h_2$: столб масла выше столба воды над границей.',
+        dur: 3.8,
+        svg: svg(300, 210, 'Анимация: в сообщающиеся сосуды с водой доливают масло',
+          `<g data-a="g"></g><polyline points="70,20 70,195 230,195 230,20" class="cab"/><polyline points="100,20 100,170 200,170 200,20" class="cab"/>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const h1 = 70 * Math.min(1, Math.max(0, (r - 0.4) / 3)), dl = 0.4 * h1, yi = 110 + dl, yo = yi - h1, yr = 110 - dl;
+            g.innerHTML = `<rect x="201" y="${r1(yr)}" width="28" height="${r1(195 - yr)}" class="water"/><rect x="71" y="170" width="158" height="24" class="water"/>` +
+              `<rect x="71" y="${r1(yi)}" width="28" height="${r1(171 - yi)}" class="water"/>` +
+              (h1 > 0.5 ? `<rect x="71" y="${r1(yo)}" width="28" height="${r1(h1)}" class="oil"/>` : '') +
+              (h1 > 10 ? L(40, r1(yi), 262, r1(yi), 'dash muted') + L(40, r1(yo), 70, r1(yo), 'dash') + L(230, r1(yr), 262, r1(yr), 'dash') +
+                A(46, r1((yo + yi) / 2), 46, r1(yo + 2)) + A(46, r1((yo + yi) / 2), 46, r1(yi - 2)) + T(38, r1((yo + yi) / 2 + 5), S('h', '1'), 'm', 'end') +
+                A(256, r1((yr + yi) / 2), 256, r1(yr + 2)) + A(256, r1((yr + yi) / 2), 256, r1(yi - 2)) + T(264, r1((yr + yi) / 2 + 5), S('h', '2'), 'm', 'start') +
+                T(85, r1(yo - 8), S('ρ', '1'), 'm') : '') + T(215, r1(yr - 8), S('ρ', '2'), 'm');
+          };
+        }
+      },
+      inelasticAnim: {
+        cap: 'Шары сталкиваются, слипаются и дальше движутся вместе с общей скоростью $v$. Импульс системы сохраняется.',
+        dur: 3.4,
+        svg: svg(320, 130, 'Анимация: абсолютно неупругий удар', L(10, 104, 310, 104) + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]'), tc = (110 - 34) / 45;
+          return r => {
+            const t = Math.min(3.4, r), after = t > tc, dt = t - tc;
+            const x1 = after ? 40 + 60 * tc + 30 * dt : 40 + 60 * t, x2 = after ? x1 + 34 : 150 + 15 * t;
+            const arrow = (x, y, v, lb) => A(r1(x), y, r1(x + v), y) + T(r1(x + v + 6), y + 5, lb, 'm', 'start');
+            g.innerHTML = `<circle cx="${r1(x1)}" cy="90" r="14" class="solid"/><circle cx="${r1(x2)}" cy="84" r="20" class="solid"/>` +
+              T(r1(x1), 95, S('m', '1'), 'm') + T(r1(x2), 89, S('m', '2'), 'm') +
+              (after ? A(r1(x2 + 20), 60, r1(x2 + 50), 60, 'acc') + T(r1(x2 + 56), 65, 'v', 'm acct', 'start')
+                : arrow(x1, 56, 60, S('v', '1')) + arrow(x2, 50, 15, S('v', '2'))) +
+              T(160, 126, after ? 'после удара: движутся вместе' : 'до удара', 'sm');
+          };
+        }
+      },
+      cmAnim: {
+        cap: 'Масса второго тела растёт, и центр масс смещается к нему. Он всегда ближе к более тяжёлому телу, а при равных массах – ровно посередине.',
+        dur: 3.8,
+        svg: svg(320, 160, 'Анимация: масса второго тела растёт, центр масс смещается к нему',
+          A(20, 122, 305, 122) + T(305, 142, 'x', 'm', 'end') + L(60, 116, 60, 128) + L(260, 116, 260, 128) +
+          T(60, 142, S('x', '1'), 'm') + T(260, 142, S('x', '2'), 'm') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const m = 1 + 3 * Math.min(1, Math.max(0, (r - 0.7) / 3)), rad = 10 * Math.sqrt(m), xc = (60 + 260 * m) / (1 + m);
+            g.innerHTML = L(60, 90, 260, 90) + L(60, 90, 60, 122, 'dash muted') + L(260, 90, 260, 122, 'dash muted') +
+              `<circle cx="60" cy="90" r="10" class="solid"/><circle cx="260" cy="90" r="${r1(rad)}" class="solid"/>` +
+              T(60, 72, S('m', '1'), 'm') + T(260, r1(84 - rad), S('m', '2') + ` = ${m.toFixed(1).replace('.', ',')}` + S('m', '1'), 'm') +
+              L(r1(xc), 96, r1(xc), 122, 'dash') + dot(r1(xc), 90, 6) + L(r1(xc), 116, r1(xc), 128, 'acc') + T(r1(xc), 142, S('x', 'ц'), 'm acct');
+          };
+        }
+      },
+      gasAnim: {
+        cap: 'Молекулы газа хаотично движутся и ударяются о стенки сосуда.',
+        dur: 6,
+        svg: svg(320, 170, 'Анимация: молекулы газа хаотично движутся в сосуде',
+          `<rect x="40" y="20" width="240" height="130" class="cab"/><g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const M = Array.from({ length: 18 }, (_, i) => { const a = i * 2.39996, s = 55 + (i * 37) % 50; return { x: 50 + (i * 53) % 220, y: 30 + (i * 29) % 110, vx: s * Math.cos(a), vy: s * Math.sin(a) }; });
+          return t => { g.innerHTML = M.map(m => dot(r1(refl(m.x, m.vx, t, 44, 276)), r1(refl(m.y, m.vy, t, 24, 146)), 3.5)).join(''); };
+        }
+      },
+      gasHot: {
+        cap: 'Одинаковое число молекул в одинаковых сосудах. Справа температура в 2 раза выше: молекулы быстрее и сильнее бьют по стенкам, и давление тоже в 2 раза больше.',
+        dur: 6,
+        svg: svg(320, 190, 'Анимация: газ при температуре T и 2T',
+          `<rect x="20" y="20" width="130" height="110" class="cab"/><rect x="170" y="20" width="130" height="110" class="cab"/>` +
+          `<polygon points="215,152 225,136 235,152" class="lossf"/><polygon points="235,152 245,138 255,152" class="lossf"/>` +
+          T(85, 176, 'T,  p', 'm') + T(235, 176, '2T,  2p', 'm acct') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const M = Array.from({ length: 12 }, (_, i) => { const a = i * 2.39996, s = 45 + (i * 37) % 30; return { x: (i * 41) % 110, y: (i * 29) % 90, vx: s * Math.cos(a), vy: s * Math.sin(a) }; });
+          return t => { g.innerHTML = [[24, 1], [174, Math.SQRT2]].map(([x0, k]) => M.map(m => dot(r1(refl(x0 + m.x, m.vx * k, t, x0, x0 + 122)), r1(refl(24 + m.y, m.vy * k, t, 24, 126)), 3.5)).join('')).join(''); };
+        }
+      },
+      kelvin: {
+        cap: 'Шкалы Цельсия и Кельвина сдвинуты на 273 градуса: $T = t + 273$. Один кельвин равен одному градусу Цельсия.',
+        svg: svg(300, 206, 'Шкала Цельсия и шкала Кельвина',
+          L(100, 20, 100, 180, 'thick') + L(200, 20, 200, 180, 'thick') + T(100, 14, 't, °C', 'm') + T(200, 14, 'T, К', 'm') +
+          [[40, '100', '373'], [90, '0', '273'], [175, '−273', '0']].map(([y, c, k]) => L(92, y, 108, y) + L(192, y, 208, y) + L(108, y, 192, y, 'dash muted') +
+            T(86, y + 5, c, '', 'end') + T(214, y + 5, k, '', 'start')).join('') +
+          T(150, 33, 'кипение воды', 'sm') + T(150, 83, 'таяние льда', 'sm') + T(150, 196, 'абсолютный ноль', 'sm acct'))
+      },
+      dalton: {
+        cap: 'Каждый газ смеси создаёт своё парциальное давление, как будто других газов нет. Давление смеси – их сумма.',
+        svg: svg(310, 160, 'Закон Дальтона: давления газов складываются',
+          [15, 115, 215].map(x => `<rect x="${x}" y="20" width="80" height="100" class="cab"/>`).join('') +
+          [[1, 0, 0], [0, 1, 0], [1, 1, 200], [1, 1, 200]].slice(0, 3).map(([a, b, x0], k) => {
+            let h = ''; const P1 = [[22, 30], [60, 45], [35, 70], [70, 85], [20, 95], [50, 60]], P2 = [[30, 50], [65, 30], [45, 88], [15, 75], [70, 62], [40, 35]];
+            const bx = [15, 115, 215][k];
+            if (a) h += P1.map(([x, y]) => dot(bx + x, y + 10, 4)).join('');
+            if (b) h += P2.map(([x, y]) => `<circle cx="${bx + x}" cy="${y + 10}" r="4" class="solid"/>`).join('');
+            return h;
+          }).join('') +
+          T(55, 142, S('p', '1'), 'm acct') + T(155, 142, S('p', '2'), 'm') + T(255, 142, 'p = ' + S('p', '1') + ' + ' + S('p', '2'), 'm'))
+      },
+      isoT: isoFig('T', 'Изотермический процесс: температура постоянна. Объём растёт, давление падает, и график $p(V)$ – гипербола.'),
+      isoP: isoFig('P', 'Изобарный процесс: давление постоянно. Газ нагревают, и объём растёт пропорционально абсолютной температуре.'),
+      isoV: isoFig('V', 'Изохорный процесс: объём постоянен. Газ нагревают, и давление растёт пропорционально абсолютной температуре.'),
+      workAnim: isoFig('W', 'Газ расширяется при постоянном давлении. Работа газа равна площади под графиком $p(V)$ – здесь прямоугольник $p\\Delta V$.'),
+      humid: {
+        cap: 'Кривая – давление насыщенного пара $p_{\\text{н}}$ при разных температурах. Точка ниже кривой – реальный пар в воздухе, $\\varphi = \\frac{p}{p_{\\text{н}}}$. Если воздух охладить при том же $p$, точка дойдёт до кривой – выпадет роса.',
+        svg: (() => {
+          const X = u => 40 + 250 * u, Y = u => 170 - 130 * (Math.exp(2.6 * u) - 1) / (Math.exp(2.6) - 1);
+          const cur = Array.from({ length: 41 }, (_, i) => [X(i / 40), Y(i / 40)]);
+          const u0 = 0.72, yh = Y(u0), yp = 170 - 0.55 * (170 - yh);
+          let ud = 0; for (let u = 0; u < 1; u += 0.001) if (Y(u) <= yp) { ud = u; break; }
+          return svg(320, 200, 'Давление насыщенного пара от температуры',
+            A(40, 170, 305, 170) + T(305, 188, 'T', 'm', 'end') + A(40, 170, 40, 20) + T(50, 26, 'p', 'm', 'start') +
+            `<polyline points="${pts(cur)}" class="wave"/>` + T(X(0.93), Y(0.93) - 10, S('p', 'н'), 'm acct', 'end') +
+            L(r1(X(u0)), 170, r1(X(u0)), r1(yh), 'dash muted') + dot(r1(X(u0)), r1(yh), 5) + `<circle cx="${r1(X(u0))}" cy="${r1(yp)}" r="6" class="solid"/>` +
+            T(r1(X(u0) + 10), r1(yp + 5), 'p', 'm', 'start') + L(r1(X(ud)), r1(yp), r1(X(u0) - 6), r1(yp), 'dash') + dot(r1(X(ud)), r1(yp), 4) +
+            T(r1(X(ud) - 6), r1(yp - 8), 'роса', 'sm', 'end') + T(r1(X(u0)), 188, 'T воздуха', 'sm'));
+        })()
+      },
+      bubble: {
+        cap: 'Пузырёк пара на глубине $h$. Снаружи на него давят атмосфера и столб жидкости. Пузырёк растёт, если давление насыщенного пара внутри не меньше $p_0 + \\rho g h$.',
+        svg: svg(300, 210, 'Пузырёк пара в жидкости на глубине h',
+          `<rect x="61" y="60" width="138" height="109" class="water"/><polyline points="60,20 60,170 200,170 200,20" class="cab"/>` +
+          L(60, 60, 200, 60, 'acc') + [90, 130, 170].map(x => A(x, 24, x, 56)).join('') + T(208, 34, S('p', '0'), 'm', 'start') +
+          `<circle cx="130" cy="135" r="14" class="ring"/>` + T(110, 140, S('p', 'н.п.'), 'sm', 'end') +
+          `<polygon points="100,196 112,176 124,196" class="lossf"/><polygon points="136,196 148,178 160,196" class="lossf"/>` +
+          L(200, 60, 240, 60, 'dash') + L(146, 135, 240, 135, 'dash') + A(236, 98, 236, 62) + A(236, 98, 236, 133) + T(244, 102, 'h', 'm', 'start'))
+      },
+      heatAnim: {
+        cap: 'График нагревания льда: нагрев льда, плавление при 0 °C, нагрев воды, кипение при 100 °C, нагрев пара. Теплоту подводят равномерно, а на площадках температура не меняется.',
+        dur: 6.6,
+        svg: svg(330, 206, 'Анимация: график нагревания льда до пара',
+          A(40, 180, 322, 180) + T(322, 198, 'Q', 'm', 'end') + A(40, 180, 40, 16) + T(50, 24, 't', 'm', 'start') +
+          L(40, 140, 300, 140, 'dash muted') + L(40, 60, 300, 60, 'dash muted') + T(34, 144, '0 °C', 'sm', 'end') + T(34, 64, '100 °C', 'sm', 'end') +
+          `<polyline points="40,160 80,140 150,140 220,60 290,60 320,40" class="ln dash" style="stroke:var(--ink-3)"/><g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const P = [[40, 160], [80, 140], [150, 140], [220, 60], [290, 60], [320, 40]];
+          const names = ['нагревание льда', 'плавление: Q = λm', 'нагревание воды: Q = cmΔt', 'кипение: Q = Lm', 'нагревание пара'];
+          return r => {
+            const x = 40 + 280 * Math.min(1, r / 6.2);
+            let k = 0; while (k < 4 && x > P[k + 1][0]) k++;
+            const [x0, y0] = P[k], [x1, y1] = P[k + 1], y = y0 + (y1 - y0) * (x - x0) / (x1 - x0);
+            const line = P.slice(0, k + 1).concat([[x, y]]);
+            g.innerHTML = `<polyline points="${pts(line)}" class="wave"/>` + dot(r1(x), r1(y), 5) +
+              T(180, 14, names[k], 'sm acct') + (k === 1 || k === 3 ? T(r1((x0 + x1) / 2), r1(y0 - 8), 't = const', 'sm') : '');
+          };
+        }
+      },
+      balanceAnim: {
+        cap: 'Горячее тело отдаёт теплоту холодному, пока их температуры не сравняются. Сколько отдало одно, столько получило другое: $Q_{\\text{отд}} = Q_{\\text{пол}}$.',
+        dur: 4.2,
+        svg: svg(300, 200, 'Анимация: теплообмен горячего и холодного тела',
+          `<rect x="60" y="120" width="90" height="60" class="lossf"/><rect x="150" y="120" width="90" height="60" class="water"/>` +
+          L(60, 120, 240, 120) + L(60, 180, 240, 180) + L(60, 120, 60, 180) + L(240, 120, 240, 180) + L(150, 120, 150, 180) +
+          `<rect x="97" y="20" width="16" height="80" rx="8" class="ghostb"/><rect x="187" y="20" width="16" height="80" rx="8" class="ghostb"/>` +
+          T(105, 196, 'горячее', 'sm') + T(195, 196, 'холодное', 'sm') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const f = Math.min(1, Math.max(0, (r - 0.4) / 3.2)), e = 1 - (1 - f) ** 2, t1 = 80 - 36 * e, t2 = 20 + 24 * e;
+            const bar = (x, t) => `<rect x="${x}" y="${r1(100 - 0.8 * t)}" width="10" height="${r1(0.8 * t)}" rx="5" class="${t > 44.5 ? 'lossf' : 'barp'}" style="opacity:.8"/>`;
+            g.innerHTML = bar(100, t1) + bar(190, t2) + T(122, 60, `${Math.round(t1)} °C`, 'sm', 'start') + T(212, 60, `${Math.round(t2)} °C`, 'sm', 'start') +
+              (f < 1 ? A(122, 150, 180, 150, 'acc thick') + T(164, 143, 'Q', 'm acct', 'start') : T(150, 112, 'общая температура 44 °C', 'sm acct'));
+          };
+        }
+      },
+      firstLaw: {
+        cap: 'Газу передают теплоту $Q$. Часть её идёт на нагревание газа – растёт внутренняя энергия $\\Delta U$, часть – на работу газа $A$, который поднимает поршень.',
+        svg: svg(300, 216, 'Первый закон термодинамики: теплота идёт на нагрев газа и работу',
+          `<rect x="111" y="90" width="78" height="80" class="water"/><rect x="110" y="82" width="80" height="8" class="piston"/>` +
+          L(110, 30, 110, 170) + L(190, 30, 190, 170) + L(110, 170, 190, 170) +
+          A(150, 80, 150, 38, 'thick') + T(160, 50, 'A', 'm', 'start') + T(150, 134, 'ΔU', 'm acct') +
+          `<polygon points="126,212 138,190 150,212" class="lossf"/><polygon points="150,212 162,192 174,212" class="lossf"/>` +
+          A(210, 200, 176, 168, 'acc thick') + T(216, 204, 'Q', 'm acct', 'start') + T(250, 120, 'Q = A + ΔU', 'm', 'middle'))
+      },
+      adiabat: {
+        cap: 'Из одной точки идут изотерма и адиабата. Адиабата круче: при расширении без теплообмена газ ещё и охлаждается, поэтому давление падает быстрее.',
+        svg: (() => {
+          const X = V => 40 + 60 * (V - 0.4), Y = p => 180 - 45 * p;
+          const iso = Array.from({ length: 31 }, (_, i) => { const V = 1 + 3 * i / 30; return [X(V), Y(3 / V)]; });
+          const ad = Array.from({ length: 31 }, (_, i) => { const V = 1 + 3 * i / 30; return [X(V), Y(3 / V ** (5 / 3))]; });
+          return svg(320, 200, 'Изотерма и адиабата на графике p(V)',
+            A(40, 180, 310, 180) + T(310, 198, 'V', 'm', 'end') + A(40, 180, 40, 20) + T(50, 28, 'p', 'm', 'start') +
+            `<polyline points="${pts(iso)}" class="ln dash" style="stroke:var(--ink-3)"/><polyline points="${pts(ad)}" class="wave"/>` + dot(r1(X(1)), r1(Y(3)), 5) +
+            T(r1(X(4)), r1(Y(0.75) - 8), 'изотерма', 'sm', 'end') + T(100, 140, 'адиабата', 'sm acct', 'end'));
+        })()
+      },
+      engine: {
+        cap: 'Схема теплового двигателя. Рабочее тело получает теплоту $Q_{\\text{н}}$ от нагревателя, часть $Q_{\\text{х}}$ отдаёт холодильнику, а разница превращается в работу: $A = Q_{\\text{н}} - Q_{\\text{х}}$.',
+        svg: svg(320, 232, 'Схема теплового двигателя: нагреватель, рабочее тело, холодильник',
+          `<rect x="70" y="10" width="180" height="40" rx="8" class="lossf"/><circle cx="160" cy="115" r="34" class="block"/><rect x="70" y="182" width="180" height="40" rx="8" class="water"/>` +
+          T(160, 35, 'Нагреватель, ' + S('T', 'н'), '', 'middle') + T(160, 112, 'рабочее', 'sm') + T(160, 126, 'тело', 'sm') + T(160, 207, 'Холодильник, ' + S('T', 'х'), '', 'middle') +
+          A(160, 52, 160, 80, 'acc thick') + T(170, 70, S('Q', 'н'), 'm acct', 'start') +
+          A(160, 150, 160, 180, 'thick') + T(170, 170, S('Q', 'х'), 'm', 'start') +
+          A(196, 115, 276, 115, 'thick') + T(282, 120, 'A', 'm', 'start'))
+      },
+      carnotAnim: {
+        cap: 'Цикл Карно: две изотермы и две адиабаты. На изотерме $T_{\\text{н}}$ газ получает теплоту от нагревателя, на изотерме $T_{\\text{х}}$ отдаёт холодильнику. Площадь внутри цикла – работа за цикл.',
+        dur: 6.6,
+        svg: svg(320, 206, 'Анимация: цикл Карно на графике p(V)',
+          A(40, 186, 312, 186) + T(312, 202, 'V', 'm', 'end') + A(40, 186, 40, 28) + T(50, 38, 'p', 'm', 'start') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const X = V => 70 + 42 * (V - 1), Y = p => 182 - 42 * p;
+          const seg = (f, a, b) => Array.from({ length: 25 }, (_, i) => { const V = a + (b - a) * i / 24; return [X(V), Y(f(V))]; });
+          const Vd = Math.pow(2, 1.5), Vc = Math.pow(4.762 / 1.5, 1.5);
+          const S4 = [seg(V => 3 / V, 1, 2), seg(V => 4.762 / V ** (5 / 3), 2, Vc), seg(V => 1.5 / V, Vc, Vd), seg(V => 3 / V ** (5 / 3), Vd, 1)];
+          const all = S4.flat(), names = ['1→2: изотерма ' + S('T', 'н') + ', газ получает ' + S('Q', 'н'), '2→3: адиабата, Q = 0, газ охлаждается', '3→4: изотерма ' + S('T', 'х') + ', газ отдаёт ' + S('Q', 'х'), '4→1: адиабата, Q = 0, газ нагревается'];
+          const lab = [[1, 3, '1'], [2, 1.5, '2'], [Vc, 1.5 / Vc, '3'], [Vd, 1.5 / Vd, '4']];
+          return r => {
+            const u = Math.min(4, Math.max(0, (r - 0.3) / 1.4)), k = Math.min(3, Math.floor(u)), f = u - k, done = u >= 4;
+            const cur = S4[k], idx = Math.round(f * (cur.length - 1)), trace = S4.slice(0, k).flat().concat(cur.slice(0, idx + 1));
+            const p = done ? S4[0][0] : cur[idx];
+            g.innerHTML = `<polyline points="${pts(all)}" class="ln dash" style="stroke:var(--ink-3)"/>` +
+              (done ? `<polygon points="${pts(all)}" class="accf"/>` : '') + `<polyline points="${pts(trace)}" class="wave"/>` +
+              lab.map(([V, pp, t]) => t === '4' ? T(r1(X(V) - 2), r1(Y(pp) + 18), t, 'm', 'middle') : T(r1(X(V) + 6), r1(Y(pp) - 6), t, 'm', 'start')).join('') + dot(r1(p[0]), r1(p[1]), 5) +
+              T(176, 14, done ? 'площадь цикла = работа за цикл A' : names[k], 'sm acct');
+          };
+        }
+      },
+      liftUpAnim: liftFig(true, 'Лифт стоит, потом разгоняется вверх с постоянным ускорением $a$. Пол давит на тело сильнее, $N > mg$, тело чуть прижимается к полу, и вес $P = N$ растёт. Ось $y$ направлена вверх, по ускорению.'),
+      liftDownAnim: liftFig(false, 'Лифт стоит, потом разгоняется вниз с постоянным ускорением $a$. Пол давит на тело слабее, $N < mg$, тело чуть вытягивается, и вес $P = N$ уменьшается. Ось $y$ направлена вниз, по ускорению.'),
+      moments: {
+        cap: 'Вращение смотрим относительно точки O – оси, на которую опирается рычаг. $F_1$ поворачивает рычаг вокруг O против часовой стрелки, $F_2$ и $F_3$ – по часовой. Равновесие: $F_1 l_1 = F_2 l_2 + F_3 l_3$.',
+        svg: svg(320, 190, 'Рычаг на оси O: одна сила вращает против часовой стрелки, две по часовой',
+          T(160, 18, 'вращение относительно точки O:', 'sm') + T(70, 38, '↺ против часовой', 'sm acct') + T(250, 38, '↻ по часовой', 'sm') +
+          L(45, 88, 130, 88, 'muted') + L(45, 83, 45, 93, 'muted') + L(130, 83, 130, 93, 'muted') + T(88, 82, S('l', '1'), 'm') +
+          L(130, 88, 210, 88, 'muted') + L(210, 83, 210, 93, 'muted') + T(170, 82, S('l', '2'), 'm') +
+          L(130, 62, 280, 62, 'muted') + L(130, 57, 130, 67, 'muted') + L(280, 57, 280, 67, 'muted') + T(205, 56, S('l', '3'), 'm') +
+          L(30, 110, 290, 110, 'thick') + `<polygon points="130,110 118,134 142,134" class="block"/>` + L(100, 134, 160, 134) +
+          dot(130, 110, 4.5) + T(130, 154, 'O', 'm acct') +
+          A(45, 110, 45, 176) + T(53, 170, S('F', '1'), 'm', 'start') +
+          A(210, 110, 210, 162) + T(218, 158, S('F', '2'), 'm', 'start') +
+          A(280, 110, 280, 152) + T(272, 170, S('F', '3'), 'm', 'end'))
+      },
+      vessels: {
+        cap: 'Колена разной формы соединены снизу. Жидкость одна, поэтому её уровень во всех коленах одинаковый.',
+        svg: (() => {
+          const Y = 72, B = [[30, 50, 30, 50], [90, 106, 72, 124], [150, 166, 182, 198], [226, 290, 250, 266]];
+          const at = (b, t, y) => b + (t - b) * (150 - y) / 110;
+          const water = B.map(([bl, br, tl, tr]) => `<polygon points="${pts([[at(bl, tl, Y), Y], [at(br, tr, Y), Y], [br, 151], [bl, 151]])}" class="water"/>`).join('') +
+            `<rect x="30" y="150" width="260" height="16" class="water"/>`;
+          const wall = `M30,40 L30,166 L290,166 L290,150 L266,40 M50,40 L50,150 L90,150 L72,40 M124,40 L106,150 L150,150 L182,40 M198,40 L166,150 L226,150 L250,40`;
+          return svg(320, 180, 'Сообщающиеся сосуды разной формы с одинаковым уровнем воды',
+            water + `<path d="${wall}" class="cab"/>` + L(12, Y, 312, Y, 'dash acc') + T(162, 22, 'уровень везде одинаковый', 'sm acct'));
+        })()
+      },
+      floatAnim: {
+        cap: 'Тело опускают в воду. Чем глубже оно погружается, тем больше объём погружённой части $V_{\\text{погр}}$ (выделен) и тем больше сила Архимеда. Когда $F_{\\text{А}}$ сравнялась с $mg$, тело плавает.',
+        dur: 2.6,
+        svg: svg(300, 200, 'Анимация: тело погружается в воду, пока сила Архимеда не сравняется с силой тяжести',
+          `<rect x="41" y="80" width="178" height="109" class="water"/><polyline points="40,20 40,190 220,190 220,20" class="cab"/>` + L(40, 80, 220, 80, 'acc') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const ease = x => 1 - (1 - x) ** 3;
+          return r => {
+            const p = Math.min(1, Math.max(0, (r - 0.3) / 1.9)), d = -30 + 60 * ease(p);   // погружение нижней грани под уровень воды
+            const top = 80 + d - 60, sub = Math.max(0, d), fa = sub * 2;
+            g.innerHTML = `<rect x="100" y="${r1(top)}" width="60" height="60" class="solid"/>` +
+              (sub > 0 ? `<rect x="100" y="80" width="60" height="${r1(sub)}" class="accf"/>` : '') +
+              (fa > 5 ? A(118, r1(top + 45), 118, r1(top + 45 - fa), 'acc thick') + T(112, r1(top + 45 - fa + 2), S('F', 'А'), 'm acct', 'end') : '') +
+              A(142, r1(top + 30), 142, r1(top + 90), 'thick') + T(150, r1(top + 88), 'mg', 'm', 'start') +
+              (p >= 1 ? T(166, 101, S('V', 'погр'), 'm acct', 'start') : '');
+          };
+        }
+      },
+      floatTwo: {
+        cap: 'Одно и то же тело в воде и в солёной воде, которая плотнее. В обоих случаях $F_{\\text{А}} = mg$, но в плотной жидкости для этого хватает меньшего объёма погружённой части, и тело сидит выше. Пунктир – глубина погружения в пресной воде.',
+        dur: 2.8,
+        svg: svg(320, 216, 'Анимация: одно тело плавает в пресной и в солёной воде на разной глубине',
+          `<rect x="21" y="86" width="128" height="89" class="water"/><rect x="171" y="86" width="128" height="89" class="water"/><rect x="171" y="86" width="128" height="89" class="accf" style="opacity:.3"/>` +
+          `<polyline points="20,30 20,176 150,176 150,30" class="cab"/><polyline points="170,30 170,176 300,176 300,30" class="cab"/>` +
+          L(20, 86, 150, 86, 'acc') + L(170, 86, 300, 86, 'acc') +
+          T(85, 196, 'вода', 'sm') + T(85, 212, 'ρ = 1000 кг/м³', 'sm') + T(235, 196, 'солёная вода', 'sm') + T(235, 212, 'ρ = 1200 кг/м³', 'sm') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          const ease = x => 1 - (1 - x) ** 3;
+          return r => {
+            const p = Math.min(1, Math.max(0, (r - 0.3) / 2.2));
+            const body = (cx, sub) => {
+              const bot = 60 + (86 + sub - 60) * ease(p), s = Math.max(0, bot - 86);
+              return `<rect x="${cx - 22}" y="${r1(bot - 50)}" width="44" height="50" class="solid"/>` + (s > 0 ? `<rect x="${cx - 22}" y="86" width="44" height="${r1(s)}" class="accf"/>` : '');
+            };
+            g.innerHTML = body(85, 40) + body(235, 33.3) + (p >= 1 ? L(20, 126, 300, 126, 'dash muted') : '');
+          };
+        }
+      },
+      archCases: {
+        cap: 'Слева тело плотнее жидкости: $F_{\\text{А}} < mg$, и оно тонет. В середине плотности равны: силы уравновешены при полном погружении, и тело остаётся на той глубине, где его отпустили (пунктир – другие возможные положения). Справа тело легче жидкости: оно всплывает и плавает на поверхности, погрузившись частично.',
+        dur: 3,
+        svg: svg(340, 226, 'Анимация: тело тонет, плавает внутри жидкости и всплывает',
+          [14, 124, 234].map(x => `<rect x="${x + 1}" y="66" width="94" height="109" class="water"/><polyline points="${x},36 ${x},176 ${x + 96},176 ${x + 96},36" class="cab"/>` + L(x, 66, x + 96, 66, 'acc')).join('') +
+          `<rect x="160" y="74" width="24" height="24" class="ghostb"/><rect x="160" y="142" width="24" height="24" class="ghostb"/>` +
+          T(62, 198, S('ρ', 'т', ' > ') + S('ρ', 'ж'), 'm') + T(62, 218, 'тонет', 'sm') +
+          T(172, 198, S('ρ', 'т', ' = ') + S('ρ', 'ж'), 'm') + T(172, 218, 'плавает внутри', 'sm') +
+          T(282, 198, S('ρ', 'т', ' < ') + S('ρ', 'ж'), 'm') + T(282, 218, 'всплывает', 'sm') + `<g data-a="g"></g>`),
+        anim: el => {
+          const g = el.querySelector('[data-a="g"]');
+          return r => {
+            const u = Math.min(1, Math.max(0, (r - 0.3) / 2.5)), sink = u * u, rise = 1 - (1 - u) ** 3;
+            const box = (x, y) => `<rect x="${x}" y="${r1(y)}" width="24" height="24" class="solid"/>`;
+            g.innerHTML = box(50, 72 + 80 * sink) + box(160, 108) + box(270, 150 - 93.6 * rise);
+          };
+        }
+      },
       wave: {
         cap: 'Длина волны – расстояние между соседними гребнями. Это расстояние волна проходит за один период.',
         svg: svg(340, 150, 'Волна, длина волны между соседними гребнями',
@@ -2479,6 +3918,7 @@ const App = (() => {
   }
   function openExpl(f) {
     if (ov) return; const ex = EXPL[f.id] || [];
+    if (ex.length) { ach.expl[f.id] = 1; saveAch(); setTimeout(() => checkAch(), 400); }
     ov = document.createElement('div');
     ov.className = 'ov';
     ov.innerHTML = `
@@ -2775,9 +4215,11 @@ const App = (() => {
   const infoOf = (f, sym) => { const own = legendOf(f)[sym]; if (own && (own.unit || own.bare)) return { unit: own.unit || '', mean: own.multi ? '' : own.mean }; const g = unitMap()[sym]; return g ? { unit: g.unit, mean: own ? (own.multi ? '' : own.mean) : g.multi ? '' : g.mean } : null; };
   const calcTasks = f => {
     const out = [];
+    if (f.noCalc) return out;
     const add = (target, toks) => {
       if (toks.some(t => t.t === 'pi' || (t.t === 'fn' && t.name !== 'sqrt') || (t.t === 'atom' && /^G$|100\\%/.test(t.tex)))) return;
       const tg = stripVec(target), atoms = atomsIn(toks);
+      if (toks.length < 2) return;
       if (!infoOf(f, tg) || atoms.some(a => !infoOf(f, stripVec(a)))) return;
       out.push({ target: tg, toks, atoms });
     };
@@ -2801,10 +4243,17 @@ const App = (() => {
     'E_{\\text{к}1}': [10, 20, 50], 'E_{\\text{к}2}': [60, 80, 100, 150], 'E_{\\text{п}1}': [50, 100, 150], 'E_{\\text{п}2}': [0, 10, 20],
     '\\omega': [2, 3, 4, 5, 10], T: [0.5, 1, 2, 4, 5], '\\nu': [0.5, 1, 2, 4, 5, 10], '\\lambda': [1, 2, 4, 5, 10], 'v_{\\max}': [1, 2, 3, 4, 5],
     'cons:x': [0.02, 0.04, 0.05, 0.1, 0.2], 'osc:A': [0.02, 0.05, 0.1, 0.2], 'osc:N': [10, 20, 30, 50], 'osc:t': [5, 10, 20, 30], 'osc:m': [0.1, 0.2, 0.4, 0.5, 1],
-    'stat:p': [1000, 2000, 5000, 10000, 20000], 'stat:M': [2, 5, 10, 20, 50], 'kin:x': [10, 20, 30, 50, 100], 'kin:\\Delta v': [2, 4, 5, 10], 'dyn:P': [100, 200, 500, 800]
+    'stat:p': [1000, 2000, 5000, 10000, 20000, 110000, 120000, 150000, 200000],
+    'mkt:m': [0.004, 0.008, 0.016, 0.028, 0.032, 0.064, 0.088, 0.14, 0.28], 'mkt:M': [0.002, 0.004, 0.028, 0.032, 0.044], 'mkt:\\nu': [0.5, 1, 2, 3, 4, 5],
+    'mkt:t': [0, 20, 27, 50, 100, 127], 'mkt:T': [273, 300, 350, 373, 400], 'mkt:p_1': [20000, 30000, 50000], 'mkt:p_2': [40000, 50000, 80000], 'mkt:p': [100000, 120000, 150000],
+    'iso:p_1': [100000, 200000, 300000, 400000], 'iso:p_2': [100000, 150000, 200000, 600000], 'iso:V_1': [1, 2, 3, 4, 6], 'iso:V_2': [1, 2, 3, 4, 6, 8], 'iso:T_1': [200, 250, 300, 400], 'iso:T_2': [300, 350, 400, 500, 600],
+    'heat:c': [400, 500, 900, 2100, 4200], 'heat:m': [0.1, 0.2, 0.5, 1, 2], 'heat:\\Delta t': [10, 20, 30, 40, 50, 80], 'heat:Q': [4200, 8400, 21000, 42000, 84000, 660000],
+    'heat:\\lambda': [25000, 87000, 330000], 'heat:L': [900000, 2300000], 'heat:q': [10000000, 27000000, 46000000], 'heat:C': [420, 840, 2100],
+    'td:p': [100000, 200000, 300000], 'td:V': [0.01, 0.02, 0.03, 0.1], 'td:U': [1500, 3000, 4500, 15000], 'td:\\Delta V': [0.001, 0.002, 0.005, 0.01, 0.02], 'td:A': [100, 200, 500, 1000],
+    'td:Q': [500, 1000, 1500, 2000], 'td:\\Delta U': [100, 300, 500, 600], 'eng:Q_{\\text{н}}': [1000, 2000, 5000], 'eng:Q_{\\text{х}}': [400, 600, 1200], 'eng:A': [300, 500, 800], p_0: [100000], V: [0.001, 0.002, 0.005, 0.01, 0.1, 0.2], '\\rho_1': [800, 900], '\\rho_2': [1000, 13600], h_1: [0.1, 0.2, 0.25, 0.4, 0.5], h_2: [0.1, 0.2, 0.25, 0.4], 'cons:h_1': [10, 20, 30, 50], 'cons:h_2': [0, 5, 10], x_1: [0, 1, 2, 3], x_2: [4, 5, 6, 8, 10], 'x_{\\text{ц}}': [2, 3, 4, 5], 'F_{\\text{т}}': [10, 20, 50, 100], 'stat:M': [2, 5, 10, 20, 50], 'kin:x': [10, 20, 30, 50, 100], 'kin:\\Delta v': [2, 4, 5, 10], 'dyn:P': [100, 200, 500, 800]
   };
   const rangeOf = (f, sym) => RANGE[`${f.topic.id}:${sym}`] || RANGE[sym] || NICE;
-  const isNice = v => isFinite(v) && v >= 0.01 && v < 1e6 && Math.abs(v * 100 - Math.round(v * 100)) < 1e-6;
+  const isNice = v => isFinite(v) && v >= 0.01 && v < 1e9 && Math.abs(v * 100 - Math.round(v * 100)) < 1e-6;
   const fmtN = v => { const r = Math.round(v * 1e4) / 1e4, [i, d] = String(r).split('.'); return (i.length > 4 ? i.replace(/\B(?=(\d{3})+$)/g, ' ') : i) + (d ? ',' + d : ''); };
   const fmtT = v => fmtN(v).replace(',', '{,}').replace(/ /g, '\\,');
   const withUnit = (v, u) => u ? `${fmtT(v)}\\ \\text{${u}}` : fmtT(v);
@@ -2872,6 +4321,7 @@ const App = (() => {
       ...fns.map(n => ({ act: 'fn:' + n, label: tex(`\\${n}`) }))
     ];
     const ed = makeEditor();
+    const idx = idxHint(f, [lhs, ...(kind === 'вырази величину' ? [f.xg || f.f] : []), ...atoms]);
     let verdict = null;
     const render = () => {
       const done = verdict !== null, ok = verdict === true;
@@ -2885,6 +4335,7 @@ const App = (() => {
           ${ask}
           <div class="formula write-line">${tex(`${lhs} = ${body}`)}</div>
           ${hint ? `<p class="hint">${hint}</p>` : ''}
+          ${done ? '' : idx}
         </article>
         ${done ? `
           <div class="verdict-line"><span class="verdict ${ok ? 'ok' : 'bad'}">${ok ? 'Верно' : 'Ошибка. Правильно так:'}</span>${ok ? earlyNote() : `<span class="tex-inline">${answer}</span>`}</div>
@@ -2940,6 +4391,7 @@ const App = (() => {
   /* ---------- результат ---------- */
   function result() {
     const r = S.results, ok = r.filter(x => x.ok).length, miss = r.filter(x => !x.ok);
+    checkAch(true);
     const note = !r.length ? '' : S.mode === 'calc' ? 'Режим «Посчитай» тренирует расчёты и не меняет клетки прогресса и серию дней.' : ok === r.length ? 'Чисто! Эти формулы будут попадаться реже.' : ok / r.length >= .7 ? 'Хорошо. Ошибки ниже — повтори их ещё раз.' : 'Нормально для начала. Ошибки будут попадаться чаще, пока не запомнишь.';
     paint(`
       <div class="bar"><span class="title">${esc(S.label)}</span></div>
@@ -2947,6 +4399,7 @@ const App = (() => {
         <span class="eyebrow">Результат</span>
         <div class="score num">${ok}<small> / ${r.length}</small></div>
         <p class="muted" style="margin:0; max-width:34ch">${note}</p>
+        ${achNew.length ? `<div class="ach-new">${achNew.map(a => `<span>${a.icon} ${esc(a.t)}</span>`).join('')}</div>` : ''}
         ${streakUp ? `<p class="streak-up">🔥 ${streakNow()} ${daysWord(streakNow())} подряд${streakNow() > 1 ? ' — серия продолжается!' : ' — серия началась!'}</p>` : !doneToday() && r.length && S.mode !== 'calc' ? `<p class="muted" style="margin:0">Ещё ${leftToday()} ${plural(leftToday(), 'задание', 'задания', 'заданий')} сегодня — и день засчитается в серию.</p>` : ''}
         ${(() => { const d = dueList().length; if (d) return `<p class="muted" style="margin:0">На повторение ещё ${plural(d, 'ждёт', 'ждут', 'ждут')} ${d} ${plural(d, 'формула', 'формулы', 'формул')}.</p>`; const tm = ALL.filter(f => lvl(f.id) >= 1 && whenLabel(dueAt(f.id)) === 'завтра').length; return tm ? `<p class="muted" style="margin:0">Завтра на повторение: ${tm} ${plural(tm, 'формула', 'формулы', 'формул')}.</p>` : ''; })()}
       </section>
@@ -3005,13 +4458,19 @@ const App = (() => {
 
   /* ---------- запуск ---------- */
   function boot() {
-    cloudLoad(['p', 's', 'd', 'o', 'k'], data => {
+    cloudLoad(['p', 's', 'd', 'o', 'k', 'a'], data => {
       const has = o => o && typeof o === 'object' && Object.keys(o).length;
       if (has(data.p)) { progress = data.p; seen = has(data.s) ? data.s : seen; sched = has(data.d) ? data.d : sched; try { localStorage.setItem(KEY, JSON.stringify(progress)); localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); localStorage.setItem(SCHED_KEY, JSON.stringify(sched)); } catch (e) {} }
       else if (Object.keys(progress).length) { cloudQueue('p', progress); cloudQueue('s', seen); cloudQueue('d', sched); }
       if (data.o) onboarded = true;
       if (data.k && typeof data.k === 'object' && (data.k.n || 0) >= (streak.n || 0) && data.k.d) { streak = { ...streak, ...data.k }; try { localStorage.setItem(STREAK_KEY, JSON.stringify(streak)); } catch (e) {} }
       else if (streak.d) cloudQueue('k', streak);
+      if (data.a && typeof data.a === 'object') {
+        const c = data.a;
+        ach = { got: { ...(c.got || {}), ...ach.got }, n: Math.max(ach.n, c.n || 0), calc: Math.max(ach.calc, c.calc || 0), modes: { ...(c.modes || {}), ...ach.modes }, expl: { ...(c.expl || {}), ...ach.expl }, solo: { ...(c.solo || {}), ...ach.solo }, row: ach.row || 0, best: Math.max(ach.best || 0, c.best || 0) };
+        try { localStorage.setItem(ACH_KEY, JSON.stringify(ach)); } catch (e) {}
+      }
+      if (Object.keys(ach.got).length || ach.n) cloudQueue('a', ach);
       home();
       syncTheme();
       if (inTg) { try { tg.onEvent('themeChanged', () => { syncTheme(); }); } catch (e) {} }
