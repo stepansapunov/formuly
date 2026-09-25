@@ -4661,7 +4661,7 @@ const App = (() => {
   try { errs = JSON.parse(localStorage.getItem(ERR_KEY) || '{}') || {}; } catch (e) { errs = {}; }
   const noteErr = id => { errs[id] = (errs[id] || 0) + 1; try { localStorage.setItem(ERR_KEY, JSON.stringify(errs)); } catch (e) {} };
   const srv = { on: false, admin: false, state: '' };
-  const APP_VER = 95;
+  const APP_VER = 96;
   const remindPref = () => { try { return localStorage.getItem(REMIND_KEY) === '1'; } catch (e) { return false; } };
   const setRemind = v => { try { localStorage.setItem(REMIND_KEY, v ? '1' : '0'); } catch (e) {} };
   async function call(action, extra = {}, ms = 8000) {
@@ -4711,11 +4711,35 @@ const App = (() => {
       let r = null; try { r = await call('join', { code: code.value, name: name.value }); } catch (e) {}
       if (!r) return joinScreen('Не получилось связаться с сервером. Проверь интернет и попробуй ещё раз.');
       if (!r.ok) return joinScreen(r.error === 'code' ? 'Код не подошёл. Проверь его и попробуй ещё раз.' : 'Что-то пошло не так. Попробуй ещё раз.');
-      srv.on = true; srv.admin = !!r.admin;
+      srv.on = true; srv.admin = !!r.admin; markJoined();
       askRemind(() => { sync(); home(); if (!onboarded) openWelcome(); });
     };
     btn.onclick = go;
     [code, name].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } }));
+  }
+  // вход подтверждён: запоминаем у ученика (телефон + облако Телеграма), дальше без сервера тоже пускаем
+  const JOINED_KEY = 'formuly.joined.v1';
+  const isJoined = () => { try { return localStorage.getItem(JOINED_KEY) === '1'; } catch (e) { return false; } };
+  function markJoined(fromCloud) { try { localStorage.setItem(JOINED_KEY, '1'); } catch (e) {} if (!fromCloud) cloudQueue('j', 1); }
+  function gateScreen(title, text, retry) {
+    setBack(null);
+    paint(`
+      <header class="brand"><span class="eyebrow">Физика</span><h1>Формулы <i>для ЕГЭ</i></h1></header>
+      <section class="summary"><div><span class="eyebrow">${esc(title)}</span>
+        <p class="muted" style="margin:8px 0 0">${esc(text)}</p></div>
+        ${retry ? '<button class="btn btn-primary" data-retry>Попробовать ещё раз</button>' : ''}
+      </section>
+      <footer class="foot"><span class="ver">версия ${APP_VER}${srv.state ? ' · ' + esc(srv.state) : ''}</span></footer>`);
+    const b = $app.querySelector('[data-retry]'); if (b) b.onclick = () => hello(() => { home(); if (!onboarded) openWelcome(); });
+  }
+  function hello(startApp) {
+    paint(`<p class="muted" style="text-align:center;margin-top:40vh">Загрузка…</p>`);
+    // до первого входа по коду без сервера не пускаем; после входа – пускаем всегда
+    const noServer = () => isJoined() ? startApp() : gateScreen('Нет связи с сервером', 'Для первого входа нужен интернет, который пропускает сервер приложения. Попробуй мобильный интернет или другую сеть Wi-Fi, смени VPN или сервер в нём, отключи блокировщики рекламы.', true);
+    call('hello', {}, 12000).then(r => {
+      if (r && r.ok) { srv.on = true; srv.admin = !!r.admin; srv.state = 'сервер: ок'; if (!r.joined) return joinScreen(); markJoined(); startApp(); sync(); }
+      else { srv.state = r ? `сервер: ${r.error === 'auth' ? 'ошибка входа' : 'ошибка'}${r.why ? ' (' + r.why + ')' : ''}` : 'сервер: нет ответа'; noServer(); }
+    }).catch(e => { srv.state = 'сервер: нет связи'; noServer(); });
   }
   const agoLabel = ts => {
     if (!ts) return 'не заходил';
@@ -4757,7 +4781,8 @@ const App = (() => {
 
   /* ---------- запуск ---------- */
   function boot() {
-    cloudLoad(['p', 's', 'd', 'o', 'k', 'a'], data => {
+    cloudLoad(['p', 's', 'd', 'o', 'k', 'a', 'j'], data => {
+      if (data.j) markJoined(true);
       const has = o => o && typeof o === 'object' && Object.keys(o).length;
       if (has(data.p)) { progress = data.p; seen = has(data.s) ? data.s : seen; sched = has(data.d) ? data.d : sched; try { localStorage.setItem(KEY, JSON.stringify(progress)); localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); localStorage.setItem(SCHED_KEY, JSON.stringify(sched)); } catch (e) {} }
       else if (Object.keys(progress).length) { cloudQueue('p', progress); cloudQueue('s', seen); cloudQueue('d', sched); }
@@ -4778,13 +4803,10 @@ const App = (() => {
       if (!API) srv.state = 'сервер выключен';
       else if (!tg) srv.state = 'вне Телеграма';
       else if (!tg.initData) srv.state = 'нет данных Телеграма';
-      if (API && inTg && tg.initData) {
-        paint(`<p class="muted" style="text-align:center;margin-top:40vh">Загрузка…</p>`);
-        call('hello').then(r => {
-          if (r && r.ok) { srv.on = true; srv.admin = !!r.admin; srv.state = 'сервер: ок'; if (!r.joined) return joinScreen(); startApp(); sync(); }
-          else { srv.state = r ? `сервер: ${r.error === 'auth' ? 'ошибка входа' : 'ошибка'}${r.why ? ' (' + r.why + ')' : ''}` : 'сервер: нет ответа'; startApp(); }
-        }).catch(e => { srv.state = 'сервер: нет связи'; startApp(); });
-      } else startApp();
+      // опубликованная версия открывается только через бота: в обычном браузере входа по коду нет
+      if (API && /github\.io$/.test(location.hostname) && !(tg && tg.initData)) return gateScreen('Открой приложение через бота', 'Эта ссылка работает только внутри Телеграма. Найди бота @formuly_ege_bot и открой приложение кнопкой меню внизу чата.', false);
+      if (API && inTg && tg.initData) hello(startApp);
+      else startApp();
     });
   }
   boot();
