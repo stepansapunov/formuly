@@ -204,7 +204,7 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .fig > svg text{fill:currentColor; font:13px var(--body)}
 .fig > svg text.m{font-family:"Times New Roman",Georgia,serif; font-style:italic; font-size:16px}
 .fig > svg text.sm{font-size:11.5px}
-.fig > svg text.acct{fill:var(--accent)}
+.fig > svg text.acct{fill:var(--accent)} .fig > svg text.muted-t{fill:var(--ink-3)}
 .fig > svg .sb{font-size:11px}
 .fig > svg .ln{stroke:currentColor; stroke-width:1.5}
 .fig > svg .ah{fill:currentColor}
@@ -1697,20 +1697,21 @@ p: Во время кипения температура жидкости не �
 
 @ heat-1
 p: Чтобы нагреть тело, ему нужно передать количество теплоты $Q = cm\Delta t$. Здесь $c$ – удельная теплоёмкость: сколько джоулей нужно, чтобы нагреть 1 кг вещества на 1 °C.
+fig: waterHeat
 p: У воды удельная теплоёмкость большая – 4200 Дж/(кг·°C), поэтому вода долго нагревается и долго остывает. У металлов она в несколько раз меньше.
 p: При охлаждении тело отдаёт такое же количество теплоты по той же формуле. Если считать $\Delta t = t_{\text{кон}} - t_{\text{нач}}$, то при охлаждении $Q$ получится отрицательным – тело отдаёт тепло.
 p: Изменение температуры можно брать в градусах Цельсия: $\Delta t = \Delta T$.
 
 @ heat-2
 p: При плавлении кристаллического тела температура не меняется, пока всё тело не расплавится. Теплота идёт на разрушение кристаллической решётки: растёт потенциальная энергия молекул, а кинетическая не меняется.
-fig: heatAnim
+fig: waterMelt
 p: Количество теплоты для плавления тела массой $m$ при температуре плавления: $Q = \lambda m$, где $\lambda$ – удельная теплота плавления. Для льда $\lambda = 3{,}3\cdot 10^5$ Дж/кг.
 p: При кристаллизации тело отдаёт ровно столько же теплоты, сколько получило при плавлении.
 p: Если тело сначала надо нагреть до температуры плавления, теплоты складываются: $Q = cm\Delta t + \lambda m$. На графике это наклонный участок, а затем горизонтальная площадка.
 
 @ heat-3
 p: Чтобы превратить жидкость в пар при температуре кипения, нужно количество теплоты $Q = Lm$, где $L$ – удельная теплота парообразования.
-fig: heatAnim | На графике нагревания две горизонтальные площадки: плавление при 0 °C и кипение при 100 °C. На площадках температура не меняется.
+fig: waterBoil
 p: Для воды $L = 2{,}3\cdot 10^6$ Дж/кг – почти в 7 раз больше, чем теплота плавления льда. Поэтому выкипает вода гораздо дольше, чем тает лёд той же массы.
 p: При конденсации пар отдаёт такую же теплоту. Поэтому ожог паром опаснее, чем кипятком: пар сначала конденсируется и отдаёт $Lm$, а потом ещё остывает.
 
@@ -1730,6 +1731,8 @@ fig: balanceAnim
 p: Энергия не теряется, поэтому сколько теплоты отдали горячие тела, столько получили холодные: $Q_{\text{отд}} = Q_{\text{пол}}$.
 p: Обе теплоты при такой записи берут положительными: для горячего тела $cm(t_{\text{нач}} - \theta)$, для холодного $cm(\theta - t_{\text{нач}})$, где $\theta$ – общая конечная температура.
 p: Другая запись: $Q_1 + Q_2 + \ldots = 0$, где у отдающих тел теплота со знаком минус. Если по ходу тело плавится или кипит, в уравнение добавляют $\lambda m$ или $Lm$.
+fig: waterCycle
+p: Удобно представлять путь каждого тела по этому графику: например, лёд из морозилки, брошенный в чай, проходит участки 1, 2 и 3, а чай – участок 8. Для каждого участка пишем свою теплоту и складываем.
 
 @ td-1
 p: Внутренняя энергия газа – это суммарная энергия движения и взаимодействия всех его молекул. В идеальном газе молекулы не взаимодействуют, поэтому остаётся только кинетическая энергия.
@@ -1993,7 +1996,7 @@ const App = (() => {
   const daysWord = n => plural(n, 'день', 'дня', 'дней');
   function streakLine() {
     const n = streakNow(), left = leftToday();
-    const tail = doneToday() ? 'сегодня засчитан' : n ? `реши ещё ${left} ${plural(left, 'задание', 'задания', 'заданий')} сегодня, чтобы не прервать` : `реши ${left} ${plural(left, 'задание', 'задания', 'заданий')}, чтобы начать серию`;
+    const tail = doneToday() ? 'сегодня засчитан<br>возвращайся завтра, чтобы продолжить серию' : n ? `реши ещё ${left} ${plural(left, 'задание', 'задания', 'заданий')} сегодня, чтобы не прервать` : `реши ${left} ${plural(left, 'задание', 'задания', 'заданий')}, чтобы начать серию`;
     return `<div class="streak ${n ? 'on' : ''}"><span class="fire" aria-hidden="true">🔥</span><span><b class="num">${n}</b> ${daysWord(n)} подряд<br><small>${tail}</small></span></div>`;
   }
   /* ---------- достижения (хранятся на телефоне и в облаке Telegram) ---------- */
@@ -2330,9 +2333,11 @@ const App = (() => {
     const rank = f => { const l = lvl(f.id); if (l >= 1 && isDue(f.id)) return 0; if (l >= 1 && l < 2) return 1; if (!seen[f.id] && l === 0) return 1.5; if (l === 0) return 1; return 2.5 + l / 2; };
     const ordered = pool.map(f => ({ f, k: rank(f) + Math.random() * 1.2 })).sort((a, b) => a.k - b.k).map(x => x.f);
     const n = Math.min(count || pool.length, pool.length);
-    const items = shuffle(ordered.slice(0, n));
+    let items = shuffle(ordered.slice(0, n)), graphs = null;
+    // «Узнай график»: в раунд идут все графики темы, а не по одному на формулу
+    if (mode === 'graph') { const pairs = shuffle(pool.flatMap(f => GRAPH_BY[f.id].map(g => [f, g]))); items = pairs.map(x => x[0]); graphs = pairs.map(x => x[1]); }
     const modes = items.map(f => { if (mode !== 'mix') return mode; const m = ['pick', 'name', 'gap', 'build', 'write', ...(f.x ? ['expr'] : []), ...(hasGraph(f) ? ['graph'] : [])]; return m[Math.random() * m.length | 0]; });
-    S = { pool, mode, label, back, count, review, items, modes, i: 0, results: [] };
+    S = { pool, mode, label, back, count, review, items, modes, graphs, i: 0, results: [] };
     streakUp = false; achNew = [];
     question();
   }
@@ -2409,6 +2414,40 @@ const App = (() => {
     { f: 'heat-1', x: 'Q', y: 't', s: 'lin', c: '\\text{нагревание}', tex: 't = t_0 + \\frac{Q}{cm}', w: [['t = \\frac{Q}{cm}', 'lin0'], ['t = t_0 - \\frac{Q}{cm}', 'dec'], ['t = t_0', 'const']] },
     { f: 'td-1', x: 'T', y: 'U', s: 'lin0', tex: 'U = \\frac{3}{2}\\nu RT', w: [['U = \\frac{3\\nu R}{2T}', 'hyp'], ['U = \\frac{3}{2}\\nu RT^2', 'par'], ['U = \\frac{3}{2}\\nu R', 'const']] }
   ];
+  GRAPHS.push(
+    { f: 'kin-3', x: 't', y: 'v_x', s: 'dec', c: '\\text{торможение}', tex: 'v_x = v_{0x} - at', w: [['v_x = v_{0x} + at', 'lin'], ['v_x = at', 'lin0'], ['v_x = v_{0x}', 'const']] },
+    { f: 'kin-7', x: 'h', y: 't', s: 'sqrt', tex: 't = \\sqrt{\\frac{2h}{g}}', w: [['t = \\frac{2h}{g}', 'lin0'], ['t = \\frac{g}{2h}', 'hyp'], ['t = \\frac{2h^2}{g}', 'par']] },
+    { f: 'kin-9', x: '\\nu', y: 'T', s: 'hyp', tex: 'T = \\frac{1}{\\nu}', w: [['T = \\nu', 'lin0'], ['T = \\nu^2', 'par'], ['T = \\sqrt{\\nu}', 'sqrt']] },
+    { f: 'kin-10', x: 'T', y: '\\omega', s: 'hyp', tex: '\\omega = \\frac{2\\pi}{T}', w: [['\\omega = 2\\pi T', 'lin0'], ['\\omega = 2\\pi T^2', 'par'], ['\\omega = 2\\pi', 'const']] },
+    { f: 'kin-11', x: 'R', y: 'v', s: 'lin0', c: '\\omega = ' + TX, tex: 'v = \\omega R', w: [['v = \\frac{\\omega}{R}', 'hyp'], ['v = \\omega R^2', 'par'], ['v = \\omega', 'const']] },
+    { f: 'dyn-1', x: 'F', y: 'a', s: 'lin0', c: 'm = ' + TX, tex: 'a = \\frac{F}{m}', w: [['a = \\frac{m}{F}', 'hyp'], ['a = \\frac{F^2}{m}', 'par'], ['a = \\frac{1}{m}', 'const']] },
+    { f: 'dyn-1', x: 'm', y: 'a', s: 'hyp', c: 'F = ' + TX, tex: 'a = \\frac{F}{m}', w: [['a = Fm', 'lin0'], ['a = Fm^2', 'par'], ['a = F', 'const']] },
+    { f: 'dyn-3', x: 'R', y: 'F', s: 'hyp', tex: 'F = G\\frac{m_1 m_2}{R^2}', w: [['F = Gm_1 m_2 R', 'lin0'], ['F = Gm_1 m_2 R^2', 'par'], ['F = Gm_1 m_2', 'const']] },
+    { f: 'dyn-7', x: 'N', y: 'F_{\\text{тр}}', s: 'lin0', tex: 'F_{\\text{тр}} = \\mu N', w: [['F_{\\text{тр}} = \\frac{\\mu}{N}', 'hyp'], ['F_{\\text{тр}} = \\mu N^2', 'par'], ['F_{\\text{тр}} = \\mu', 'const']] },
+    { f: 'dyn-9', x: 'm', y: 'F_{\\text{т}}', s: 'lin0', tex: 'F_{\\text{т}} = mg', w: [['F_{\\text{т}} = \\frac{g}{m}', 'hyp'], ['F_{\\text{т}} = m^2 g', 'par'], ['F_{\\text{т}} = g', 'const']] },
+    { f: 'dyn-11', x: 'M', y: 'g', s: 'lin0', c: 'R = ' + TX, tex: 'g = G\\frac{M}{R^2}', w: [['g = G\\frac{R^2}{M}', 'hyp'], ['g = G\\frac{M^2}{R^2}', 'par'], ['g = \\frac{G}{R^2}', 'const']] },
+    { f: 'stat-1', x: 'l', y: 'M', s: 'lin0', c: 'F = ' + TX, tex: 'M = Fl', w: [['M = \\frac{F}{l}', 'hyp'], ['M = Fl^2', 'par'], ['M = F', 'const']] },
+    { f: 'stat-2', x: 'l_2', y: 'F_2', s: 'hyp', c: 'F_1,\\ l_1 = ' + TX, tex: 'F_2 = \\frac{F_1 l_1}{l_2}', w: [['F_2 = \\frac{F_1 l_2}{l_1}', 'lin0'], ['F_2 = F_1', 'const'], ['F_2 = \\frac{F_1 l_2^2}{l_1}', 'par']] },
+    { f: 'stat-7', x: 'V', y: 'm', s: 'lin0', tex: 'm = \\rho V', w: [['m = \\frac{\\rho}{V}', 'hyp'], ['m = \\rho V^2', 'par'], ['m = \\rho', 'const']] },
+    { f: 'cons-2', x: '\\Delta t', y: '\\Delta p', s: 'lin0', c: 'F = ' + TX, tex: '\\Delta p = F\\Delta t', w: [['\\Delta p = \\frac{F}{\\Delta t}', 'hyp'], ['\\Delta p = F\\Delta t^2', 'par'], ['\\Delta p = F', 'const']] },
+    { f: 'cons-4', x: 's', y: 'A', s: 'lin0', c: 'F,\\ \\alpha = ' + TX, tex: 'A = Fs\\cos\\alpha', w: [['A = \\frac{F\\cos\\alpha}{s}', 'hyp'], ['A = Fs^2\\cos\\alpha', 'par'], ['A = F\\cos\\alpha', 'const']] },
+    { f: 'cons-6', x: 'v', y: 'N', s: 'lin0', c: 'F = ' + TX, tex: 'N = Fv', w: [['N = \\frac{F}{v}', 'hyp'], ['N = Fv^2', 'par'], ['N = F', 'const']] },
+    { f: 'osc-2', x: 't', y: '\\nu', s: 'hyp', c: 'N = ' + TX, tex: '\\nu = \\frac{N}{t}', w: [['\\nu = Nt', 'lin0'], ['\\nu = Nt^2', 'par'], ['\\nu = N', 'const']] },
+    { f: 'osc-3', x: '\\nu', y: '\\omega', s: 'lin0', tex: '\\omega = 2\\pi\\nu', w: [['\\omega = \\frac{2\\pi}{\\nu}', 'hyp'], ['\\omega = 2\\pi\\nu^2', 'par'], ['\\omega = 2\\pi', 'const']] },
+    { f: 'osc-6', x: 'A', y: 'v_{\\max}', s: 'lin0', c: '\\omega = ' + TX, tex: 'v_{\\max} = \\omega A', w: [['v_{\\max} = \\frac{\\omega}{A}', 'hyp'], ['v_{\\max} = \\omega A^2', 'par'], ['v_{\\max} = \\omega', 'const']] },
+    { f: 'mkt-1', x: 'N', y: '\\nu', s: 'lin0', tex: '\\nu = \\frac{N}{N_A}', w: [['\\nu = \\frac{N_A}{N}', 'hyp'], ['\\nu = \\frac{N^2}{N_A}', 'par'], ['\\nu = N_A', 'const']] },
+    { f: 'mkt-4', x: 'V', y: 'n', s: 'hyp', c: 'N = ' + TX, tex: 'n = \\frac{N}{V}', w: [['n = NV', 'lin0'], ['n = NV^2', 'par'], ['n = N', 'const']] },
+    { f: 'mkt-8', x: 'v', y: 'p', s: 'par', c: 'n = ' + TX, tex: 'p = \\frac{1}{3}m_0 n v^2', w: [['p = \\frac{1}{3}m_0 n v', 'lin0'], ['p = \\frac{m_0 n}{3v}', 'hyp'], ['p = \\frac{1}{3}m_0 n\\sqrt{v}', 'sqrt']] },
+    { f: 'mkt-10', x: 'n', y: 'p', s: 'lin0', c: 'T = ' + TX, tex: 'p = nkT', w: [['p = \\frac{kT}{n}', 'hyp'], ['p = n^2 kT', 'par'], ['p = kT', 'const']] },
+    { f: 'hum-1', x: 'p', y: '\\varphi', s: 'lin0', c: 'T = ' + TX, tex: '\\varphi = \\frac{p}{p_{\\text{н}}}\\cdot 100\\%', w: [['\\varphi = \\frac{p_{\\text{н}}}{p}\\cdot 100\\%', 'hyp'], ['\\varphi = \\frac{p^2}{p_{\\text{н}}}\\cdot 100\\%', 'par'], ['\\varphi = 100\\%', 'const']] },
+    { f: 'heat-2', x: 'm', y: 'Q', s: 'lin0', tex: 'Q = \\lambda m', w: [['Q = \\frac{\\lambda}{m}', 'hyp'], ['Q = \\lambda m^2', 'par'], ['Q = \\lambda', 'const']] },
+    { f: 'heat-3', x: 'm', y: 'Q', s: 'lin0', tex: 'Q = Lm', w: [['Q = \\frac{L}{m}', 'hyp'], ['Q = Lm^2', 'par'], ['Q = L', 'const']] },
+    { f: 'heat-4', x: 'm', y: 'Q', s: 'lin0', tex: 'Q = qm', w: [['Q = \\frac{q}{m}', 'hyp'], ['Q = qm^2', 'par'], ['Q = q', 'const']] },
+    { f: 'td-3', x: '\\Delta T', y: '\\Delta U', s: 'lin0', tex: '\\Delta U = \\frac{3}{2}\\nu R\\Delta T', w: [['\\Delta U = \\frac{3\\nu R}{2\\Delta T}', 'hyp'], ['\\Delta U = \\frac{3}{2}\\nu R\\Delta T^2', 'par'], ['\\Delta U = \\frac{3}{2}\\nu R', 'const']] },
+    { f: 'td-4', x: '\\Delta V', y: 'A', s: 'lin0', c: 'p = ' + TX, tex: 'A = p\\Delta V', w: [['A = \\frac{p}{\\Delta V}', 'hyp'], ['A = p\\Delta V^2', 'par'], ['A = p', 'const']] },
+    { f: 'eng-2', x: 'Q_{\\text{н}}', y: '\\eta', s: 'hyp', c: 'A = ' + TX, tex: '\\eta = \\frac{A}{Q_{\\text{н}}}', w: [['\\eta = AQ_{\\text{н}}', 'lin0'], ['\\eta = AQ_{\\text{н}}^2', 'par'], ['\\eta = A', 'const']] },
+    { f: 'eng-4', x: 'T_{\\text{х}}', y: '\\eta', s: 'dec', c: 'T_{\\text{н}} = ' + TX, tex: '\\eta = \\frac{T_{\\text{н}} - T_{\\text{х}}}{T_{\\text{н}}}', w: [['\\eta = \\frac{T_{\\text{х}}}{T_{\\text{н}}}', 'lin0'], ['\\eta = \\frac{T_{\\text{н}}}{T_{\\text{х}}}', 'hyp'], ['\\eta = 1', 'const']] }
+  );
   // изопроцессы в трёх парах осей: какой процесс изображён / какой график у процесса
   const PROC = { T: ['iso-4', 'изотермический'], P: ['iso-5', 'изобарный'], V: ['iso-6', 'изохорный'] };
   const PROC_AX = [['V', 'p', { T: 'hyp', P: 'const', V: 'vert' }], ['T', 'V', { T: 'vert', P: 'lin0', V: 'const' }], ['T', 'p', { T: 'vert', P: 'const', V: 'lin0' }]];
@@ -2439,7 +2478,7 @@ const App = (() => {
   }
   const r1 = n => Math.round(n * 10) / 10;
   function qGraph(f) {
-    const g = GRAPH_BY[f.id][Math.random() * GRAPH_BY[f.id].length | 0], toGraph = Math.random() < 0.5;
+    const g = (S.graphs && S.graphs[S.i]) || GRAPH_BY[f.id][Math.random() * GRAPH_BY[f.id].length | 0], toGraph = Math.random() < 0.5;
     const cond = g.c ? `<div class="sub">${tex(g.c)}</div>` : '';
     const eyebrow = `${esc(f.topic.title)} · узнай график`;
     if (g.proc) {
@@ -2688,33 +2727,78 @@ const App = (() => {
     const refl = (x0, v, t, lo, hi) => { const L0 = hi - lo; let u = ((x0 - lo) + v * t) % (2 * L0); if (u < 0) u += 2 * L0; return lo + (u < L0 ? u : 2 * L0 - u); };
     // изопроцессы: цилиндр с поршнем слева, график справа; kind: T – изотерма p(V), P – изобара V(T), V – изохора p(T), W – работа при p = const
     const isoFig = (kind, cap) => {
-      const ax = { T: ['V', 'p'], P: ['T', 'V'], V: ['T', 'p'], W: ['V', 'p'] }[kind];
-      const st = { T: 'T = const', P: 'p = const', V: 'V = const', W: 'p = const' }[kind];
+      // состояние газа: u растёт от 1 до 3; T – изотерма (с поршня убирают песок), P – изобара, V – изохора (поршень на упорах), W – работа при p = const
+      const st = u => kind === 'T' ? { p: 3 / u, V: u, T: 2 } : kind === 'P' ? { p: 1.5, V: u, T: u } : kind === 'V' ? { p: u, V: 1.5, T: u } : { p: 2, V: u, T: u };
+      const main = { T: ['V', 'p'], P: ['T', 'V'], V: ['T', 'p'], W: ['V', 'p'] }[kind];
+      const small = kind === 'W' ? [] : [['V', 'p'], ['T', 'V'], ['T', 'p']].filter(([a, b]) => !(a === main[0] && b === main[1]));
+      const title = { T: 'T = const', P: 'p = const', V: 'V = const', W: 'p = const' }[kind];
       const note = { T: 'V растёт, p падает', P: 'T растёт, V растёт', V: 'T растёт, p растёт', W: '' }[kind];
-      const X = u => 160 + 50 * u, Y = kind === 'T' ? u => 180 - 45 * 3 / u : kind === 'W' ? () => 90 : u => 180 - 45 * u;
-      const guide = kind === 'T' ? Array.from({ length: 30 }, (_, i) => { const u = 0.95 + 2.4 * i / 29; return [X(u), Y(u)]; })
-        : kind === 'W' ? [[X(0.6), 90], [X(3.3), 90]] : [[160, 180], [X(3.3), Y(3.3)]];
-      const heat = kind !== 'T';
+      const X = v => 160 + 50 * v, Y = v => 180 - 45 * v;
+      const guide = kind === 'T' ? Array.from({ length: 30 }, (_, i) => { const u = 0.95 + 2.4 * i / 29; return [X(u), Y(3 / u)]; })
+        : kind === 'W' ? [[X(0.6), Y(2)], [X(3.3), Y(2)]] : [[160, 180], [X(3.3), Y(3.3)]];
+      const H = small.length ? 336 : 232;
+      const sgx = [30, 200];
       return {
         cap, dur: 4,
-        svg: svg(340, 214, 'Анимация: изопроцесс, поршень в цилиндре и график',
-          L(30, 28, 30, 180) + L(100, 28, 100, 180) + L(30, 180, 100, 180) + T(65, 16, st, 'sm acct') +
-          (heat ? `<polygon points="44,206 56,186 68,206" class="lossf"/><polygon points="62,206 74,188 86,206" class="lossf"/>` : '') +
-          A(160, 180, 334, 180) + T(334, 198, ax[0], 'm', 'end') + A(160, 180, 160, 16) + T(170, 24, ax[1], 'm', 'start') +
-          `<polyline points="${pts(guide)}" class="ln dash" style="stroke:var(--ink-3)"/>` + (note ? T(248, 208, note, 'sm') : '') + `<g data-a="g"></g>`),
+        svg: svg(340, H, 'Анимация: изопроцесс – поршень в цилиндре, термометр, манометр и графики',
+          L(40, 50, 40, 200) + L(100, 50, 100, 200) + L(40, 200, 100, 200) + T(70, 38, title, 'sm acct') +
+          `<rect x="16" y="70" width="8" height="122" rx="4" class="ghostb"/><circle cx="20" cy="198" r="7" class="lossf" style="opacity:.8"/>` + T(20, 222, 'T', 'm') +
+          L(100, 160, 111, 160) + `<circle cx="124" cy="160" r="13" class="ring"/>` + T(124, 190, 'p', 'm') +
+          A(160, 180, 334, 180) + T(334, 198, main[0], 'm', 'end') + A(160, 180, 160, 16) + T(170, 24, main[1], 'm', 'start') +
+          `<polyline points="${pts(guide)}" class="ln dash" style="stroke:var(--ink-3)"/>` + (note ? T(248, 208, note, 'sm') : '') +
+          small.map(([a, b], i) => A(sgx[i], 320, sgx[i] + 128, 320) + T(sgx[i] + 128, 334, a, 'm', 'end') + A(sgx[i], 320, sgx[i], 240) + T(sgx[i] + 10, 248, b, 'm', 'start')).join('') +
+          `<g data-a="g"></g>`),
         anim: el => {
           const g = el.querySelector('[data-a="g"]');
           return r => {
-            const f = Math.min(1, Math.max(0, (r - 0.3) / 3.3)), u = 1 + 2 * (1 - (1 - f) ** 2), h = kind === 'V' ? 60 : 30 * u, top = 180 - h;
-            const tr = Array.from({ length: 24 }, (_, i) => { const w = 1 + (u - 1) * i / 23; return [X(w), Y(w)]; });
-            g.innerHTML = `<rect x="31" y="${r1(top)}" width="68" height="${r1(h)}" class="water"/><rect x="30" y="${r1(top - 8)}" width="70" height="8" class="piston"/>` +
-              (kind === 'W' ? `<rect x="${X(1)}" y="90" width="${r1(X(u) - X(1))}" height="90" class="accf"/>` + L(X(1), 90, X(1), 180, 'dash muted') + L(r1(X(u)), 90, r1(X(u)), 180, 'dash muted') : '') +
-              `<polyline points="${pts(tr)}" class="wave"/>` + dot(X(1), r1(Y(1)), 4) + T(X(1) - 6, r1(Y(1) - 8), '1', 'm', 'end') + dot(r1(X(u)), r1(Y(u)), 5) +
-              (f >= 1 ? T(r1(X(u) + 6), r1(Y(u) - 8), '2', 'm', 'start') : '') +
-              (kind === 'W' && f >= 1 ? T(r1((X(1) + X(u)) / 2), 140, 'A = pΔV', 'm acct') : '');
+            const f = Math.min(1, Math.max(0, (r - 0.3) / 3.3)), u = 1 + 2 * (1 - (1 - f) ** 2), s = st(u), s0 = st(1);
+            // цилиндр: высота газа пропорциональна V, над поршнем песок (пропорционален давлению) или упоры
+            const h = 34 * s.V, top = 200 - h;
+            const sand = kind === 'V' ? '' : (() => { const sh = 9 * s.p; return `<polygon points="${pts([[46, top - 8], [94, top - 8], [82, top - 8 - sh], [58, top - 8 - sh]])}" class="oil"/>`; })();
+            const stops = kind === 'V' ? L(40, top - 10, 50, top - 10, 'thick') + L(90, top - 10, 100, top - 10, 'thick') : '';
+            // термометр и манометр
+            const lvl = 30 * s.T, ang = Math.PI * (1 - s.p / 3.6);
+            let out = `<rect x="41" y="${r1(top)}" width="58" height="${r1(h)}" class="water"/><rect x="40" y="${r1(top - 8)}" width="60" height="8" class="piston"/>` + sand + stops +
+              `<rect x="17" y="${r1(192 - lvl)}" width="6" height="${r1(lvl)}" class="lossf" style="opacity:.8"/>` +
+              L(124, 160, r1(124 + 10 * Math.cos(ang)), r1(160 - 10 * Math.sin(ang)), 'thick');
+            // главный график
+            const tr = Array.from({ length: 24 }, (_, i) => { const w = 1 + (u - 1) * i / 23, q = st(w); return [X(q[main[0]]), Y(q[main[1]])]; });
+            const e = tr[tr.length - 1];
+            if (kind === 'W') out += `<rect x="${X(1)}" y="${Y(2)}" width="${r1(X(u) - X(1))}" height="90" class="accf"/>` + L(X(1), Y(2), X(1), 180, 'dash muted') + L(r1(X(u)), Y(2), r1(X(u)), 180, 'dash muted');
+            out += `<polyline points="${pts(tr)}" class="wave"/>` + dot(r1(tr[0][0]), r1(tr[0][1]), 4) + T(r1(tr[0][0] - 6), r1(tr[0][1] - 8), '1', 'm', 'end') + dot(r1(e[0]), r1(e[1]), 5) +
+              (f >= 1 ? T(r1(e[0] + 6), r1(e[1] - 8), '2', 'm', 'start') : '') + (kind === 'W' && f >= 1 ? T(r1((X(1) + X(u)) / 2), 140, 'A = pΔV', 'm acct') : '');
+            // маленькие графики в других осях
+            small.forEach(([a, b], i) => {
+              const sx = v => sgx[i] + 34 * v, sy = v => 320 - 22 * v;
+              const pl = Array.from({ length: 12 }, (_, k) => { const q = st(1 + (u - 1) * k / 11); return [sx(q[a]), sy(q[b])]; });
+              const z = pl[pl.length - 1];
+              out += `<polyline points="${pts(pl)}" class="wave" style="stroke-width:2"/>` + dot(r1(pl[0][0]), r1(pl[0][1]), 3) + dot(r1(z[0]), r1(z[1]), 4) +
+                T(r1(pl[0][0] - 5), r1(pl[0][1] + (s0[b] > st(3)[b] ? -5 : 12)), '1', 'sm', 'end') + (f >= 1 ? T(r1(z[0] + 6), r1(z[1] + (s0[b] > st(3)[b] ? 12 : -4)), '2', 'sm', 'start') : '');
+            });
+            g.innerHTML = out;
           };
         }
       };
+    };
+    // полный цикл для воды: лёд → вода → пар и обратно; hl – номера участков, которые выделить (null – все обычные)
+    const waterFig = (hl, cap) => {
+      const P = [[0, -20], [1, 0], [2.2, 0], [3.4, 100], [5.6, 100], [6.2, 120], [6.8, 100], [9, 100], [10.2, 0], [11.4, 0], [12.4, -20]];
+      const X = s => r1(56 + 21.4 * s), Y = t => r1(150 - 1.1 * t);
+      const segs = P.slice(1).map((q, i) => [P[i], q]);
+      const on = i => !hl || hl.includes(i);
+      let body = A(42, 186, 334, 186) + T(334, 202, 'время', 'sm', 'end') + A(42, 186, 42, 8) + T(50, 16, 't, °C', 'sm', 'start') +
+        L(42, Y(0), 322, Y(0), 'dash muted') + L(42, Y(100), 322, Y(100), 'dash muted') + T(36, Y(0) + 4, '0', 'sm', 'end') + T(36, Y(100) + 4, '100', 'sm', 'end') +
+        L(X(6.2), 22, X(6.2), 186, 'dash muted') +
+        `<rect x="43" y="${Y(0)}" width="279" height="${r1(186 - Y(0))}" class="softf" style="opacity:.55"/><rect x="43" y="14" width="279" height="${r1(Y(100) - 14)}" class="softf" style="opacity:.55"/>` +
+        T(128, 178, 'лёд, ' + S('c', 'л'), 'sm acct') + T(150, 104, 'вода, ' + S('c', 'в'), 'sm acct') + T(262, 32, 'пар, ' + S('c', 'п'), 'sm acct') + T(r1((42 + X(6.2)) / 2), 218, 'получает теплоту', 'sm') + T(r1((X(6.2) + 322) / 2), 218, 'отдаёт теплоту', 'sm');
+      segs.forEach(([a, b], i) => {
+        const hot = hl && hl.includes(i);
+        body += `<line x1="${X(a[0])}" y1="${Y(a[1])}" x2="${X(b[0])}" y2="${Y(b[1])}" class="ln ${hot ? 'acc' : hl ? 'muted' : ''}" style="stroke-width:${hot ? 4 : hl ? 1.6 : 2.4}"/>`;
+        const mx = (X(a[0]) + X(b[0])) / 2, my = (Y(a[1]) + Y(b[1])) / 2, flat = a[1] === b[1];
+        const lx = flat ? mx : mx + (b[1] > a[1] ? -9 : 9), ly = flat ? my - 7 : my - 2;
+        body += T(r1(lx), r1(ly), String(i + 1), on(i) ? (hot ? 'sm acct' : 'sm') : 'sm muted-t');
+      });
+      return { cap, svg: svg(340, 226, 'График: полный цикл для воды – нагревание льда, плавление, кипение и обратно', body) };
     };
     // лифт разгоняется с постоянным ускорением вверх (up) или вниз; ось y направлена по ускорению
     const liftFig = (up, cap) => ({
@@ -3625,10 +3709,9 @@ const App = (() => {
       gasHot: {
         cap: 'Одинаковое число молекул в одинаковых сосудах. Справа температура в 2 раза выше: молекулы быстрее и сильнее бьют по стенкам, и давление тоже в 2 раза больше.',
         dur: 6,
-        svg: svg(320, 190, 'Анимация: газ при температуре T и 2T',
+        svg: svg(320, 176, 'Анимация: газ при температуре T и 2T',
           `<rect x="20" y="20" width="130" height="110" class="cab"/><rect x="170" y="20" width="130" height="110" class="cab"/>` +
-          `<polygon points="215,152 225,136 235,152" class="lossf"/><polygon points="235,152 245,138 255,152" class="lossf"/>` +
-          T(85, 176, 'T,  p', 'm') + T(235, 176, '2T,  2p', 'm acct') + `<g data-a="g"></g>`),
+          T(85, 166, 'T,  p', 'm') + T(235, 166, '2T,  2p', 'm') + `<g data-a="g"></g>`),
         anim: el => {
           const g = el.querySelector('[data-a="g"]');
           const M = Array.from({ length: 12 }, (_, i) => { const a = i * 2.39996, s = 45 + (i * 37) % 30; return { x: (i * 41) % 110, y: (i * 29) % 90, vx: s * Math.cos(a), vy: s * Math.sin(a) }; });
@@ -3654,12 +3737,12 @@ const App = (() => {
             if (b) h += P2.map(([x, y]) => `<circle cx="${bx + x}" cy="${y + 10}" r="4" class="solid"/>`).join('');
             return h;
           }).join('') +
-          T(55, 142, S('p', '1'), 'm acct') + T(155, 142, S('p', '2'), 'm') + T(255, 142, 'p = ' + S('p', '1') + ' + ' + S('p', '2'), 'm'))
+          T(55, 142, S('p', '1'), 'm acct') + T(155, 142, S('p', '2'), 'm') + T(255, 142, 'p = ' + S('p', '1', ' + ') + S('p', '2'), 'm'))
       },
-      isoT: isoFig('T', 'Изотермический процесс: температура постоянна. Объём растёт, давление падает, и график $p(V)$ – гипербола.'),
-      isoP: isoFig('P', 'Изобарный процесс: давление постоянно. Газ нагревают, и объём растёт пропорционально абсолютной температуре.'),
-      isoV: isoFig('V', 'Изохорный процесс: объём постоянен. Газ нагревают, и давление растёт пропорционально абсолютной температуре.'),
-      workAnim: isoFig('W', 'Газ расширяется при постоянном давлении. Работа газа равна площади под графиком $p(V)$ – здесь прямоугольник $p\\Delta V$.'),
+      isoT: isoFig('T', 'Изотермический процесс: температура постоянна, термометр не меняется. С поршня понемногу убирают песок, давление падает (стрелка манометра), и газ расширяется – поршень поднимается. График $p(V)$ – гипербола, а в осях $V$–$T$ и $p$–$T$ процесс идёт по вертикальным отрезкам.'),
+      isoP: isoFig('P', 'Изобарный процесс: песка на поршне столько же, поэтому давление постоянно. Газ нагревают (термометр), и объём растёт пропорционально абсолютной температуре. В осях $p$–$V$ и $p$–$T$ это горизонтальные отрезки.'),
+      isoV: isoFig('V', 'Изохорный процесс: поршень упирается в упоры, и объём не меняется. Газ нагревают, и давление (стрелка манометра) растёт пропорционально абсолютной температуре. В осях $p$–$V$ это вертикальный отрезок, в осях $V$–$T$ – горизонтальный.'),
+      workAnim: isoFig('W', 'Газ нагревают при постоянном давлении: песка на поршне столько же, а поршень поднимается. Работа газа равна площади под графиком $p(V)$ – здесь прямоугольник $p\\Delta V$.'),
       humid: {
         cap: 'Кривая – давление насыщенного пара $p_{\\text{н}}$ при разных температурах. Точка ниже кривой – реальный пар в воздухе, $\\varphi = \\frac{p}{p_{\\text{н}}}$. Если воздух охладить при том же $p$, точка дойдёт до кривой – выпадет роса.',
         svg: (() => {
@@ -3677,11 +3760,10 @@ const App = (() => {
       },
       bubble: {
         cap: 'Пузырёк пара на глубине $h$. Снаружи на него давят атмосфера и столб жидкости. Пузырёк растёт, если давление насыщенного пара внутри не меньше $p_0 + \\rho g h$.',
-        svg: svg(300, 210, 'Пузырёк пара в жидкости на глубине h',
+        svg: svg(300, 180, 'Пузырёк пара в жидкости на глубине h',
           `<rect x="61" y="60" width="138" height="109" class="water"/><polyline points="60,20 60,170 200,170 200,20" class="cab"/>` +
           L(60, 60, 200, 60, 'acc') + [90, 130, 170].map(x => A(x, 24, x, 56)).join('') + T(208, 34, S('p', '0'), 'm', 'start') +
           `<circle cx="130" cy="135" r="14" class="ring"/>` + T(110, 140, S('p', 'н.п.'), 'sm', 'end') +
-          `<polygon points="100,196 112,176 124,196" class="lossf"/><polygon points="136,196 148,178 160,196" class="lossf"/>` +
           L(200, 60, 240, 60, 'dash') + L(146, 135, 240, 135, 'dash') + A(236, 98, 236, 62) + A(236, 98, 236, 133) + T(244, 102, 'h', 'm', 'start'))
       },
       heatAnim: {
@@ -3709,15 +3791,19 @@ const App = (() => {
         cap: 'Горячее тело отдаёт теплоту холодному, пока их температуры не сравняются. Сколько отдало одно, столько получило другое: $Q_{\\text{отд}} = Q_{\\text{пол}}$.',
         dur: 4.2,
         svg: svg(300, 200, 'Анимация: теплообмен горячего и холодного тела',
-          `<rect x="60" y="120" width="90" height="60" class="lossf"/><rect x="150" y="120" width="90" height="60" class="water"/>` +
+          `<rect data-a="h" x="60" y="120" width="90" height="60"/><rect data-a="c" x="150" y="120" width="90" height="60"/>` +
           L(60, 120, 240, 120) + L(60, 180, 240, 180) + L(60, 120, 60, 180) + L(240, 120, 240, 180) + L(150, 120, 150, 180) +
           `<rect x="97" y="20" width="16" height="80" rx="8" class="ghostb"/><rect x="187" y="20" width="16" height="80" rx="8" class="ghostb"/>` +
           T(105, 196, 'горячее', 'sm') + T(195, 196, 'холодное', 'sm') + `<g data-a="g"></g>`),
         anim: el => {
-          const g = el.querySelector('[data-a="g"]');
+          const g = el.querySelector('[data-a="g"]'), hb = el.querySelector('[data-a="h"]'), cb = el.querySelector('[data-a="c"]');
+          // цвет по температуре: 20 °C – синий, 44 °C – нейтральный, 80 °C – красный
+          const C20 = [70, 110, 230], C44 = [150, 128, 165], C80 = [228, 72, 60];
+          const col = t => { const [a, b, k] = t <= 44 ? [C20, C44, (t - 20) / 24] : [C44, C80, (t - 44) / 36]; return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * k)).join(',')})`; };
           return r => {
             const f = Math.min(1, Math.max(0, (r - 0.4) / 3.2)), e = 1 - (1 - f) ** 2, t1 = 80 - 36 * e, t2 = 20 + 24 * e;
-            const bar = (x, t) => `<rect x="${x}" y="${r1(100 - 0.8 * t)}" width="10" height="${r1(0.8 * t)}" rx="5" class="${t > 44.5 ? 'lossf' : 'barp'}" style="opacity:.8"/>`;
+            hb.setAttribute('style', `fill:${col(t1)};opacity:.85`); cb.setAttribute('style', `fill:${col(t2)};opacity:.85`);
+            const bar = (x, t) => `<rect x="${x}" y="${r1(100 - 0.8 * t)}" width="10" height="${r1(0.8 * t)}" rx="5" style="fill:${col(t)};opacity:.9"/>`;
             g.innerHTML = bar(100, t1) + bar(190, t2) + T(122, 60, `${Math.round(t1)} °C`, 'sm', 'start') + T(212, 60, `${Math.round(t2)} °C`, 'sm', 'start') +
               (f < 1 ? A(122, 150, 180, 150, 'acc thick') + T(164, 143, 'Q', 'm acct', 'start') : T(150, 112, 'общая температура 44 °C', 'sm acct'));
           };
@@ -3729,7 +3815,6 @@ const App = (() => {
           `<rect x="111" y="90" width="78" height="80" class="water"/><rect x="110" y="82" width="80" height="8" class="piston"/>` +
           L(110, 30, 110, 170) + L(190, 30, 190, 170) + L(110, 170, 190, 170) +
           A(150, 80, 150, 38, 'thick') + T(160, 50, 'A', 'm', 'start') + T(150, 134, 'ΔU', 'm acct') +
-          `<polygon points="126,212 138,190 150,212" class="lossf"/><polygon points="150,212 162,192 174,212" class="lossf"/>` +
           A(210, 200, 176, 168, 'acc thick') + T(216, 204, 'Q', 'm acct', 'start') + T(250, 120, 'Q = A + ΔU', 'm', 'middle'))
       },
       adiabat: {
@@ -3754,26 +3839,39 @@ const App = (() => {
           A(196, 115, 276, 115, 'thick') + T(282, 120, 'A', 'm', 'start'))
       },
       carnotAnim: {
-        cap: 'Цикл Карно: две изотермы и две адиабаты. На изотерме $T_{\\text{н}}$ газ получает теплоту от нагревателя, на изотерме $T_{\\text{х}}$ отдаёт холодильнику. Площадь внутри цикла – работа за цикл.',
+        cap: 'Цикл Карно: две изотермы и две адиабаты. На изотерме $T_{\\text{н}}$ (1→2) газ получает теплоту от нагревателя, на изотерме $T_{\\text{х}}$ (3→4) отдаёт холодильнику. На адиабатах (2→3 и 4→1) теплообмена нет. Площадь внутри цикла – работа за цикл. Масштаб для наглядности преувеличен.',
         dur: 6.6,
-        svg: svg(320, 206, 'Анимация: цикл Карно на графике p(V)',
-          A(40, 186, 312, 186) + T(312, 202, 'V', 'm', 'end') + A(40, 186, 40, 28) + T(50, 38, 'p', 'm', 'start') + `<g data-a="g"></g>`),
+        svg: (() => {
+          const X = V => 78 + 44 * (V - 1), Y = p => 188 - 30 * p;
+          const iso = (c, a, b) => Array.from({ length: 30 }, (_, i) => { const V = a + (b - a) * i / 29; return [X(V), Y(c / V)]; });
+          return svg(320, 236, 'Анимация: цикл Карно на графике p(V), изотермы и адиабаты',
+            `<polyline points="${pts(iso(5, 0.96, 5.8))}" class="ln" style="stroke:var(--bad);opacity:.3;stroke-dasharray:2 4"/>` +
+            `<polyline points="${pts(iso(2, 0.96, 5.8))}" class="ln" style="stroke:var(--accent);opacity:.35;stroke-dasharray:2 4"/>` +
+            T(r1(X(4.2)), r1(Y(5 / 4.2) - 8), S('T', 'н'), 'm', 'start') + T(r1(X(1.3) - 4), r1(Y(2 / 1.3) + 16), S('T', 'х'), 'm acct', 'end') +
+            A(40, 188, 312, 188) + T(312, 204, 'V', 'm', 'end') + A(40, 188, 40, 24) + T(34, 32, 'p', 'm', 'end') +
+            `<line x1="30" y1="226" x2="50" y2="226" class="ln" style="stroke:var(--bad);stroke-width:3"/>` + T(54, 230, 'изотерма ' + S('T', 'н'), 'sm', 'start') +
+            `<line x1="132" y1="226" x2="152" y2="226" class="ln" style="stroke:var(--accent);stroke-width:3"/>` + T(156, 230, 'изотерма ' + S('T', 'х'), 'sm', 'start') +
+            `<line x1="236" y1="226" x2="256" y2="226" class="ln" style="stroke-width:3;stroke-dasharray:6 4"/>` + T(260, 230, 'адиабата', 'sm', 'start') +
+            `<g data-a="g"></g>`);
+        })(),
         anim: el => {
           const g = el.querySelector('[data-a="g"]');
-          const X = V => 70 + 42 * (V - 1), Y = p => 182 - 42 * p;
+          const X = V => 78 + 44 * (V - 1), Y = p => 188 - 30 * p;
           const seg = (f, a, b) => Array.from({ length: 25 }, (_, i) => { const V = a + (b - a) * i / 24; return [X(V), Y(f(V))]; });
-          const Vd = Math.pow(2, 1.5), Vc = Math.pow(4.762 / 1.5, 1.5);
-          const S4 = [seg(V => 3 / V, 1, 2), seg(V => 4.762 / V ** (5 / 3), 2, Vc), seg(V => 1.5 / V, Vc, Vd), seg(V => 3 / V ** (5 / 3), Vd, 1)];
+          // схематично: изотермы pV = 5 и pV = 2, адиабаты pV² = const
+          const S4 = [seg(V => 5 / V, 1, 2.2), seg(V => 11 / V ** 2, 2.2, 5.5), seg(V => 2 / V, 5.5, 2.5), seg(V => 5 / V ** 2, 2.5, 1)];
+          const sty = ['stroke:var(--bad);stroke-width:3.2', 'stroke:currentColor;stroke-width:3;stroke-dasharray:6 4', 'stroke:var(--accent);stroke-width:3.2', 'stroke:currentColor;stroke-width:3;stroke-dasharray:6 4'];
           const all = S4.flat(), names = ['1→2: изотерма ' + S('T', 'н') + ', газ получает ' + S('Q', 'н'), '2→3: адиабата, Q = 0, газ охлаждается', '3→4: изотерма ' + S('T', 'х') + ', газ отдаёт ' + S('Q', 'х'), '4→1: адиабата, Q = 0, газ нагревается'];
-          const lab = [[1, 3, '1'], [2, 1.5, '2'], [Vc, 1.5 / Vc, '3'], [Vd, 1.5 / Vd, '4']];
+          const lab = [[X(1) - 6, Y(5) - 4, '1', 'end'], [X(2.2) + 6, Y(5 / 2.2) - 4, '2', 'start'], [X(5.5) + 2, Y(2 / 5.5) - 10, '3', 'start'], [X(2.5) - 6, Y(0.8) + 16, '4', 'end']];
           return r => {
             const u = Math.min(4, Math.max(0, (r - 0.3) / 1.4)), k = Math.min(3, Math.floor(u)), f = u - k, done = u >= 4;
-            const cur = S4[k], idx = Math.round(f * (cur.length - 1)), trace = S4.slice(0, k).flat().concat(cur.slice(0, idx + 1));
+            const cur = S4[k], idx = Math.round(f * (cur.length - 1));
             const p = done ? S4[0][0] : cur[idx];
-            g.innerHTML = `<polyline points="${pts(all)}" class="ln dash" style="stroke:var(--ink-3)"/>` +
-              (done ? `<polygon points="${pts(all)}" class="accf"/>` : '') + `<polyline points="${pts(trace)}" class="wave"/>` +
-              lab.map(([V, pp, t]) => t === '4' ? T(r1(X(V) - 2), r1(Y(pp) + 18), t, 'm', 'middle') : T(r1(X(V) + 6), r1(Y(pp) - 6), t, 'm', 'start')).join('') + dot(r1(p[0]), r1(p[1]), 5) +
+            let h = done ? `<polygon points="${pts(all)}" class="accf" style="opacity:.25"/>` : '';
+            for (let q = 0; q <= k; q++) { const part = q < k || done ? S4[q] : cur.slice(0, idx + 1); if (part.length > 1) h += `<polyline points="${pts(part)}" class="ln" style="fill:none;stroke-linejoin:round;${sty[q]}"/>`; }
+            h += lab.map(([x, y, t, a]) => T(r1(x), r1(y), t, 'm', a)).join('') + dot(r1(p[0]), r1(p[1]), 5) +
               T(176, 14, done ? 'площадь цикла = работа за цикл A' : names[k], 'sm acct');
+            g.innerHTML = h;
           };
         }
       },
@@ -3862,6 +3960,10 @@ const App = (() => {
           };
         }
       },
+      waterCycle: waterFig(null, 'Полный цикл для воды. Ниже 0 °C это лёд, от 0 до 100 °C – вода, выше 100 °C – пар, и у каждого своя удельная теплоёмкость: $c_{\\text{л}}$, $c_{\\text{в}}$, $c_{\\text{п}}$. Участки 1–5 – тело получает теплоту: 1 – нагревание льда, 2 – плавление, 3 – нагревание воды, 4 – кипение, 5 – нагревание пара. Участки 6–10 – всё в обратную сторону, тело отдаёт теплоту: 6 – охлаждение пара, 7 – конденсация, 8 – охлаждение воды, 9 – кристаллизация, 10 – охлаждение льда. В уравнение теплового баланса входит теплота каждого участка, который прошло тело.'),
+      waterHeat: waterFig([0, 2, 4, 5, 7, 9], 'Нагревание и охлаждение – наклонные участки: 1, 3, 5 (лёд, вода и пар нагреваются) и 6, 8, 10 (остывают). Здесь меняется температура, и $Q = cm\\Delta t$. У льда, воды и пара своя удельная теплоёмкость: $c_{\\text{л}}$, $c_{\\text{в}}$ и $c_{\\text{п}}$, поэтому для каждого участка берём свою.'),
+      waterMelt: waterFig([1, 8], 'Плавление (2) и кристаллизация (9) – горизонтальные участки при 0 °C. Температура не меняется, $Q = \\lambda m$. При плавлении лёд получает теплоту, при кристаллизации вода отдаёт столько же.'),
+      waterBoil: waterFig([3, 6], 'Кипение (4) и конденсация (7) – горизонтальные участки при 100 °C. Температура не меняется, $Q = Lm$. При кипении вода получает теплоту, при конденсации пар отдаёт столько же. Эти участки длиннее, чем при 0 °C, потому что $L$ больше $\\lambda$.'),
       wave: {
         cap: 'Длина волны – расстояние между соседними гребнями. Это расстояние волна проходит за один период.',
         svg: svg(340, 150, 'Волна, длина волны между соседними гребнями',
