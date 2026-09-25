@@ -108,6 +108,7 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .locked{border-style:dashed; background:transparent; color:var(--ink-3); cursor:default}
 .locked .code{color:var(--ink-3); background:transparent; border:1px dashed var(--line)}
 .foot{display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; font-size:13px; color:var(--ink-3)}
+.foot .ver{flex-basis:100%; font-size:12px; color:var(--ink-3)}
 .link{color:var(--ink-2); text-decoration:underline; text-underline-offset:3px; padding:4px 0}
 
 /* topic screen */
@@ -2244,6 +2245,7 @@ const App = (() => {
       </section>
       <footer class="foot">
         <button class="link" data-welcome>Как пользоваться</button><button class="link" data-reset>Сбросить прогресс</button>
+        <span class="ver">версия ${APP_VER}${srv.state ? ' · ' + esc(srv.state) : ''}</span>
       </footer>
     `);
     $app.querySelectorAll('[data-section]').forEach(b => b.onclick = () => section(b.dataset.section));
@@ -4658,7 +4660,8 @@ const App = (() => {
   let errs = {};
   try { errs = JSON.parse(localStorage.getItem(ERR_KEY) || '{}') || {}; } catch (e) { errs = {}; }
   const noteErr = id => { errs[id] = (errs[id] || 0) + 1; try { localStorage.setItem(ERR_KEY, JSON.stringify(errs)); } catch (e) {} };
-  const srv = { on: false, admin: false };
+  const srv = { on: false, admin: false, state: '' };
+  const APP_VER = 95;
   const remindPref = () => { try { return localStorage.getItem(REMIND_KEY) === '1'; } catch (e) { return false; } };
   const setRemind = v => { try { localStorage.setItem(REMIND_KEY, v ? '1' : '0'); } catch (e) {} };
   async function call(action, extra = {}, ms = 8000) {
@@ -4771,12 +4774,16 @@ const App = (() => {
       if (inTg) { try { tg.onEvent('themeChanged', () => { syncTheme(); }); } catch (e) {} }
       const startApp = () => { home(); if (!onboarded) openWelcome(); };
       // вход по коду: только внутри Телеграма и только если сервер подключён; если сервер недоступен – не блокируем
+      // строка состояния внизу главной – чтобы по скриншоту ученика понять, что не так
+      if (!API) srv.state = 'сервер выключен';
+      else if (!tg) srv.state = 'вне Телеграма';
+      else if (!tg.initData) srv.state = 'нет данных Телеграма';
       if (API && inTg && tg.initData) {
         paint(`<p class="muted" style="text-align:center;margin-top:40vh">Загрузка…</p>`);
         call('hello').then(r => {
-          if (r && r.ok) { srv.on = true; srv.admin = !!r.admin; if (!r.joined) return joinScreen(); startApp(); sync(); }
-          else startApp();
-        }).catch(() => startApp());
+          if (r && r.ok) { srv.on = true; srv.admin = !!r.admin; srv.state = 'сервер: ок'; if (!r.joined) return joinScreen(); startApp(); sync(); }
+          else { srv.state = r ? `сервер: ${r.error === 'auth' ? 'ошибка входа' : 'ошибка'}${r.why ? ' (' + r.why + ')' : ''}` : 'сервер: нет ответа'; startApp(); }
+        }).catch(e => { srv.state = 'сервер: нет связи'; startApp(); });
       } else startApp();
     });
   }
