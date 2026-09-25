@@ -267,6 +267,10 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .gbox .gx{position:absolute; right:-2px; bottom:-14px; font-size:14px}
 .gbox.mid .gx{bottom:auto; top:52%}
 .gbox.big .gy,.gbox.big .gx{font-size:17px}
+.fld{display:flex; flex-direction:column; gap:6px; font-size:14px; color:var(--ink-2)}
+.fld input{font:inherit; font-size:17px; color:var(--ink); padding:12px 14px; border-radius:12px; border:1px solid var(--line); background:var(--paper)}
+.fld input:focus{outline:2px solid var(--accent); outline-offset:1px}
+.missed .row.st-row{border-left-color:var(--accent)}
 .kb{display:grid; grid-template-columns:repeat(5, 1fr); gap:6px}
 .key{min-height:50px; padding:4px; border-radius:11px; background:var(--card); border:1px solid var(--line); font-size:19px; font-weight:500; display:flex; align-items:center; justify-content:center; overflow:hidden}
 .key.var{background:var(--accent-soft); border-color:transparent; font-size:20px}
@@ -2210,6 +2214,7 @@ const App = (() => {
       </header>
       ${streakLine()}
       <button class="ach-btn" data-ach><span aria-hidden="true">🏆</span><span>Достижения</span><b class="num">${ACHS.filter(a => ach.got[a.id]).length} из ${ACHS.length}</b></button>
+      ${srv.admin ? '<button class="ach-btn" data-admin><span aria-hidden="true">📊</span><span>Статистика группы</span></button>' : ''}
       <section class="summary">
         <div>
           <span class="eyebrow">Весь курс</span>
@@ -2244,6 +2249,7 @@ const App = (() => {
     $app.querySelectorAll('[data-section]').forEach(b => b.onclick = () => section(b.dataset.section));
     const wl = $app.querySelector('[data-welcome]'); if (wl) wl.onclick = () => openWelcome();
     const ab = $app.querySelector('[data-ach]'); if (ab) ab.onclick = openAch;
+    const adm = $app.querySelector('[data-admin]'); if (adm) adm.onclick = adminScreen;
     const rv = $app.querySelector('[data-review]'); if (rv) rv.onclick = () => start({ pool: dueList(), mode: 'mix', label: 'Повторение', back: home, count: 20, review: true });
     wireLen(home);
     $app.querySelectorAll('[data-help]').forEach(b => b.onclick = openHelp);
@@ -2386,7 +2392,7 @@ const App = (() => {
     if (S.mode !== 'mix') ach.solo[S.modes[S.i]] = 1;   // «Попробовал всё»: только режим, запущенный отдельно
     // серия без ошибок: считается только в «Тренировке» (всё вперемешку); отдельные режимы и повторение её не меняют
     if (S.mode === 'mix' && !S.review) { ach.row = ok ? ach.row + 1 : 0; ach.best = Math.max(ach.best, ach.row); }
-    if (calc) { if (ok) ach.calc++; } else ach.n++;
+    if (calc) { if (ok) ach.calc++; } else { ach.n++; if (!ok) noteErr(f.id); }
     saveAch(); checkAch();
   }
   const earlyNote = () => { const r = S.results[S.results.length - 1]; return r && r.ok && !r.counted && !r.calc ? `<span class="note">Следующая клетка — ${whenLabel(r.due)}, при повторении</span>` : ''; };
@@ -4581,6 +4587,7 @@ const App = (() => {
   function result() {
     const r = S.results, ok = r.filter(x => x.ok).length, miss = r.filter(x => !x.ok);
     checkAch(true);
+    sync();
     const note = !r.length ? '' : S.mode === 'calc' ? 'Режим «Посчитай» тренирует расчёты и не меняет клетки прогресса и серию дней.' : ok === r.length ? 'Чисто! Эти формулы будут попадаться реже.' : ok / r.length >= .7 ? 'Хорошо. Ошибки ниже — повтори их ещё раз.' : 'Нормально для начала. Ошибки будут попадаться чаще, пока не запомнишь.';
     paint(`
       <div class="bar"><span class="title">${esc(S.label)}</span></div>
@@ -4645,6 +4652,106 @@ const App = (() => {
     document.body.style.overflow = 'hidden';
   }
 
+  /* ---------- сервер: вход по коду приглашения, статистика группы, напоминания ---------- */
+  const API = 'https://functions.yandexcloud.net/d4eounthc6a04rucsdg0';                                   // адрес функции Yandex Cloud; пусто – сервер выключен
+  const REMIND_KEY = 'formuly.remind.v1', ERR_KEY = 'formuly.err.v1';
+  let errs = {};
+  try { errs = JSON.parse(localStorage.getItem(ERR_KEY) || '{}') || {}; } catch (e) { errs = {}; }
+  const noteErr = id => { errs[id] = (errs[id] || 0) + 1; try { localStorage.setItem(ERR_KEY, JSON.stringify(errs)); } catch (e) {} };
+  const srv = { on: false, admin: false };
+  const remindPref = () => { try { return localStorage.getItem(REMIND_KEY) === '1'; } catch (e) { return false; } };
+  const setRemind = v => { try { localStorage.setItem(REMIND_KEY, v ? '1' : '0'); } catch (e) {} };
+  async function call(action, extra = {}, ms = 8000) {
+    const ctl = window.AbortController ? new AbortController() : null;
+    const t = setTimeout(() => ctl && ctl.abort(), ms);
+    try {
+      // text/plain – «простой» запрос, браузер не делает лишний предварительный запрос
+      const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action, initData: tg.initData, ...extra }), signal: ctl ? ctl.signal : undefined });
+      return await r.json();
+    } finally { clearTimeout(t); }
+  }
+  // сводка для куратора: без ответов и без личных данных, только прогресс
+  const snap = () => ({
+    v: 1, day: dayKey(), sd: streak.d || '', sn: streak.n || 0, n: ach.n, best: bestStreak(), today: streak.t === dayKey() ? streak.c : 0,
+    due: dueList().length, learned: learned(ALL), started: started(ALL), total: ALL.length, pct: pct(ALL),
+    secs: SECTIONS.map(s => [s.code, pct(s.items), learned(s.items), s.items.length]), err: errs
+  });
+  let syncT = null;
+  function sync() {
+    if (!srv.on) return;
+    clearTimeout(syncT);
+    syncT = setTimeout(() => { call('sync', { stats: snap(), remind: remindPref() }).catch(() => {}); }, 800);
+  }
+  function askRemind(done) {
+    // разрешение боту писать ученику: без него напоминания не дойдут
+    if (inTg && tg.requestWriteAccess && tgAtLeast('6.9')) { try { tg.requestWriteAccess(ok => { setRemind(!!ok); done(); }); return; } catch (e) {} }
+    done();
+  }
+  function joinScreen(msg = '') {
+    setBack(null);
+    const u = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+    const guess = [u.first_name, u.last_name].filter(Boolean).join(' ');
+    paint(`
+      <header class="brand"><span class="eyebrow">Физика</span><h1>Формулы <i>для ЕГЭ</i></h1></header>
+      <section class="summary join">
+        <div><span class="eyebrow">Вход по приглашению</span>
+          <p class="muted" style="margin:6px 0 0">Введи код, который дал куратор, и своё имя. Имя видит только куратор в статистике группы. Код нужен один раз.</p></div>
+        <label class="fld"><span>Код приглашения</span><input id="j-code" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
+        <label class="fld"><span>Имя и фамилия</span><input id="j-name" autocomplete="name" value="${esc(guess)}"></label>
+        ${msg ? `<p class="rv-lost">${esc(msg)}</p>` : ''}
+        <button class="btn btn-primary" data-join>Войти</button>
+      </section>`);
+    const btn = $app.querySelector('[data-join]'), code = $app.querySelector('#j-code'), name = $app.querySelector('#j-name');
+    const go = async () => {
+      if (!code.value.trim()) { code.focus(); return; }
+      btn.disabled = true; btn.textContent = 'Проверяем…';
+      let r = null; try { r = await call('join', { code: code.value, name: name.value }); } catch (e) {}
+      if (!r) return joinScreen('Не получилось связаться с сервером. Проверь интернет и попробуй ещё раз.');
+      if (!r.ok) return joinScreen(r.error === 'code' ? 'Код не подошёл. Проверь его и попробуй ещё раз.' : 'Что-то пошло не так. Попробуй ещё раз.');
+      srv.on = true; srv.admin = !!r.admin;
+      askRemind(() => { sync(); home(); if (!onboarded) openWelcome(); });
+    };
+    btn.onclick = go;
+    [code, name].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } }));
+  }
+  const agoLabel = ts => {
+    if (!ts) return 'не заходил';
+    const d = Math.round((today0() - new Date(ts).setHours(0, 0, 0, 0)) / DAY);
+    return d <= 0 ? 'сегодня' : d === 1 ? 'вчера' : `${d} ${plural(d, 'день', 'дня', 'дней')} назад`;
+  };
+  async function adminScreen() {
+    setBack(home);
+    const head = `<div class="bar"><button class="icon-btn" data-back aria-label="Назад">${ICON.back}</button></div>
+      <header class="topic-head"><span class="eyebrow">Для куратора</span><h1>Статистика группы</h1></header>`;
+    paint(head + `<p class="muted">Загружаем…</p>`);
+    $app.querySelector('[data-back]').onclick = home;
+    let r = null; try { r = await call('stats', {}, 12000); } catch (e) {}
+    if (!r || !r.ok) { paint(head + `<p class="rv-lost">Не получилось загрузить статистику. Попробуй позже.</p>`); $app.querySelector('[data-back]').onclick = home; return; }
+    const yest = (() => { const d = new Date(today0() - DAY); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; })();
+    const us = r.users.map(u => {
+      const s = u.stats || {}, alive = s.sn > 0 && (s.sd === dayKey() || s.sd === yest);
+      return { ...u, s, streakNow: alive ? s.sn : 0 };
+    }).sort((a, b) => (b.seen || 0) - (a.seen || 0));
+    const todayN = us.filter(u => agoLabel(u.seen) === 'сегодня').length, weekN = us.filter(u => Date.now() - (u.seen || 0) < 7 * DAY).length;
+    // чаще всего ошибаются: сумма ошибок по группе и сколько учеников ошибались
+    const agg = {};
+    us.forEach(u => Object.entries(u.s.err || {}).forEach(([id, c]) => { if (!byId[id]) return; (agg[id] ||= { c: 0, k: 0 }); agg[id].c += c; agg[id].k++; }));
+    const top = Object.entries(agg).sort((a, b) => b[1].c - a[1].c).slice(0, 10);
+    paint(head + `
+      <section class="summary"><div>
+        <p class="num" style="margin:0;font-size:15px;line-height:1.6">Учеников: <b>${us.length}</b><br>Заходили сегодня: <b>${todayN}</b>, за неделю: <b>${weekN}</b></p>
+        <p class="note" style="margin:8px 0 0">Данные обновляются, когда ученик заканчивает раунд.</p>
+      </div></section>
+      <section class="sec"><div class="section-head"><h2>Ученики</h2></div>
+        <div class="missed">${us.length ? us.map(u => `<div class="row st-row">
+          <b>${esc(u.name || 'Без имени')}${u.uname ? ` <span class="muted" style="font-weight:400">@${esc(u.uname)}</span>` : ''}</b>
+          <span class="muted num" style="font-size:13.5px">${agoLabel(u.seen)} · 🔥 ${u.streakNow} · решено ${u.s.n || 0} · выучено ${u.s.learned || 0} из ${u.s.total || ALL.length} · ждут повторения ${u.s.due || 0}${u.remind ? '' : ' · без напоминаний'}</span>
+        </div>`).join('') : '<p class="muted">Пока никто не вошёл по коду.</p>'}</div></section>
+      ${top.length ? `<section class="sec"><div class="section-head"><h2>Чаще всего ошибаются</h2></div>
+        <div class="missed">${top.map(([id, a]) => `<div class="row"><span class="muted" style="font-size:14px">${esc(byId[id].n)} · ошибок ${a.c}, учеников ${a.k}</span><span class="tex-wrap">${tex(byId[id].f)}</span></div>`).join('')}</div></section>` : ''}`);
+    $app.querySelector('[data-back]').onclick = home;
+  }
+
   /* ---------- запуск ---------- */
   function boot() {
     cloudLoad(['p', 's', 'd', 'o', 'k', 'a'], data => {
@@ -4660,10 +4767,17 @@ const App = (() => {
         try { localStorage.setItem(ACH_KEY, JSON.stringify(ach)); } catch (e) {}
       }
       if (Object.keys(ach.got).length || ach.n) cloudQueue('a', ach);
-      home();
       syncTheme();
       if (inTg) { try { tg.onEvent('themeChanged', () => { syncTheme(); }); } catch (e) {} }
-      if (!onboarded) openWelcome();
+      const startApp = () => { home(); if (!onboarded) openWelcome(); };
+      // вход по коду: только внутри Телеграма и только если сервер подключён; если сервер недоступен – не блокируем
+      if (API && inTg && tg.initData) {
+        paint(`<p class="muted" style="text-align:center;margin-top:40vh">Загрузка…</p>`);
+        call('hello').then(r => {
+          if (r && r.ok) { srv.on = true; srv.admin = !!r.admin; if (!r.joined) return joinScreen(); startApp(); sync(); }
+          else startApp();
+        }).catch(() => startApp());
+      } else startApp();
     });
   }
   boot();
