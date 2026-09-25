@@ -187,6 +187,8 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .tex mjx-container{margin:0 !important}
 .tex svg{overflow:visible}
 .raw{font-family:ui-monospace,Menlo,monospace; font-size:.8em}
+.tex.wait{display:inline-block; min-width:2.5em; height:1em; vertical-align:middle; border-radius:6px; background:var(--cell); animation:pulse 1.2s ease-in-out infinite alternate}
+@keyframes pulse{from{opacity:.45} to{opacity:1}}
 
 /* пояснение */
 .ov{position:fixed; inset:0; z-index:50; background:rgba(8,11,20,.55); display:flex; align-items:flex-end; justify-content:center; padding-top:env(safe-area-inset-top, 0px)}
@@ -1815,7 +1817,7 @@ window.MathJax = {
   }
 };
 </script>
-<script src="mathjax/tex-svg.js" async></script>
+<script src="mathjax/tex-svg.js" async onerror="var x=document.createElement('script');x.src='https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js';x.async=true;document.head.appendChild(x)"></script>
 
 <script>
 const App = (() => {
@@ -2102,7 +2104,7 @@ const App = (() => {
     close: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'
   };
 
-  let mathReady = false;
+  let mathReady = false, mjGaveUp = false;
   const cache = new Map();
   function typeset(root = $app) {
     root.querySelectorAll('.tex[data-tex]').forEach(el => {
@@ -2114,9 +2116,11 @@ const App = (() => {
           if (!node && /\\(color|cssId)/.test(s)) { try { node = MathJax.tex2svg(s.replace(/\\(color|cssId)\{[^}]*\}/g, ''), { display: false }); } catch (e) { node = null; } }
           if (node) cache.set(s, node);
         }
-        if (node) { el.replaceChildren(node.cloneNode(true)); el.classList.remove('raw'); return; }
+        if (node) { el.textContent = ''; el.appendChild(node.cloneNode(true)); el.classList.remove('raw', 'wait'); return; }
       }
-      el.textContent = s; el.classList.add('raw');
+      // пока библиотека формул грузится – серая заглушка; сырой LaTeX только если она так и не загрузилась
+      if (!mjGaveUp) { el.textContent = ''; el.classList.add('wait'); return; }
+      el.textContent = s; el.classList.remove('wait'); el.classList.add('raw');
     });
     fitFormulas(root);
   }
@@ -4580,8 +4584,8 @@ const App = (() => {
     });
   }
   boot();
-  const fallback = setTimeout(() => { if (!mathReady) typeset(); }, 6000);
-  window.__onMath = () => { try { document.head.appendChild(MathJax.svgStylesheet()); } catch (e) {} mathReady = true; clearTimeout(fallback); cache.clear(); typeset(); };
+  const fallback = setTimeout(() => { if (!mathReady) { mjGaveUp = true; typeset(document); } }, 20000);
+  window.__onMath = () => { try { document.head.appendChild(MathJax.svgStylesheet()); } catch (e) {} mathReady = true; clearTimeout(fallback); cache.clear(); typeset(document); };
   if (window.__mjReady) window.__onMath();
   return {};
 })();
