@@ -99,6 +99,10 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .topic .name{font-weight:600}
 .topic .meta{font-size:13px; color:var(--ink-2)}
 .topic .pct{font-size:14px; font-weight:600; color:var(--ink-2)}
+.topic .pct.done{color:var(--ok); font-size:22px; line-height:1}
+.topic.done{border-color:var(--ok)}
+.topic.done .code{background:var(--ok-soft); color:var(--ok)}
+.topic.done .meter > span{background:var(--ok)}
 .meter{display:block; height:4px; border-radius:4px; background:var(--cell); overflow:hidden; margin-top:8px}
 .meter > span{display:block; height:100%; background:var(--accent); border-radius:4px; transition:width .4s}
 .locked{border-style:dashed; background:transparent; color:var(--ink-3); cursor:default}
@@ -161,6 +165,8 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .opt .k{flex:none; width:24px; height:24px; border-radius:7px; background:var(--cell); display:grid; place-items:center; font-size:12px; font-weight:600; color:var(--ink-2)}
 .opt .tex{flex:1; min-width:0; font-size:19px; overflow-x:auto; overflow-y:hidden; padding-block:4px; text-align:left}
 .opt.text{font-weight:500}
+.opt.sel{border-color:var(--accent); background:var(--accent-soft)}
+.opt.sel .k{background:var(--accent); color:var(--accent-ink)}
 .opt.right{border-color:var(--ok); background:var(--ok-soft)}
 .opt.right .k{background:var(--ok); color:#fff}
 .opt.wrong{border-color:var(--bad); background:var(--bad-soft)}
@@ -254,6 +260,8 @@ h1,h2,h3{margin:0; text-wrap:balance}
 .gbox svg{display:block; width:100%; height:auto; overflow:visible}
 .gbox .gax{stroke:currentColor; stroke-width:1.4} .gbox .gah{fill:currentColor}
 .gbox .gln{fill:none; stroke:var(--accent); stroke-width:2.6; stroke-linejoin:round; stroke-linecap:round}
+.gbox .gar{fill:var(--accent)} .gbox .glb{fill:currentColor; font:italic 12px "Times New Roman",Georgia,serif}
+.fig.gfig{padding:6px; margin:4px 0}
 .gbox .g0{fill:var(--ink-3); font:9px var(--body); text-anchor:end}
 .gbox .gy{position:absolute; left:15%; top:-4px; font-size:14px}
 .gbox .gx{position:absolute; right:-2px; bottom:-14px; font-size:14px}
@@ -1964,12 +1972,23 @@ const App = (() => {
     const d = Math.round((new Date(t).setHours(0, 0, 0, 0) - today0()) / DAY);
     return d <= 0 ? 'сегодня' : d === 1 ? 'завтра' : `через ${d} ${plural(d, 'день', 'дня', 'дней')}`;
   };
+  // разброс сроков, чтобы формулы, выученные в один день, не приходили на повторение все разом
+  const fuzz = d => d <= 1 ? 1 + (Math.random() < 0.5 ? 1 : 0) : Math.max(1, d + Math.round((Math.random() * 2 - 1) * (d >= 7 ? 2 : 1)));
+  // дневная норма повторения: лишние формулы переносятся на завтра и клетки не теряют
+  const DAILY = 20;
+  function capDue() {
+    const due = ALL.filter(f => isDue(f.id)).sort((a, b) => dueAt(a.id) - dueAt(b.id));
+    if (due.length <= DAILY) return;
+    const t = today0() + DAY;
+    due.slice(DAILY).forEach(f => { sched[f.id] = t; });
+    saveSched();
+  }
   const bump = (id, ok) => {
     const l = lvl(id); let counted = false;
     if (ok) {
       if (canAdvance(id)) {
         const nl = Math.min(MAX, l + 1), days = l === MAX ? KEEP : WAIT[nl];
-        progress[id] = nl; sched[id] = days ? today0() + days * DAY : now(); counted = true;
+        progress[id] = nl; sched[id] = days ? today0() + fuzz(days) * DAY : now(); counted = true;
       }
     } else { progress[id] = Math.max(0, l - 2); sched[id] = now(); }
     seen[id] = 1; save(); saveSeen(); saveSched();
@@ -2088,6 +2107,7 @@ const App = (() => {
   const dueList = () => ALL.filter(f => isDue(f.id)).sort((a, b) => dueAt(a.id) - dueAt(b.id));
   const learned = items => items.filter(f => lvl(f.id) >= 4).length;
   const started = items => items.filter(f => seen[f.id] || lvl(f.id) > 0).length;
+  const allDone = items => items.length > 0 && items.every(f => lvl(f.id) >= 4);   // тема выучена: все формулы на 4 клетках и выше
   const pct = items => Math.round(items.reduce((s, f) => s + lvl(f.id), 0) / (items.length * MAX) * 100);
 
   /* ---------- утилиты ---------- */
@@ -2168,7 +2188,7 @@ const App = (() => {
     else if (future.length) {
       const next = future[0], n = future.filter(t => whenLabel(t) === whenLabel(next)).length;
       body = `<div><span class="eyebrow">Повторение</span>
-          <p class="rv-text">На сегодня всё повторено. Следующее повторение ${whenLabel(next)}: ${n} ${plural(n, 'формула', 'формулы', 'формул')}.</p></div>`;
+          <p class="rv-text">На сегодня всё повторено. Следующее повторение ${whenLabel(next)}: ${Math.min(n, DAILY)} ${plural(Math.min(n, DAILY), 'формула', 'формулы', 'формул')}${n > DAILY ? ', остальные позже' : ''}.</p></div>`;
     } else body = `<div><span class="eyebrow">Повторение</span>
           <p class="rv-text">Здесь появятся формулы, которые пора повторить. Начни с тренировки.</p></div>`;
     const warn = due.length ? `<p class="rv-warn">Если не повторить формулу 3 дня, она теряет клетку.</p>` : '';
@@ -2179,6 +2199,7 @@ const App = (() => {
   function home() {
     setBack(null);
     applyDecay();
+    capDue();
     checkAch(true);
     const total = ALL.length, done = learned(ALL);
     const weak = ALL.filter(f => lvl(f.id) < MAX).length;
@@ -2204,14 +2225,14 @@ const App = (() => {
         <div class="section-head"><h2>Разделы</h2></div>
         <div class="topics">
           ${SECTIONS.map(sec => `
-            <button class="topic" data-section="${sec.code}">
+            <button class="topic ${allDone(sec.items) ? 'done' : ''}" data-section="${sec.code}">
               <span class="code">${sec.code}</span>
               <span>
                 <span class="name">${esc(sec.title)}</span><br>
                 <span class="meta num">начато ${started(sec.items)} из ${sec.items.length} · выучено ${learned(sec.items)}</span>
                 <span class="meter"><span style="width:${pct(sec.items)}%"></span></span>
               </span>
-              <span class="pct num">${pct(sec.items)}%</span>
+              ${allDone(sec.items) ? '<span class="pct done" title="Все формулы выучены">✓</span>' : `<span class="pct num">${pct(sec.items)}%</span>`}
             </button>`).join('')}
           ${UPCOMING.filter(([c]) => !SECTIONS.some(x => x.code === c)).map(([c, n]) => `<div class="topic locked"><span class="code">${c}</span><span class="name">${n}</span><span class="soon">скоро</span></div>`).join('')}
         </div>
@@ -2263,14 +2284,14 @@ const App = (() => {
         <div class="section-head"><h2>Темы</h2></div>
         <div class="topics">
           ${sec.topics.map(t => `
-            <button class="topic" data-topic="${t.id}">
+            <button class="topic ${allDone(t.items) ? 'done' : ''}" data-topic="${t.id}">
               <span class="code">${t.code}</span>
               <span>
                 <span class="name">${esc(t.title)}</span><br>
                 <span class="meta num">начато ${started(t.items)} из ${t.items.length} · выучено ${learned(t.items)}</span>
                 <span class="meter"><span style="width:${pct(t.items)}%"></span></span>
               </span>
-              <span class="pct num">${pct(t.items)}%</span>
+              ${allDone(t.items) ? '<span class="pct done" title="Все формулы выучены">✓</span>' : `<span class="pct num">${pct(t.items)}%</span>`}
             </button>`).join('')}
         </div>
       </section>
@@ -2456,6 +2477,59 @@ const App = (() => {
   const PROC = { T: ['iso-4', 'изотермический'], P: ['iso-5', 'изобарный'], V: ['iso-6', 'изохорный'] };
   const PROC_AX = [['V', 'p', { T: 'hyp', P: 'const', V: 'vert' }], ['T', 'V', { T: 'vert', P: 'lin0', V: 'const' }], ['T', 'p', { T: 'vert', P: 'const', V: 'lin0' }]];
   for (const [k, [f, name]] of Object.entries(PROC)) for (const [x, y, sh] of PROC_AX) GRAPHS.push({ f, x, y, s: sh[k], proc: k, name, alt: Object.keys(PROC).filter(q => q !== k).map(q => [PROC[q][1], sh[q]]) });
+  // ---- термодинамика: свои вопросы по графикам (участки цикла воды, работа газа, адиабата) ----
+  const rr = n => Math.round(n * 10) / 10;
+  const GX = u => rr(16 + 116 * u), GY = v => rr(88 - 76 * v);
+  const gArrow = (u1, v1, u2, v2) => {
+    const x1 = GX(u1), y1 = GY(v1), x2 = GX(u2), y2 = GY(v2), a = Math.atan2(y2 - y1, x2 - x1);
+    const mx = (x1 + x2) / 2 + 4 * Math.cos(a), my = (y1 + y2) / 2 + 4 * Math.sin(a), px = -Math.sin(a) * 3.5, py = Math.cos(a) * 3.5;
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="gln"/><polygon points="${rr(mx)},${rr(my)} ${rr(mx - 8 * Math.cos(a) + px)},${rr(my - 8 * Math.sin(a) + py)} ${rr(mx - 8 * Math.cos(a) - px)},${rr(my - 8 * Math.sin(a) - py)}" class="gar"/>`;
+  };
+  const gDot = (u, v) => `<circle cx="${GX(u)}" cy="${GY(v)}" r="2.6" class="gar"/>`;
+  const gTxt = (u, v, t, a = 'middle') => `<text x="${GX(u)}" y="${GY(v)}" text-anchor="${a}" class="glb">${t}</text>`;
+  const pvBox = inner => `<div class="gbox big"><svg viewBox="0 0 140 100" aria-hidden="true">` +
+    `<line x1="16" y1="88" x2="134" y2="88" class="gax"/><polygon points="136,88 129,85 129,91" class="gah"/>` +
+    `<line x1="16" y1="94" x2="16" y2="6" class="gax"/><polygon points="16,3 13,10 19,10" class="gah"/>` + inner +
+    `</svg><span class="gy">${tex('p')}</span><span class="gx">${tex('V')}</span></div>`;
+  const SIGN = ['положительную', 'отрицательную', 'равную нулю'];
+  const signQ = (ask, inner, correct) => () => ({ ask, askHtml: pvBox(inner), options: SIGN, correct, isTex: false });
+  const WATER = ['нагревание льда', 'плавление льда', 'нагревание воды', 'кипение воды', 'нагревание пара', 'охлаждение пара', 'конденсация пара', 'охлаждение воды', 'кристаллизация воды', 'охлаждение льда'];
+  const PHASE_C = { 0: 'л', 9: 'л', 2: 'в', 7: 'в', 4: 'п', 5: 'п' };
+  const cQ = k => `Q = c_{\\text{${k}}} m\\Delta t`;
+  for (let i = 0; i < 10; i++) {
+    const f = PHASE_C[i] ? 'heat-1' : i === 1 || i === 8 ? 'heat-2' : 'heat-3';
+    const right = PHASE_C[i] ? cQ(PHASE_C[i]) : f === 'heat-2' ? 'Q = \\lambda m' : 'Q = Lm';
+    const wrong = PHASE_C[i] ? [...['л', 'в', 'п'].filter(k => k !== PHASE_C[i]).map(cQ), i < 5 ? 'Q = \\lambda m' : 'Q = Lm'] : f === 'heat-2' ? ['Q = Lm', cQ('л'), cQ('в')] : ['Q = \\lambda m', cQ('в'), cQ('п')];
+    GRAPHS.push({ f, custom: () => {
+      const fig = `<div class="fig gfig">${FIG._water([i]).svg}</div>`;
+      if (Math.random() < 0.5) {
+        const others = shuffle(WATER.filter((_, k) => k !== i && k !== 9 - i)).slice(0, 2);
+        return { ask: 'Какой процесс идёт на выделенном участке?', askHtml: fig, options: shuffle([WATER[i], WATER[9 - i], ...others]), correct: WATER[i], isTex: false };
+      }
+      return { ask: 'Как найти количество теплоты на выделенном участке?', askHtml: fig, options: shuffle([right, ...wrong]), correct: right, isTex: true };
+    } });
+  }
+  GRAPHS.push(
+    { f: 'td-4', custom: signQ('Какую работу совершает газ в этом процессе?', gArrow(0.2, 0.6, 0.85, 0.6) + gDot(0.2, 0.6) + gTxt(0.2, 0.68, '1') + gTxt(0.85, 0.68, '2'), 'положительную') },
+    { f: 'td-4', custom: signQ('Какую работу совершает газ в этом процессе?', gArrow(0.85, 0.45, 0.2, 0.45) + gDot(0.85, 0.45) + gTxt(0.85, 0.53, '1') + gTxt(0.2, 0.53, '2'), 'отрицательную') },
+    { f: 'td-4', custom: signQ('Какую работу совершает газ в этом процессе?', gArrow(0.5, 0.2, 0.5, 0.85) + gDot(0.5, 0.2) + gTxt(0.56, 0.18, '1', 'start') + gTxt(0.56, 0.84, '2', 'start'), 'равную нулю') },
+    { f: 'td-4', custom: () => {
+      const up = Math.random() < 0.5 ? 'a' : 'b', dn = up === 'a' ? 'b' : 'a';
+      const inner = gArrow(0.2, 0.8, 0.8, 0.8) + gArrow(0.8, 0.8, 0.8, 0.3) + gArrow(0.2, 0.8, 0.2, 0.3) + gArrow(0.2, 0.3, 0.8, 0.3) +
+        gDot(0.2, 0.8) + gDot(0.8, 0.3) + gTxt(0.16, 0.86, '1', 'end') + gTxt(0.84, 0.24, '2', 'start') + gTxt(0.5, 0.86, up) + gTxt(0.5, 0.36, dn);
+      return { ask: 'Газ переводят из состояния 1 в состояние 2 двумя способами. В каком процессе газ совершил большую работу?', askHtml: pvBox(inner), options: [`в процессе ${up}`, `в процессе ${dn}`, 'работа одинаковая'].sort(), correct: `в процессе ${up}`, isTex: false };
+    } },
+    { f: 'td-7', custom: () => {
+      const ad = Math.random() < 0.5 ? '1' : '2', is = ad === '1' ? '2' : '1';
+      const U = Array.from({ length: 30 }, (_, k) => 0.15 + 0.75 * k / 29);
+      const curve = fn => `<polyline points="${U.map(u => `${GX(u)},${GY(fn(u))}`).join(' ')}" class="gln"/>`;
+      const inner = curve(u => 0.85 * 0.15 / u) + curve(u => 0.85 * (0.15 / u) ** 1.67) + gDot(0.15, 0.85) +
+        gTxt(0.64, 0.27, is, 'start') + gTxt(0.33, 0.1, ad, 'end');
+      return { ask: 'Из одного состояния газ расширяется двумя способами: изотермически и адиабатно. Какая линия – адиабата?', askHtml: pvBox(inner), options: ['линия 1', 'линия 2'], correct: `линия ${ad}`, isTex: false };
+    } },
+    { f: 'eng-1', custom: signQ('Какую работу совершает газ за цикл?', gArrow(0.25, 0.25, 0.25, 0.75) + gArrow(0.25, 0.75, 0.8, 0.75) + gArrow(0.8, 0.75, 0.8, 0.25) + gArrow(0.8, 0.25, 0.25, 0.25), 'положительную') },
+    { f: 'eng-1', custom: signQ('Какую работу совершает газ за цикл?', gArrow(0.25, 0.25, 0.8, 0.25) + gArrow(0.8, 0.25, 0.8, 0.75) + gArrow(0.8, 0.75, 0.25, 0.75) + gArrow(0.25, 0.75, 0.25, 0.25), 'отрицательную') }
+  );
   const GRAPH_BY = {};
   for (const g of GRAPHS) (GRAPH_BY[g.f] ||= []).push(g);
   const hasGraph = f => !!GRAPH_BY[f.id];
@@ -2485,6 +2559,7 @@ const App = (() => {
     const g = (S.graphs && S.graphs[S.i]) || GRAPH_BY[f.id][Math.random() * GRAPH_BY[f.id].length | 0], toGraph = Math.random() < 0.5;
     const cond = g.c ? `<div class="sub">${tex(g.c)}</div>` : '';
     const eyebrow = `${esc(f.topic.title)} · узнай график`;
+    if (g.custom) return choice(f, { eyebrow, ...g.custom() });
     if (g.proc) {
       const axes = `${g.y}\\text{–}${g.x}`;
       if (!toGraph) return choice(f, { eyebrow, ask: 'Какой процесс изображён на графике?', askHtml: graphBox(g.s, g, true), options: shuffle([g.name, ...g.alt.map(a => a[0])]), correct: g.name, isTex: false });
@@ -2549,7 +2624,7 @@ const App = (() => {
   }
 
   function choice(f, { eyebrow, ask, askTex, askHtml, sub, options, correct, isTex, row, note, solution, idx, optHtml, grid }) {
-    let picked = null;
+    let picked = null, sel = null;   // sel – выбранный, но ещё не проверенный вариант
     const render = () => {
       const done = picked !== null;
       paint(`${top()}
@@ -2565,24 +2640,30 @@ const App = (() => {
           ${options.map((o, i) => {
             let cls = '';
             if (done) cls = o === correct ? 'right' : (o === picked ? 'wrong' : 'dim');
+            else if (o === sel) cls = 'sel';
             return `<button class="opt ${optHtml ? 'gopt' : isTex ? '' : 'text'} ${cls}" data-i="${i}" ${done ? 'disabled' : ''}><span class="k">${i + 1}</span>${optHtml ? optHtml(o) : isTex ? tex(o) : `<span>${unit(o)}</span>`}</button>`;
           }).join('')}
         </div>
         ${done ? `
           <div class="verdict-line"><span class="verdict ${picked === correct ? 'ok' : 'bad'}">${picked === correct ? 'Верно' : 'Ошибка — верный вариант подсвечен зелёным'}</span>${earlyNote()}</div>
           ${solution ? `<div class="solution">${solution}</div>` : ''}
-          ${afterActions(f)}` : ''}
+          ${afterActions(f)}` : `<div class="actions one after"><button class="btn btn-primary" data-submit ${sel === null ? 'disabled' : ''}>Проверить</button></div>`}
       `, e => {
-        if (!done && /^[1-4]$/.test(e.key)) pick(options[+e.key - 1]);
+        if (!done && /^[1-4]$/.test(e.key)) choose(options[+e.key - 1]);
+        else if (!done && e.key === 'Enter' && sel !== null) { e.preventDefault(); pick(sel); }
         else if (done && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); next(); }
         else if (e.key === 'Escape') S.results.length ? result() : S.back();
       });
       wireTop();
-      $app.querySelectorAll('[data-i]').forEach(b => b.onclick = () => pick(options[+b.dataset.i]));
+      $app.querySelectorAll('[data-i]').forEach(b => b.onclick = () => choose(options[+b.dataset.i]));
+      const sb = $app.querySelector('[data-submit]'); if (sb) sb.onclick = () => pick(sel);
       const n = $app.querySelector('[data-next]'); if (n) { n.onclick = next; n.focus({ preventScroll: true }); }
       const xb = $app.querySelector('[data-expl]'); if (xb) xb.onclick = () => openExpl(f);
     };
-    const pick = o => { if (picked !== null || o === undefined) return; picked = o; record(f, o === correct); render(); };
+    // нажатие только выбирает вариант; засчитывается после «Проверить» (защита от случайных нажатий)
+    const keep = fn => { const y = window.scrollY; fn(); window.scrollTo(0, y); };
+    const choose = o => { if (picked !== null || o === undefined) return; sel = o; keep(render); };
+    const pick = o => { if (picked !== null || o === undefined || o === null) return; picked = o; record(f, o === correct); keep(render); };
     render();
   }
 
@@ -2852,6 +2933,7 @@ const App = (() => {
       }
     });
     return {
+      _water: waterFig,   // для вопросов «Узнай график»
       uniform: {
         cap: 'Тело начинает движение из точки $x_0$ и за время $t$ смещается на $v_x t$.',
         svg: svg(320, 116, 'Тело на оси x сдвигается от x0 на vx·t',
@@ -4092,13 +4174,14 @@ const App = (() => {
         <p>Правильный ответ закрашивает клетку, ошибка стирает две. Но закрасить все клетки за один вечер нельзя: память проверяется временем.</p>
         <ol class="steps">
           <li><b>1–2 клетки</b><span>сразу, в любой тренировке</span></li>
-          <li><b>3-я клетка</b><span>на следующий день</span></li>
-          <li><b>4-я клетка</b><span>ещё через 3 дня — формула выучена</span></li>
-          <li><b>5-я клетка</b><span>ещё через 7 дней</span></li>
-          <li><b>Дальше</b><span>проверка через 14 дней, потом раз в месяц</span></li>
+          <li><b>3-я клетка</b><span>через 1–2 дня</span></li>
+          <li><b>4-я клетка</b><span>ещё через 2–4 дня — формула выучена</span></li>
+          <li><b>5-я клетка</b><span>примерно через неделю</span></li>
+          <li><b>Дальше</b><span>проверка примерно через 2 недели, потом раз в месяц</span></li>
         </ol>
         <p>Когда подходит срок, формула попадает в блок «Повторение» на главной. Если ответить на неё раньше срока, ответ засчитается как тренировка, но клетка не добавится.</p>
         <p>После ошибки формула сразу возвращается на повторение.</p>
+        <p>В день на повторение приходит не больше 20 формул. Если их больше, остальные переносятся на следующий день и клеток не теряют. Сроки у формул немного разбросаны, чтобы выученные в один день не приходили все разом.</p>
         <p>Если формула ждёт повторения, а ты не заходишь, каждые 3 дня она теряет одну клетку. Совсем в ноль она не упадёт, одна клетка останется.</p>
         <p>Зачем так: формула, которую ты вспомнил через неделю, запомнилась надолго. А пять правильных ответов подряд за вечер через неделю забываются.</p>
         <p>Процент освоения показывает, сколько клеток закрашено из всех возможных.</p>
@@ -4531,7 +4614,7 @@ const App = (() => {
   const WELCOME = [
     { t: 'Формулы для ЕГЭ', b: `<p>Здесь ты учишь формулы по физике, которые мы проходим на курсе. Одна тренировка — 10 вопросов и 3–5 минут.</p><p>Режимы разные: найти формулу, узнать её, собрать из кусочков или набрать самому. Если ошибся, открой «Пояснение»: там разобрано, откуда формула берётся.</p>` },
     { t: 'Клетки', b: `<p>У каждой формулы 5 клеток. Правильный ответ закрашивает клетку, ошибка стирает две.</p><ul class="help-list"><li>${'CELLS0'}<span>ещё не встречалась</span></li><li>${'CELLS2'}<span>начата</span></li><li>${'CELLS4'}<span>выучена</span></li></ul>` },
-    { t: 'Заходи каждый день', b: `<p>Выученные формулы возвращаются на повторение: через день, потом через 3, 7 и 14 дней. Так они остаются в голове до экзамена.</p><p>Если формула ждёт повторения, а ты 3 дня не заходишь, она теряет клетку. Хватает 5 минут в день.</p>` }
+    { t: 'Заходи каждый день', b: `<p>Выученные формулы возвращаются на повторение: примерно через день, потом через 3, 7 и 14 дней, не больше 20 формул в день. Так они остаются в голове до экзамена.</p><p>Если формула ждёт повторения, а ты 3 дня не заходишь, она теряет клетку. Хватает 5 минут в день.</p>` }
   ];
   function openWelcome() {
     if (ov) return;
